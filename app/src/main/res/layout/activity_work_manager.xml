@@ -5,7 +5,7 @@
 
     <Button
         android:id="@+id/btn_start"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="start"
         android:layout_centerInParent="true"
@@ -13,10 +13,29 @@
 
     <Button
         android:id="@+id/btn_stop"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:text="stop"
         android:layout_below="@id/btn_start"
+        android:layout_centerInParent="true"
+        android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/btn_start_service"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="start service"
+        android:layout_toRightOf="@id/btn_start"
+        android:layout_centerInParent="true"
+        android:onClick="onClick"/>
+
+    <Button
+        android:id="@+id/btn_bind_service"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="bind service"
+        android:layout_toRightOf="@id/btn_stop"
+        android:layout_below="@id/btn_start_service"
         android:layout_centerInParent="true"
         android:onClick="onClick"/>
 
