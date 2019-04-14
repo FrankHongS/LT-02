@@ -12,13 +12,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.hon.librarytest02.chart.ChartActivity
+import com.hon.librarytest02.chart.ChartActivity01
 import com.hon.librarytest02.workmanager.WorkManagerActivity
 
 class MainActivity : AppCompatActivity() {
 
     private var recyclerView:RecyclerView?=null
 
-    private var titles= arrayOf("WorkManager","ButterKnife")
+    private var titles= arrayOf("WorkManager","ButterKnife","ChartView",
+            "ChartView 01")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,8 @@ class MainActivity : AppCompatActivity() {
                 when(position){
                     0->startActivity(Intent(this@MainActivity,WorkManagerActivity::class.java))
                     1->startActivity(Intent(this@MainActivity,Test02Activity::class.java))
+                    2->startActivity(Intent(this@MainActivity,ChartActivity::class.java))
+                    3->startActivity(Intent(this@MainActivity, ChartActivity01::class.java))
                 }
             }
         })

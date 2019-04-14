@@ -20,6 +20,10 @@
         </activity>
         <activity android:name=".Test02Activity" />
         <activity android:name=".workmanager.WorkManagerActivity"/>
+        <activity android:name=".chart.ChartActivity"
+            android:theme="@style/NoActionBar"/>
+        <activity android:name=".chart.ChartActivity01"
+            android:theme="@style/NoActionBar"/>
 
         <service android:name=".service.Service01"/>
     </application>

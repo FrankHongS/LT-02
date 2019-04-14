@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ChartView margins & size -->
+    <dimen name="history_margin_bottom">100dp</dimen>
+    <dimen name="history_margin_left">60dp</dimen>
+    <dimen name="history_margin_right">60dp</dimen>
+    <dimen name="history_margin_top">100dp</dimen>
+    <dimen name="history_xlabel_text_size">43sp</dimen>
+    <dimen name="history_ylabel_text_size">50sp</dimen>
+    <dimen name="history_x_unit_text_size">25sp</dimen>
+    <dimen name="history_y_unit_text_size">28sp</dimen>
+    <dimen name="history_line_stroke_width">3sp</dimen>
+    <dimen name="history_data_stroke_width">5sp</dimen>
+    <dimen name="history_circle_radius">10sp</dimen>
+    <dimen name="history_x_first_point_offset">30sp</dimen>
+</resources>
