@@ -12,13 +12,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.hon.librarytest02.audiomessage.AudioMessageActivity
+import com.hon.librarytest02.jobschedule.JobSchedulerActivity
+import com.hon.librarytest02.service.ServiceActivity
+import com.hon.librarytest02.text.TextActivity
+import com.hon.librarytest02.timelineview.TimelineViewActivity
+import com.hon.librarytest02.webview.WebActivity
 import com.hon.librarytest02.workmanager.WorkManagerActivity
 
 class MainActivity : AppCompatActivity() {
 
     private var recyclerView:RecyclerView?=null
 
-    private var titles= arrayOf("WorkManager","ButterKnife")
+    private var titles= arrayOf("WorkManager","Service","Job Scheduler","ButterKnife",
+            "WebView","Timeline View","Audio Message","Text")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +38,13 @@ class MainActivity : AppCompatActivity() {
             override fun onItemClick(position: Int) {
                 when(position){
                     0->startActivity(Intent(this@MainActivity,WorkManagerActivity::class.java))
-                    1->startActivity(Intent(this@MainActivity,Test02Activity::class.java))
+                    1->startActivity(Intent(this@MainActivity,ServiceActivity::class.java))
+                    2->startActivity(Intent(this@MainActivity,JobSchedulerActivity::class.java))
+                    3->startActivity(Intent(this@MainActivity,Test02Activity::class.java))
+                    4->startActivity(Intent(this@MainActivity,WebActivity::class.java))
+                    5->startActivity(Intent(this@MainActivity,TimelineViewActivity::class.java))
+                    6->startActivity(Intent(this@MainActivity,AudioMessageActivity::class.java))
+                    7->startActivity(Intent(this@MainActivity,TextActivity::class.java))
                 }
             }
         })

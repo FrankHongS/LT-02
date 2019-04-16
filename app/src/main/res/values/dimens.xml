@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="xijp_book_size_37dp">37dp</dimen>
+    <dimen name="xijp_book_size_7dp">7dp</dimen>
+</resources>

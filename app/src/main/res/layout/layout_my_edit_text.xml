@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/et_forth"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@drawable/xijp_portal_setting_profile_name_bg"
+        android:gravity="center"
+        android:inputType="text"
+        android:maxLength="1"
+        android:text="西"
+        android:textColor="@color/xijp_portal_setting_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+    <!--android:text="西"-->
+    <EditText
+        android:id="@+id/et_third"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/xijp_portal_setting_profile_name_bg"
+        android:gravity="center"
+        android:inputType="text"
+        android:maxLength="1"
+        android:text="西"
+        android:textColor="@color/xijp_portal_setting_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/et_forth"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/et_second"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/xijp_portal_setting_profile_name_bg"
+        android:gravity="center"
+        android:inputType="text"
+        android:maxLength="1"
+        android:text="西"
+        android:textColor="@color/xijp_portal_setting_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/et_third"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+
+    <EditText
+        android:id="@+id/et_first"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/xijp_portal_setting_profile_name_bg"
+        android:gravity="center"
+        android:inputType="text"
+        android:maxLength="1"
+        android:text="西"
+        android:textColor="@color/xijp_portal_setting_text"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/et_second"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

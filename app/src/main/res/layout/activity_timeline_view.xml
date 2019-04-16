@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.hon.librarytest02.timelineview.TimelineView
+        android:id="@+id/tlv_test"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        app:paintColor="#f4b95c"
+        app:nodeCount="3"
+        app:selectedNode="2"
+        app:selectedNodeColor="#0fb6a9"
+        />
+
+</RelativeLayout>

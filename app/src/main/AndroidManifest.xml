@@ -3,7 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hon.librarytest02">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
+        android:name=".LibraryTest"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -20,8 +28,18 @@
         </activity>
         <activity android:name=".Test02Activity" />
         <activity android:name=".workmanager.WorkManagerActivity"/>
+        <activity android:name=".service.ServiceActivity" />
+        <activity android:name=".jobschedule.JobSchedulerActivity" />
+        <activity android:name=".webview.WebActivity"
+            android:theme="@style/NoActionBar"/>
+        <activity android:name=".timelineview.TimelineViewActivity" />
+        <activity android:name=".audiomessage.AudioMessageActivity" />
+        <activity android:name=".text.TextActivity" />
 
         <service android:name=".service.Service01"/>
+        <service android:name=".jobschedule.MyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"/>
     </application>
 
 </manifest>

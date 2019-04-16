@@ -1,27 +1,17 @@
 package com.hon.librarytest02.workmanager;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.hon.librarytest02.R;
-import com.hon.librarytest02.service.Service01;
 
 import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.work.Constraints;
-import androidx.work.Logger;
-import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkInfo;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 
@@ -35,19 +25,6 @@ import static androidx.work.PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS;
 public class WorkManagerActivity extends AppCompatActivity {
 
     private WorkRequest mWorkRequest;
-
-    private ServiceConnection connection=new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            Service01.MyBinder binder= (Service01.MyBinder) service;
-            binder.startDownload();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,10 +70,6 @@ public class WorkManagerActivity extends AppCompatActivity {
                 break;
             case R.id.btn_stop:
                 WorkManager.getInstance().cancelWorkById(mWorkRequest.getId());
-                break;
-            case R.id.btn_bind_service:
-                Intent intent01=new Intent(this,Service01.class);
-                bindService(intent01,connection,BIND_AUTO_CREATE);
                 break;
             default:
                 break;

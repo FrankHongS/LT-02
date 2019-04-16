@@ -3,4 +3,23 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--job scheduler-->
+    <color name="none_received">#999999</color>
+    <color name="start_received">#00FF00</color>
+    <color name="stop_received">#FF0000</color>
+
+    <color name="webviewPrimary">#009688</color>
+    <color name="webviewPrimaryDark">#00796b</color>
+    <color name="webviewAccent">#607D8B</color>
+    <color name="webviewIcon">#FFFFFF</color>
+
+    <color name="chat_input_bg">#52b2a8</color>
+
+    <color name="xijp_book_color_ffb845">#ffb845</color>
+    <color name="xijp_book_color_ffffff">#ffffff</color>
+
+    <color name="xijp_portal_setting_text">#FFFFFF</color>
+    <color name="xijp_portal_setting_profile_icon">#F4B95C</color>
+
 </resources>
