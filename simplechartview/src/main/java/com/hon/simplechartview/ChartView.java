@@ -48,7 +48,7 @@ public class ChartView extends View {
 
     private int dataStrokeWidth = 3;
 
-    private long duration = 1500;
+    private long duration = 3500;
     private PathMeasure mRoomTempPathMeasure;
     private PathMeasure mTargetTempPathMeasure;
     private Path mRoomTempPath;
