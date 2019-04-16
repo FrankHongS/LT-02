@@ -35,6 +35,10 @@
         <activity android:name=".timelineview.TimelineViewActivity" />
         <activity android:name=".audiomessage.AudioMessageActivity" />
         <activity android:name=".text.TextActivity" />
+        <activity android:name=".chart.ChartActivity"
+            android:theme="@style/NoActionBar"/>
+        <activity android:name=".chart.ChartActivity01"
+            android:theme="@style/NoActionBar"/>
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

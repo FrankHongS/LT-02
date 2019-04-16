@@ -1,18 +1,19 @@
 package com.hon.librarytest02
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
+import com.hon.librarytest02.chart.ChartActivity
+import com.hon.librarytest02.chart.ChartActivity01
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.service.ServiceActivity
 import com.hon.librarytest02.text.TextActivity
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     private var recyclerView:RecyclerView?=null
 
     private var titles= arrayOf("WorkManager","Service","Job Scheduler","ButterKnife",
-            "WebView","Timeline View","Audio Message","Text")
+            "WebView","Timeline View","Audio Message","Text","ChartView",
+            "ChartView 01")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +39,16 @@ class MainActivity : AppCompatActivity() {
         recyclerView?.adapter=MainAdapter(this,titles,object :MainAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 when(position){
-                    0->startActivity(Intent(this@MainActivity,WorkManagerActivity::class.java))
-                    1->startActivity(Intent(this@MainActivity,ServiceActivity::class.java))
-                    2->startActivity(Intent(this@MainActivity,JobSchedulerActivity::class.java))
+                    0->startActivity(Intent(this@MainActivity, WorkManagerActivity::class.java))
+                    1->startActivity(Intent(this@MainActivity, ServiceActivity::class.java))
+                    2->startActivity(Intent(this@MainActivity, JobSchedulerActivity::class.java))
                     3->startActivity(Intent(this@MainActivity,Test02Activity::class.java))
-                    4->startActivity(Intent(this@MainActivity,WebActivity::class.java))
-                    5->startActivity(Intent(this@MainActivity,TimelineViewActivity::class.java))
-                    6->startActivity(Intent(this@MainActivity,AudioMessageActivity::class.java))
-                    7->startActivity(Intent(this@MainActivity,TextActivity::class.java))
+                    4->startActivity(Intent(this@MainActivity, WebActivity::class.java))
+                    5->startActivity(Intent(this@MainActivity, TimelineViewActivity::class.java))
+                    6->startActivity(Intent(this@MainActivity, AudioMessageActivity::class.java))
+                    7->startActivity(Intent(this@MainActivity, TextActivity::class.java))
+                    8->startActivity(Intent(this@MainActivity, ChartActivity::class.java))
+                    9->startActivity(Intent(this@MainActivity, ChartActivity01::class.java))
                 }
             }
         })

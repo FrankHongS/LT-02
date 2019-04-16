@@ -47,10 +47,13 @@ dependencies {
     // use -ktx for Kotlin+Coroutines
     implementation 'com.jakewharton:butterknife:10.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.0.0'
+
     implementation project(':apt_annotation')
     annotationProcessor project(':apt_processor')
+    implementation project(path: ':mylogger')
+    implementation project(path: ':simplechartview')
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation project(path: ':mylogger')
 }
