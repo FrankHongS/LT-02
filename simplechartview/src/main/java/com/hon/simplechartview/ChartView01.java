@@ -1,6 +1,7 @@
 package com.hon.simplechartview;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +11,7 @@ import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
@@ -29,14 +31,16 @@ public class ChartView01 extends View {
     private int mUnitYDistance=Util.dip2px(getContext(),100);// Y axis unit distance
     private float mTranslateRatio=0.3f;
 
-    private int mUnitXDistance=Util.dip2px(getContext(),50);// X axis unit distance
+    private int mUnitXDistance=Util.dip2px(getContext(),70);// X axis unit distance
 
     private Paint mXAxisPaint;
     private Paint mDataCirclePaint;
+    private Paint mTextPaint;
     private List<Paint> mDataLinePaintList;
 
     private int mXAxisStrokeWidth=3;
     private int mDataCircleStrokeWidth=3;
+    private int mTextStrokeWidth=2;
     private int mDataLineStrokeWidth=3;
 
     private int mYAxisTextSize=Util.sp2px(getContext(),18);// Y axis text size
@@ -52,15 +56,20 @@ public class ChartView01 extends View {
     private int mDataPointRadius=10;
 
     private int mLongestSize;
-    private float mMaxTextWidth;
+    private int mMaxTextWidth;
     private float mPerDataToPx;
     private float mOriginY;// origin point Y value
 
     private List<Path> mPathList;
     private List<PathMeasure> mPathMeasureList;
 
+    private List<Path> mXAxisPathList;
+
     private ValueAnimator mValueAnimator;
     private long duration = 2500;
+
+    private float mInitialX;
+    private int mContentWidth;
 
     public ChartView01(Context context) {
         this(context,null);
@@ -73,6 +82,8 @@ public class ChartView01 extends View {
     public ChartView01(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        setClickable(true);
+
         initPaints();
 
         texts=new String[mXAxisCount];
@@ -83,10 +94,18 @@ public class ChartView01 extends View {
         mXAxisPaint = new Paint();
         mXAxisPaint.setStyle(Paint.Style.STROKE);
         mXAxisPaint.setAntiAlias(true);
-        mXAxisPaint.setColor(Color.BLACK);
+        mXAxisPaint.setColor(Color.parseColor("#666666"));
         mXAxisPaint.setDither(true);
         mXAxisPaint.setStrokeWidth(mXAxisStrokeWidth);
-        mXAxisPaint.setTextSize(mYAxisTextSize);
+        mXAxisPaint.setPathEffect(new DashPathEffect(new float[]{10,10},10));
+
+        mTextPaint = new Paint();
+        mTextPaint.setStyle(Paint.Style.FILL);
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setColor(Color.parseColor("#555555"));
+        mTextPaint.setDither(true);
+        mTextPaint.setStrokeWidth(mTextStrokeWidth);
+        mTextPaint.setTextSize(mYAxisTextSize);
 
         mDataCirclePaint=new Paint();
         mDataCirclePaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -102,7 +121,10 @@ public class ChartView01 extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
         mLongestSize=Util.getLongestSize(mChartData);
-        setMeasuredDimension(mUnitXDistance*mLongestSize,
+        int width=MeasureSpec.getSize(widthMeasureSpec);
+
+        mContentWidth=mUnitXDistance*(mLongestSize+1)+mYAxisTextMargin*2+mMaxTextWidth;
+        setMeasuredDimension(width,
                 (int) (mUnitYDistance*2+mUnitYDistance*mTranslateRatio+3*mYAxisTextSize+3*mDataPointRadius));
     }
 
@@ -132,9 +154,8 @@ public class ChartView01 extends View {
         // X axis and Y axis value
         for(int i=0;i<mXAxisCount;i++){
             float tempY=mOriginY-i*mUnitYDistance;
-            canvas.drawText(texts[i],mMaxTextWidth-textsWidth[i]+mYAxisTextMargin,tempY+mYAxisTextSize/2f,mXAxisPaint);
-            canvas.drawLine(mMaxTextWidth+mYAxisTextMargin*2,tempY,
-                    getWidth(),tempY,mXAxisPaint);
+            canvas.drawText(texts[i],mMaxTextWidth-textsWidth[i]+mYAxisTextMargin,tempY+mYAxisTextSize/2f,mTextPaint);
+            canvas.drawPath(mXAxisPathList.get(i),mXAxisPaint);
         }
 
         // data path
@@ -155,13 +176,47 @@ public class ChartView01 extends View {
 
         // X axis value
         for(int k=0;k<mLongestSize;k++){
-            canvas.drawText(String.valueOf(k+1),
-                    mMaxTextWidth+mYAxisTextMargin*2+mUnitXDistance*(k+1),
+            String text=String.format("第%s天",String.valueOf(k+1));
+            float tempTextWidth=mTextPaint.measureText(text);
+            canvas.drawText(text,
+                    mMaxTextWidth+mYAxisTextMargin*2+mUnitXDistance*(k+1)-tempTextWidth/2,
                     getHeight()-mYAxisTextSize,
-                    mXAxisPaint);
+                    mTextPaint);
         }
 
+    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                mInitialX=event.getRawX();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float moveX=event.getX();
+                int delta=(int) (mInitialX-moveX);
+                Log.d("ChartView", String.format("onTouchEvent: delta=%s,width=%d,contentWidth=%d"
+                        ,delta,getWidth(),mContentWidth));
+                if(delta<-getScrollX()){
+                    Log.d("ChartView", "left border");
+//                    delta=-getScrollX();
+                    scrollTo(0,0);
+                    break;
+                }else if(delta+getScrollX()>mContentWidth-getWidth()){
+                    Log.d("ChartView", "right border");
+//                    delta=mContentWidth-getWidth()-getScrollX();
+                    scrollTo(mContentWidth-getWidth(),0);
+                    break;
+                }
+                scrollBy(delta,0);
+                mInitialX=moveX;
+                break;
+
+        }
+
+        return super.onTouchEvent(event);
     }
 
     public void setChartData(List<List<Float>> chartData){
@@ -182,13 +237,13 @@ public class ChartView01 extends View {
         for(int i=0;i<mXAxisCount;i++){
             float v=mMaxAndMin[1]-mTranslateRatio*unit+unit*i;
             texts[i]=String.valueOf(Math.round(v*100)/100f);
-            float textWidth=mXAxisPaint.measureText(texts[i]);
+            float textWidth=mTextPaint.measureText(texts[i]);
             textsWidth[i]=textWidth;
             if(textWidth>maxTextWidth)
                 maxTextWidth=textWidth;
         }
 
-        mMaxTextWidth=maxTextWidth;
+        mMaxTextWidth= (int) (maxTextWidth+0.5f);
         mPerDataToPx=mUnitYDistance/unit;
     }
 
@@ -225,6 +280,17 @@ public class ChartView01 extends View {
 
             mPathList.add(path);
             mPathMeasureList.add(pathMeasure);
+        }
+
+        mXAxisPathList=new ArrayList<>();
+
+        for(int i=0;i<mXAxisCount;i++){
+            Path path=new Path();
+            float tempY=mOriginY-i*mUnitYDistance;
+            path.moveTo(mMaxTextWidth+mYAxisTextMargin*2,tempY);
+            path.lineTo(mContentWidth,tempY);
+
+            mXAxisPathList.add(path);
         }
     }
 

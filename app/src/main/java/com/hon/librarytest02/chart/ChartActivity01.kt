@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.activity_chart_01.*
 class ChartActivity01:AppCompatActivity() {
 
     private val dataList= listOf(
-            listOf(10f,20f,30f,40f,50f,60f),
+            listOf(10f,20f,30f,40f,50f,60f,70f),
             listOf(15f,25f,35f,45f,55f,60f)
     )
 
