@@ -143,7 +143,7 @@ public class ChartView extends View {
         super(context, attrs, defStyleAttr);
 
         ta = context
-                .obtainStyledAttributes(attrs, R.styleable.ChartView);
+                .obtainStyledAttributes(attrs, R.styleable.SimpleChartView);
 
         setDefaultAttrrbutesValue();
 
@@ -334,31 +334,31 @@ public class ChartView extends View {
 
     private void setDefaultAttrrbutesValue() {
         float MarginTopPx = ta.getDimension(
-                R.styleable.ChartView_margin_top, 50);
+                R.styleable.SimpleChartView_margin_top, 50);
         float MarginBottomPx = ta.getDimension(
-                R.styleable.ChartView_margin_bottom, 50);
+                R.styleable.SimpleChartView_margin_bottom, 50);
         float MarginLeftPx = ta.getDimension(
-                R.styleable.ChartView_margin_left, 50);
+                R.styleable.SimpleChartView_margin_left, 50);
         float MarginRightPx = ta.getDimension(
-                R.styleable.ChartView_margin_right, 50);
+                R.styleable.SimpleChartView_margin_right, 50);
 
         float yLabelSizePx = ta.getDimension(
-                R.styleable.ChartView_ylabel_text_size, 30);
+                R.styleable.SimpleChartView_ylabel_text_size, 30);
         float xlabelSizePx = ta.getDimension(
-                R.styleable.ChartView_xlabel_text_size, 20);
+                R.styleable.SimpleChartView_xlabel_text_size, 20);
         float xUnitSizePx = ta.getDimension(
-                R.styleable.ChartView_x_unit_text_size, 30);
+                R.styleable.SimpleChartView_x_unit_text_size, 30);
         float yUnitSizePx = ta.getDimension(
-                R.styleable.ChartView_y_unit_text_size, 30);
+                R.styleable.SimpleChartView_y_unit_text_size, 30);
 
         float xFirstPointOffsetPx = ta.getDimension(
-                R.styleable.ChartView_x_first_point_offset, 30);
+                R.styleable.SimpleChartView_x_first_point_offset, 30);
         float lineStrokeWidthPx = ta.getDimension(
-                R.styleable.ChartView_line_stroke_width, 5);
+                R.styleable.SimpleChartView_line_stroke_width, 5);
         float dataStrokeWidthPx = ta.getDimension(
-                R.styleable.ChartView_data_stroke_width, 5);
+                R.styleable.SimpleChartView_data_stroke_width, 5);
         float circleRadiusPx = ta.getDimension(
-                R.styleable.ChartView_circle_radius, 6);
+                R.styleable.SimpleChartView_circle_radius, 6);
 
         xFirstPointOffset = px2sp(
                 xFirstPointOffsetPx);
@@ -378,25 +378,25 @@ public class ChartView extends View {
         dataStrokeWidth = px2sp(dataStrokeWidthPx);
         circleRadius = px2sp(circleRadiusPx);
 
-        lineColor = ta.getColor(R.styleable.ChartView_line_color,
+        lineColor = ta.getColor(R.styleable.SimpleChartView_line_color,
                 getResources().getColor(R.color.saswell_yellow));
         roomTempLineColor = ta.getColor(
-                R.styleable.ChartView_first_data_line_color,
+                R.styleable.SimpleChartView_first_data_line_color,
                 getResources().getColor(R.color.saswell_indoor_temp));
         targetTempLineColor = ta.getColor(
-                R.styleable.ChartView_second_data_line_color,
+                R.styleable.SimpleChartView_second_data_line_color,
                 getResources().getColor(R.color.saswell_setpoint_temp));
 
         powerTimeLineColor = ta.getColor(
-                R.styleable.ChartView_rect_background_color,
+                R.styleable.SimpleChartView_rect_background_color,
                 getResources().getColor(R.color.saswell_power_time));
 
-        mUnitColor = ta.getColor(R.styleable.ChartView_unit_color,
+        mUnitColor = ta.getColor(R.styleable.SimpleChartView_unit_color,
                 getResources().getColor(R.color.saswell_light_grey));
 
-        mXUnitText = ta.getString(R.styleable.ChartView_x_unit_text);
-        mY1UnitText = ta.getString(R.styleable.ChartView_y1_unit_text);
-        mY2UnitText = ta.getString(R.styleable.ChartView_y2_unit_text);
+        mXUnitText = ta.getString(R.styleable.SimpleChartView_x_unit_text);
+        mY1UnitText = ta.getString(R.styleable.SimpleChartView_y1_unit_text);
+        mY2UnitText = ta.getString(R.styleable.SimpleChartView_y2_unit_text);
     }
 
     /**

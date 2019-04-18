@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ChartView">
+    <declare-styleable name="SimpleChartView">
         <attr name="ylabel_text_size" format="dimension"/>
         <attr name="xlabel_text_size" format="dimension"/>
         <attr name="margin_top" format="dimension"/>
@@ -21,5 +21,11 @@
         <attr name="second_data_line_color" format="color"/>
         <attr name="rect_background_color" format="color"/>
         <attr name="x_first_point_offset" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="ChartView">
+        <attr name="x_unit_distance" format="dimension"/>
+        <attr name="y_unit_distance" format="dimension"/>
+        <attr name="vertical_translate" format="float"/>
     </declare-styleable>
 </resources>

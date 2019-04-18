@@ -23,11 +23,11 @@ public class Util {
         return new float[]{Collections.max(mergedList),Collections.min(mergedList)};
     }
 
-    public static int getLongestSize(List<List<Float>> dataLiist){
+    public static int getLongestSize(List<List<Float>> dataList){
 
         int longest=0;
 
-        for(List<Float> list:dataLiist){
+        for(List<Float> list:dataList){
             int size=list.size();
             if(size>longest)
                 longest=size;
