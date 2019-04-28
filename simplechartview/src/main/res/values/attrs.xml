@@ -1,31 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="SimpleChartView">
-        <attr name="ylabel_text_size" format="dimension"/>
-        <attr name="xlabel_text_size" format="dimension"/>
-        <attr name="margin_top" format="dimension"/>
-        <attr name="margin_bottom" format="dimension"/>
-        <attr name="margin_left" format="dimension"/>
-        <attr name="margin_right" format="dimension"/>
-        <attr name="line_stroke_width" format="dimension"/>
-        <attr name="data_stroke_width" format="dimension"/>
-        <attr name="circle_radius" format="dimension"/>
-        <attr name="line_color" format="color"/>
-        <attr name="unit_color" format="color"/>
-        <attr name="x_unit_text" format="string"/>
-        <attr name="y1_unit_text" format="string"/>
-        <attr name="y2_unit_text" format="string"/>
-        <attr name="y_unit_text_size" format="dimension"/>
-        <attr name="x_unit_text_size" format="dimension"/>
-        <attr name="first_data_line_color" format="color"/>
-        <attr name="second_data_line_color" format="color"/>
-        <attr name="rect_background_color" format="color"/>
-        <attr name="x_first_point_offset" format="dimension"/>
-    </declare-styleable>
-
     <declare-styleable name="ChartView">
         <attr name="x_unit_distance" format="dimension"/>
         <attr name="y_unit_distance" format="dimension"/>
         <attr name="vertical_translate" format="float"/>
+        <attr name="x_label_text_size" format="dimension"/>
+        <attr name="y_label_text_size" format="dimension"/>
+        <attr name="unit_left_padding" format="dimension"/>
+        <attr name="x_axis_stroke_width" format="integer"/>
+        <attr name="data_line_stroke_width" format="integer"/>
+        <attr name="x_axis_count" format="integer"/>
+        <attr name="data_dot_radius" format="integer"/>
+        <attr name="x_label_text_color" format="color"/>
+        <attr name="y_label_text_color" format="color"/>
+        <attr name="x_axis_color" format="color"/>
+        <attr name="animation_duration" format="float"/>
+        <!--the distance between x axis with x label-->
+        <attr name="x_label_margin_top" format="dimension"/>
     </declare-styleable>
 </resources>

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.chart.ChartActivity
-import com.hon.librarytest02.chart.ChartActivity01
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.service.ServiceActivity
 import com.hon.librarytest02.text.TextActivity
@@ -26,8 +25,8 @@ class MainActivity : AppCompatActivity() {
     private var recyclerView:RecyclerView?=null
 
     private var titles= arrayOf("WorkManager","Service","Job Scheduler","ButterKnife",
-            "WebView","Timeline View","Audio Message","Text","ChartView",
-            "ChartView 01")
+            "WebView","Timeline View","Audio Message","Text","ChartView"
+            )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +47,6 @@ class MainActivity : AppCompatActivity() {
                     6->startActivity(Intent(this@MainActivity, AudioMessageActivity::class.java))
                     7->startActivity(Intent(this@MainActivity, TextActivity::class.java))
                     8->startActivity(Intent(this@MainActivity, ChartActivity::class.java))
-                    9->startActivity(Intent(this@MainActivity, ChartActivity01::class.java))
                 }
             }
         })
