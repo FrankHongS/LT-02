@@ -1,5 +1,6 @@
 package com.hon.librarytest02
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,8 +16,10 @@ import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.chart.ChartActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.service.ServiceActivity
+import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
 import com.hon.librarytest02.timelineview.TimelineViewActivity
+import com.hon.librarytest02.watchstock.WatchStockActivity
 import com.hon.librarytest02.webview.WebActivity
 import com.hon.librarytest02.workmanager.WorkManagerActivity
 
@@ -25,8 +28,8 @@ class MainActivity : AppCompatActivity() {
     private var recyclerView:RecyclerView?=null
 
     private var titles= arrayOf("WorkManager","Service","Job Scheduler","ButterKnife",
-            "WebView","Timeline View","Audio Message","Text","ChartView"
-            )
+            "WebView","Timeline View","Audio Message","Text","ChartView",
+            "Spider","Stock")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,18 +41,24 @@ class MainActivity : AppCompatActivity() {
         recyclerView?.adapter=MainAdapter(this,titles,object :MainAdapter.OnItemClickListener{
             override fun onItemClick(position: Int) {
                 when(position){
-                    0->startActivity(Intent(this@MainActivity, WorkManagerActivity::class.java))
-                    1->startActivity(Intent(this@MainActivity, ServiceActivity::class.java))
-                    2->startActivity(Intent(this@MainActivity, JobSchedulerActivity::class.java))
-                    3->startActivity(Intent(this@MainActivity,Test02Activity::class.java))
-                    4->startActivity(Intent(this@MainActivity, WebActivity::class.java))
-                    5->startActivity(Intent(this@MainActivity, TimelineViewActivity::class.java))
-                    6->startActivity(Intent(this@MainActivity, AudioMessageActivity::class.java))
-                    7->startActivity(Intent(this@MainActivity, TextActivity::class.java))
-                    8->startActivity(Intent(this@MainActivity, ChartActivity::class.java))
+                    0->navigate(WorkManagerActivity::class.java)
+                    1->navigate(ServiceActivity::class.java)
+                    2->navigate(JobSchedulerActivity::class.java)
+                    3->navigate(Test02Activity::class.java)
+                    4->navigate(WebActivity::class.java)
+                    5->navigate(TimelineViewActivity::class.java)
+                    6->navigate(AudioMessageActivity::class.java)
+                    7->navigate(TextActivity::class.java)
+                    8->navigate(ChartActivity::class.java)
+                    9->navigate(SpiderActivity::class.java)
+                    10->navigate(WatchStockActivity::class.java)
                 }
             }
         })
+    }
+
+    fun navigate(target:Class<out Activity>){
+        startActivity(Intent(this@MainActivity,target))
     }
 
     fun onClick(view:View){
