@@ -16,10 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 import androidx.annotation.Nullable;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -46,15 +44,21 @@ public class StockService extends Service {
 
         Toast.makeText(this, "service is watching stock :)", Toast.LENGTH_SHORT).show();
 
+        sendNotification(Constants.StockNotification.STOCK_CHANNEL_ID,
+                "Hello",
+                "service is watching stock :)");
+
         String stockId=intent.getStringExtra(WatchStockActivity.KEY_STOCK_ID);
         int increase=intent.getIntExtra(WatchStockActivity.KEY_INCREASE,2);
         int decrease=intent.getIntExtra(WatchStockActivity.KEY_DECREASE,2);
 
         mStockDisposable = Observable
-                .interval(1, TimeUnit.MINUTES)
+                .interval(2, TimeUnit.MINUTES)
                 .flatMap(aLong -> mApiService.getStockInfo(stockId))
                 .subscribeOn(Schedulers.io())
+                .unsubscribeOn(AndroidSchedulers.mainThread())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(throwable -> {/*do nothing*/})
                 .subscribe(
                        stock -> {
                            if("200".equals(stock.resultCode)){
@@ -63,7 +67,7 @@ public class StockService extends Service {
                        }
                 );
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_REDELIVER_INTENT;
     }
 
     @Nullable
