@@ -16,6 +16,7 @@ import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.chart.ChartActivity
 import com.hon.librarytest02.chart.ChartActivity01
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
+import com.hon.librarytest02.lifecycle.LifecycleActivity
 import com.hon.librarytest02.service.ServiceActivity
 import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
@@ -30,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     private var titles= arrayOf("WorkManager","Service","Job Scheduler","ButterKnife",
             "WebView","Timeline View","Audio Message","Text","ChartView",
-            "ChartView 01","Spider","Stock")
+            "ChartView 01","Spider","Stock","Lifecycle")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
                     9->navigate(ChartActivity01::class.java)
                     10->navigate(SpiderActivity::class.java)
                     11->navigate(WatchStockActivity::class.java)
+                    12->navigate(LifecycleActivity::class.java)
                 }
             }
         })

@@ -44,6 +44,7 @@
         <activity android:name=".spider.SpiderActivity" />
         <activity android:name=".watchstock.WatchStockActivity"
             android:theme="@style/NoActionBar"/>
+        <activity android:name=".lifecycle.LifecycleActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"
