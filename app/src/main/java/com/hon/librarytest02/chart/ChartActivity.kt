@@ -1,20 +1,26 @@
 package com.hon.librarytest02.chart
 
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hon.librarytest02.R
+import com.hon.simplechartview.ChartEntity
+import com.hon.simplechartview.ChartView
 import kotlinx.android.synthetic.main.activity_chart.*
+import kotlinx.android.synthetic.main.fragment_chart.*
 
 /**
- * Created by Frank Hon on 2019/4/14 1:08 AM.
+ * Created by Frank Hon on 2019/4/14 9:12 PM.
  * E-mail: frank_hon@foxmail.com
  */
 class ChartActivity:AppCompatActivity() {
-
-    // Test Data
-    private val mStrDayRoomData = "22,23,23,23,23,23,23,23,24,23,25,26"
-    private val mStrDaySettingData = "26,26,26,26,26,26,26,26,26,16,16,17"
-    private val mStrDayPowerTimeData = "80,90,91,93,100,100,100,100,50,70,89,60,100,60,70,80,80,90,95,100,100,100,100,100"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,14 +29,32 @@ class ChartActivity:AppCompatActivity() {
         initView()
     }
 
-    fun initView(){
-        testChartView.setOnViewLayoutListener{
-            updateView()
+    private fun initView(){
+        val fragment1= Fragment1()
+        val fragment2=Fragment2()
+        val fragment3=Fragment3()
+
+        val fragments= listOf(fragment1,fragment2,fragment3)
+
+        chartViewPager.adapter=ChartViewPagerAdapter(supportFragmentManager,fragments)
+    }
+
+    class ChartViewPagerAdapter(fm: FragmentManager,val fragments:List<Fragment>) : FragmentPagerAdapter(fm) {
+        override fun getItem(position: Int): Fragment {
+            return fragments[position]
         }
-    }
 
-    fun updateView(){
-        testChartView.setData("$mStrDayRoomData-$mStrDaySettingData-$mStrDayPowerTimeData",0)
-    }
+        override fun getCount(): Int {
+            return fragments.size
+        }
 
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
+            return super.instantiateItem(container, position)
+        }
+
+        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+            super.destroyItem(container, position, `object`)
+        }
+
+    }
 }

@@ -1,6 +1,9 @@
 package com.hon.simplechartview;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PathEffect;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,14 +39,37 @@ public class Util {
         return longest;
     }
 
-    public static int dip2px(Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dipValue * scale + 0.5f);
+    public static Paint generatePaint(int color, int strokeWidth, Paint.Style style,PathEffect effect){
+
+        Paint paint=new Paint();
+
+        paint.setStyle(style);
+        paint.setAntiAlias(true);
+        paint.setColor(color);
+        paint.setDither(true);
+        paint.setStrokeWidth(strokeWidth);
+
+        if (effect!=null){
+            paint.setPathEffect(effect);
+        }
+
+        return paint;
     }
 
-    public static int sp2px(Context context, float spValue) {
-        final float scale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * scale + 0.5f);
+    public static Paint generatePaint(int color, int strokeWidth, Paint.Style style){
+        return generatePaint(color,strokeWidth,style,null);
+    }
+
+    public static Paint generateTextPaint(int color,int textSize,int strokeWidth){
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setAntiAlias(true);
+        paint.setColor(color);
+        paint.setDither(true);
+        paint.setStrokeWidth(strokeWidth);
+        paint.setTextSize(textSize);
+
+        return paint;
     }
 
 }

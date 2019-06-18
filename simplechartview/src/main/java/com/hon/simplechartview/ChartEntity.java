@@ -10,11 +10,11 @@ public class ChartEntity {
 
     private List<Float> dataList;
 
-    private String lineColor;
+    private int lineColor;
 
-    private String dotColor;
+    private int dotColor;
 
-    public ChartEntity(List<Float> dataList, String lineColor, String dotColor) {
+    public ChartEntity(List<Float> dataList, int lineColor, int dotColor) {
         this.dataList = dataList;
         this.lineColor = lineColor;
         this.dotColor = dotColor;
@@ -24,11 +24,11 @@ public class ChartEntity {
         return dataList;
     }
 
-    public String getLineColor() {
+    public int getLineColor() {
         return lineColor;
     }
 
-    public String getDotColor() {
+    public int getDotColor() {
         return dotColor;
     }
 }

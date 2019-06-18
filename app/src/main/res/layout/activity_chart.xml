@@ -2,38 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
-    <com.hon.simplechartview.ChartView
-        android:id="@+id/testChartView"
-        android:layout_width="0dp"
-        android:layout_height="600dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:circle_radius="@dimen/history_circle_radius"
-        app:data_stroke_width="@dimen/history_data_stroke_width"
-        app:first_data_line_color="@color/saswell_indoor_temp"
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/chartViewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:line_color="@color/saswell_yellow"
-        app:line_stroke_width="@dimen/history_line_stroke_width"
-        app:margin_bottom="@dimen/history_margin_bottom"
-        app:margin_left="@dimen/history_margin_left"
-        app:margin_right="@dimen/history_margin_right"
-        app:margin_top="@dimen/history_margin_top"
-        app:rect_background_color="@color/saswell_power_time"
-        app:second_data_line_color="@color/saswell_setpoint_temp"
-        app:unit_color="@color/saswell_light_grey"
-        app:x_first_point_offset="@dimen/history_x_first_point_offset"
-        app:x_unit_text="@string/history_x_unit_day"
-        app:x_unit_text_size="@dimen/history_x_unit_text_size"
-        app:xlabel_text_size="@dimen/history_xlabel_text_size"
-        app:y1_unit_text="@string/history_y1_unit"
-        app:y2_unit_text="@string/history_y2_unit"
-        app:y_unit_text_size="@dimen/history_y_unit_text_size"
-        app:ylabel_text_size="@dimen/history_ylabel_text_size" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

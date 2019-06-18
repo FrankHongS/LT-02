@@ -39,8 +39,6 @@
         <activity android:name=".text.TextActivity" />
         <activity android:name=".chart.ChartActivity"
             android:theme="@style/NoActionBar"/>
-        <activity android:name=".chart.ChartActivity01"
-            android:theme="@style/NoActionBar"/>
         <activity android:name=".spider.SpiderActivity" />
         <activity android:name=".watchstock.WatchStockActivity"
             android:theme="@style/NoActionBar"/>

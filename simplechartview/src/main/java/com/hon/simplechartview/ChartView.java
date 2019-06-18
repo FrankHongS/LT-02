@@ -1,135 +1,93 @@
 package com.hon.simplechartview;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathEffect;
 import android.graphics.PathMeasure;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.Scroller;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 
 /**
- * Created by Frank Hon on 2019/4/14 12:35 AM.
+ * Created by Frank Hon on 2019/4/14 4:30 PM.
  * E-mail: frank_hon@foxmail.com
  */
 public class ChartView extends View {
 
-    TypedArray ta;
+    private static final int DEFAULT_STROKE_WIDTH=3;
 
-    private float MarginTop = 100;
 
-    private float MarginBottom = 100;
+    private int mUnitXDistance;// X axis unit distance
+    private int mUnitYDistance;// Y axis unit distance
+    private float mTranslateRatio;// the Y direction translate distance divide the Y unit distance( translate/unit )
 
-    private float MarginLeft = 100;
+    private int mXAxisStrokeWidth;
+    private int mDataLineStrokeWidth;
 
-    private float MarginRight = 100;
+    private int mXLabelTextSize;
+    private int mYLabelTextSize;
+    private int mUnitLeftPadding;
+    private int mXLabelMargin;
 
-    private float mYLabelSize = 50;
+    private int mXLabelColor;
+    private int mYLabelColor;
+    private int mXAxisColor;
 
-    private float mXlabelSize = 35;
+    private int mXAxisCount;// horizontal axis count
+    private int mDataDotRadius;
+    private long mAnimationDuration;
 
-    private float mXUnitTextSize;
+    private Paint mXAxisPaint;
+    private Paint mYLabelPaint;
+    private Paint mXLabelPaint;
 
-    private float mYUnitTextSize;
+    private List<Paint> mDataLinePaintList=new ArrayList<>();
+    private List<Paint> mDotPaintList=new ArrayList<>();
 
-    // 圆半径
-    private int circleRadius = 8;
+    private List<List<Float>> mChartData=new ArrayList<>();
+    private List<Integer> mLineColorList=new ArrayList<>();
+    private List<Integer> mDotColorList=new ArrayList<>();
 
-    private int lineStrokeWidth = 3;
+    private List<ChartEntity> mChartEntityList;
+    private List<String> mXAxisLabelList;
 
-    private int dataStrokeWidth = 3;
+    private String[] mYLabelArray;
+    private float[] mYLabelWidthArray;
 
-    private long duration = 3500;
-    private PathMeasure mRoomTempPathMeasure;
-    private PathMeasure mTargetTempPathMeasure;
-    private Path mRoomTempPath;
-    private Path mTargetTempPath;
-    /**
-     * 柱形绘制进度
-     */
-    private float mRectFration;
+    private int mLongestSize;
+    private int mMaxTextWidth;
+    private float mPerDataToPx;
+    private float mOriginY;// origin point Y value
 
-    // X,Y轴的单位长度
-    private float Xscale = 20;
-    private float Yscale = 20;
+    private List<Path> mPathList;
+    private List<PathMeasure> mPathMeasureList;
 
-    // 绘制X轴总长度
-    private float xLength;
-    // 绘制Y轴总长度
-    private float yLength;
-
-    // X轴第1个节点的偏移位置
-    private float xFirstPointOffset;
-
-    // y轴显示的节点间隔距离
-    private int yScaleForData = 1;
-
-    // x轴显示的节点间隔距离
-    private int xScaleForData = 1;
-
-    // 画线颜色
-    private int lineColor;
-
-    private int roomTempLineColor;
-    private int targetTempLineColor;
-    private int powerTimeLineColor;
-    private int mUnitColor;
-
-    private String mXUnitText;
-    private String mY1UnitText;
-    private String mY2UnitText;
-
-    private int mMode = 1;// 从Activity传过来的模式值 1：天 2：周 3：月 4：年
-
-    // 原点坐标
-    private float Xpoint;
-    private float Ypoint;
-
-    // X,Y轴上面的显示文字
-    private String[] Xlabel = { "1", "2", "3", "4", "5", "6", "7" };
-    private String[] Ylabel = { "0", "9", "18", "27", "36" };
-    private String[] Ylabel2 = { "0", "25", "50", "75", "100" };
-
-    private final static int X_SCALE_FOR_DATA_DAY = 2;
-    private final static int X_SCALE_FOR_DATA_WEEK = 1;
-    private final static int X_SCALE_FOR_DATA_YEAR = 1;
-    private final static int X_SCALE_FOR_DATA_MOUNTH = 5;
-
-    private final static int DAY_MODE = 0;
-    private final static int WEEK_MODE = 1;
-    private final static int MONTH_MODE = 2;
-    private final static int YEAR_MODE = 3;
-
-    // 曲线数据
-    private float[] roomTempDataArray = { 15, 15, 15, 15, 15, 15, 15 };
-    private float[] targetTempDataArray = { 16, 16, 16, 16, 16, 16, 16 };
-    private float[] powerOnTimeDataArray = { 100, 100, 100, 100, 100, 100, 100 };
-
-    /**
-     * 各条柱形图当前top值数组
-     */
-    private Float[] rectCurrentTops;
+    private List<Path> mXAxisPathList;
 
     private ValueAnimator mValueAnimator;
 
-    private Paint linePaint;
-    private Paint targetTempPaint;
-    private Paint roomTempPaint;
-    private PathEffect mRoomTempEffect;
-    private PathEffect mtargetTempEffect;
-    //定义一个内存中的图片，该图片将作为缓冲区
-    Bitmap mCacheBitmap = null;
-    //定义cacheBitmap上的Canvas对象
-    Canvas mCacheCanvas = null;
+    private int mContentWidth;
+
+    private Scroller mScroller;
+
+    private int mMarginLeft;// the distance between left border with first data dot
+
+    private int mHeight;
 
     public ChartView(Context context) {
         this(context,null);
@@ -142,572 +100,354 @@ public class ChartView extends View {
     public ChartView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        ta = context
-                .obtainStyledAttributes(attrs, R.styleable.SimpleChartView);
+        setClickable(true);
 
-        setDefaultAttrrbutesValue();
+        initAttrs(attrs);
 
-        initPaint();
+        initPaints();
+
+        solveScrollConflict();
+
+    }
+
+    private void initAttrs(AttributeSet attrs) {
+        final TypedArray a = getContext().obtainStyledAttributes(
+                attrs, R.styleable.ChartView);
+
+        mUnitXDistance=a.getDimensionPixelSize(R.styleable.ChartView_x_unit_distance,200);
+        mUnitYDistance=a.getDimensionPixelSize(R.styleable.ChartView_y_unit_distance,300);
+
+        mTranslateRatio=a.getFloat(R.styleable.ChartView_vertical_translate,0.4f);
+
+        mXLabelTextSize=a.getDimensionPixelSize(R.styleable.ChartView_x_label_text_size,60);
+        mYLabelTextSize=a.getDimensionPixelSize(R.styleable.ChartView_y_label_text_size,60);
+        mUnitLeftPadding=a.getDimensionPixelSize(R.styleable.ChartView_unit_left_padding,50);
+
+        mXAxisStrokeWidth=a.getInteger(R.styleable.ChartView_x_axis_stroke_width,3);
+        mDataLineStrokeWidth=a.getInteger(R.styleable.ChartView_data_line_stroke_width,4);
+
+        mXAxisCount=a.getInteger(R.styleable.ChartView_x_axis_count,4);
+        mDataDotRadius=a.getInteger(R.styleable.ChartView_data_dot_radius,15);
+
+        mXLabelColor=a.getColor(R.styleable.ChartView_x_label_text_color,Color.parseColor("#555555"));
+        mYLabelColor=a.getColor(R.styleable.ChartView_y_label_text_color,Color.parseColor("#555555"));
+        mXAxisColor=a.getColor(R.styleable.ChartView_x_axis_color,Color.parseColor("#666666"));
+
+        mAnimationDuration= (long) (a.getFloat(R.styleable.ChartView_animation_duration,2.5f)*1000);
+
+        mXLabelMargin=a.getDimensionPixelSize(R.styleable.ChartView_x_label_margin_top,28);
+
+        a.recycle();
+    }
+
+    private void solveScrollConflict(){
+
+        mScroller=new Scroller(getContext());
+
+        final GestureDetector detector=new GestureDetector(getContext(),new GestureDetector.SimpleOnGestureListener(){
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                if(velocityX<0&&getScrollX()>=mContentWidth-getWidth()){
+                    return false;
+                }
+
+                if(velocityX>0&&getScrollX()<=0){
+                    return false;
+                }
+
+                mScroller.fling(getScrollX(),0,-(int)velocityX,0,
+                        0, mContentWidth-getWidth(),
+                        0,0);
+                return true;
+            }
+
+            @Override
+            public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+
+                if(Math.abs(distanceX)>=Math.abs(distanceY)){
+                    if (distanceX>0&&getScrollX()>=mContentWidth-getWidth()){
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                            return false;
+                    }
+                    if(distanceX<0&&getScrollX()<=0){
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                            return false;
+                    }
+
+                }else {
+                    return false;
+                }
+
+                int distance= (int) distanceX;
+                if(-distance>getScrollX()){
+                    distance=-getScrollX();
+                }else if(distance+getScrollX()>mContentWidth-getWidth()){
+                    distance=mContentWidth-getWidth()-getScrollX();
+                }
+
+                scrollBy(distance,0);
+                return true;
+            }
+        });
+
+        setOnTouchListener(new OnTouchListener() {
+            float startX;
+            float startY;
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        startX=event.getX();
+                        startY=event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float deltaX=event.getX()-startX;
+                        float deltaY=event.getY()-startY;
+                        if(Math.abs(deltaX)>=Math.abs(deltaY)){
+                                getParent().requestDisallowInterceptTouchEvent(true);
+                        }else {
+                            getParent().requestDisallowInterceptTouchEvent(false);
+                        }
+                        startX=event.getX();
+                        startY=event.getY();
+                        break;
+
+                }
+                return detector.onTouchEvent(event);
+            }
+        });
+
+    }
+
+    @Override
+    public void computeScroll() {
+        if(mScroller.computeScrollOffset()){
+            scrollTo(mScroller.getCurrX(),mScroller.getCurrY());
+            postInvalidate();
+        }
+    }
+
+    private void initPaints(){
+        mXAxisPaint = Util.generatePaint(mXAxisColor,mXAxisStrokeWidth, Paint.Style.STROKE,new DashPathEffect(new float[]{10,10},10));
+        mXLabelPaint=Util.generateTextPaint(mXLabelColor,mXLabelTextSize,DEFAULT_STROKE_WIDTH);
+        mYLabelPaint=Util.generateTextPaint(mYLabelColor,mYLabelTextSize,DEFAULT_STROKE_WIDTH);
+
+    }
+
+    public void setChartData(List<ChartEntity> chartEntityList,List<String> labelList){
+        this.mChartEntityList=chartEntityList;
+        this.mXAxisLabelList=labelList;
 
         initData();
 
-        initParams();
+        mLongestSize=Util.getLongestSize(mChartData);
+        mContentWidth=mUnitXDistance*mLongestSize+mMarginLeft;
 
-        initPath();
+        mHeight=(int) (mUnitYDistance*(mXAxisCount-1)+mUnitYDistance*mTranslateRatio+3*mXLabelTextSize+3*mDataDotRadius+mXLabelMargin);
+        mOriginY=mHeight-2*mXLabelTextSize-mXLabelMargin;
 
-        ta.recycle();
-    }
-
-    public ChartView(Context context, String[] xlabel, String[] ylabel,
-                            float[] roomDataArray) {
-        super(context);
-        this.Xlabel = xlabel;
-        this.Ylabel = ylabel;
-        this.roomTempDataArray = roomDataArray;
-    }
-
-    /**
-     * 设置显示数据
-     *
-     * @param strAlldata
-     */
-    public void setData(String strAlldata, int mode) {
-        String[] allHistroyArray = strAlldata.split("-");
-
-        String[] arrayRoomTempData = allHistroyArray[0].split(",");
-        String[] arraySetTempData = allHistroyArray[1].split(",");
-//        String[] arrayPowerTimeData = allHistroyArray[2].split(",");
-
-        mMode = mode;
-
-        initXData(arrayRoomTempData);
-
-        initRoomTempData(arrayRoomTempData);
-
-        initTargetTempData(arraySetTempData);
-
-//        initPowerOnTimeData(arrayPowerTimeData);
-
-        initData();
-
-        initParams();
+        initDataPaints();
 
         initPath();
 
         startAnimation();
     }
 
-    private void initPaint() {
-        linePaint = new Paint();
-        linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setAntiAlias(true);
-        linePaint.setColor(lineColor);
-        linePaint.setDither(true);
-        linePaint.setStrokeWidth(lineStrokeWidth);
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        roomTempPaint = new Paint();
-        roomTempPaint.setStyle(Paint.Style.STROKE);
-        roomTempPaint.setAntiAlias(true);
-        roomTempPaint.setColor(roomTempLineColor);
-        roomTempPaint.setDither(true);
-        roomTempPaint.setStrokeWidth(dataStrokeWidth);
+        int width=MeasureSpec.getSize(widthMeasureSpec);
 
-        targetTempPaint = new Paint();
-        targetTempPaint.setStyle(Paint.Style.STROKE);
-        targetTempPaint.setAntiAlias(true);
-        targetTempPaint.setColor(targetTempLineColor);
-        targetTempPaint.setDither(true);
-        targetTempPaint.setStrokeWidth(dataStrokeWidth);
-    }
+        setMeasuredDimension(width,mHeight);
 
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-
-        mRoomTempPath = new Path();
-        mTargetTempPath = new Path();
-
-        rectCurrentTops = new Float[roomTempDataArray.length];
-    }
-
-    /**
-     * 初始化宽高比例等数据
-     */
-    public void initParams() {
-        Xpoint = MarginLeft;
-
-        xLength = this.getWidth() - MarginLeft - MarginRight
-                - (MarginRight + MarginLeft) / 16;
-        yLength = this.getHeight() - MarginTop - MarginBottom;
-
-        Ypoint = this.getHeight() - MarginBottom + mYLabelSize / 3;
-        Xscale = (xLength - xFirstPointOffset * 2) / (this.Xlabel.length - 1);
-        Yscale = yLength / (this.Ylabel.length - 1);
-
-    }
-
-    /**
-     * 初始化path
-     */
-    private void initPath() {
-        initRoomTempPath(roomTempDataArray);
-        initTargetTempPath(targetTempDataArray);
-    }
-
-    /**
-     * 初始化房间温度数据
-     *
-     * @param arrayRoomTempData
-     */
-    private void initRoomTempData(String[] arrayRoomTempData) {
-        roomTempDataArray = new float[arrayRoomTempData.length];
-        for (int i = 0; i < arrayRoomTempData.length; i++) {
-            if (arrayRoomTempData[i].length() > 0) {
-                roomTempDataArray[i] = Float.parseFloat(arrayRoomTempData[i]);
-                // LogUtils.error(TAG, "" + roomTempDataArray[i]);
-            }
-        }
-    }
-
-    /**
-     * 初始化设定温度数据
-     *
-     * @param arraySetTempData
-     */
-    private void initTargetTempData(String[] arraySetTempData) {
-        targetTempDataArray = new float[arraySetTempData.length];
-        for (int i = 0; i < arraySetTempData.length; i++) {
-            if (arraySetTempData[i].length() > 0) {
-                targetTempDataArray[i] = Float.parseFloat(arraySetTempData[i]);
-            }
-        }
-    }
-
-    /**
-     * 初始化开机时间数据
-     *
-     * @param arrayPowerTimeData
-     */
-    private void initPowerOnTimeData(String[] arrayPowerTimeData) {
-        powerOnTimeDataArray = new float[arrayPowerTimeData.length];
-        for (int i = 0; i < arrayPowerTimeData.length; i++) {
-            if (arrayPowerTimeData[i].length() > 0) {
-                powerOnTimeDataArray[i] = Float
-                        .parseFloat(arrayPowerTimeData[i]);
-            }
-        }
-    }
-
-    /**
-     * 初始化X轴数据
-     */
-    private void initXData(String[] tempData) {
-        switch (mMode) {
-            case DAY_MODE:
-                xScaleForData = X_SCALE_FOR_DATA_DAY;
-                setXUnitText(getResources().getString(R.string.history_x_unit_hour));
-                break;
-            case WEEK_MODE:
-                xScaleForData = X_SCALE_FOR_DATA_WEEK;
-                setXUnitText(getResources().getString(R.string.history_x_unit_day));
-                break;
-            case MONTH_MODE:
-                xScaleForData = X_SCALE_FOR_DATA_MOUNTH;
-                setXUnitText(getResources().getString(R.string.history_x_unit_day));
-                break;
-            case YEAR_MODE:
-                xScaleForData = X_SCALE_FOR_DATA_YEAR;
-                setXUnitText(getResources()
-                        .getString(R.string.history_x_unit_month));
-                break;
-
-            default:
-                break;
-        }
-
-        Xlabel = new String[tempData.length];
-        for (int i = 0; i < Xlabel.length; i++) {
-            Xlabel[i] = Integer.toString(i + 1);
-        }
-    }
-
-    private void setDefaultAttrrbutesValue() {
-        float MarginTopPx = ta.getDimension(
-                R.styleable.SimpleChartView_margin_top, 50);
-        float MarginBottomPx = ta.getDimension(
-                R.styleable.SimpleChartView_margin_bottom, 50);
-        float MarginLeftPx = ta.getDimension(
-                R.styleable.SimpleChartView_margin_left, 50);
-        float MarginRightPx = ta.getDimension(
-                R.styleable.SimpleChartView_margin_right, 50);
-
-        float yLabelSizePx = ta.getDimension(
-                R.styleable.SimpleChartView_ylabel_text_size, 30);
-        float xlabelSizePx = ta.getDimension(
-                R.styleable.SimpleChartView_xlabel_text_size, 20);
-        float xUnitSizePx = ta.getDimension(
-                R.styleable.SimpleChartView_x_unit_text_size, 30);
-        float yUnitSizePx = ta.getDimension(
-                R.styleable.SimpleChartView_y_unit_text_size, 30);
-
-        float xFirstPointOffsetPx = ta.getDimension(
-                R.styleable.SimpleChartView_x_first_point_offset, 30);
-        float lineStrokeWidthPx = ta.getDimension(
-                R.styleable.SimpleChartView_line_stroke_width, 5);
-        float dataStrokeWidthPx = ta.getDimension(
-                R.styleable.SimpleChartView_data_stroke_width, 5);
-        float circleRadiusPx = ta.getDimension(
-                R.styleable.SimpleChartView_circle_radius, 6);
-
-        xFirstPointOffset = px2sp(
-                xFirstPointOffsetPx);
-
-        MarginTop = px2dip(MarginTopPx);
-        MarginBottom = px2dip(MarginBottomPx);
-        MarginLeft = px2dip(MarginLeftPx);
-        MarginRight = px2dip( MarginRightPx);
-
-        mYLabelSize = px2sp(yLabelSizePx);
-        mXlabelSize = px2sp(xlabelSizePx);
-
-        mXUnitTextSize = px2sp(xUnitSizePx);
-        mYUnitTextSize = px2sp(yUnitSizePx);
-
-        lineStrokeWidth = px2sp(lineStrokeWidthPx);
-        dataStrokeWidth = px2sp(dataStrokeWidthPx);
-        circleRadius = px2sp(circleRadiusPx);
-
-        lineColor = ta.getColor(R.styleable.SimpleChartView_line_color,
-                getResources().getColor(R.color.saswell_yellow));
-        roomTempLineColor = ta.getColor(
-                R.styleable.SimpleChartView_first_data_line_color,
-                getResources().getColor(R.color.saswell_indoor_temp));
-        targetTempLineColor = ta.getColor(
-                R.styleable.SimpleChartView_second_data_line_color,
-                getResources().getColor(R.color.saswell_setpoint_temp));
-
-        powerTimeLineColor = ta.getColor(
-                R.styleable.SimpleChartView_rect_background_color,
-                getResources().getColor(R.color.saswell_power_time));
-
-        mUnitColor = ta.getColor(R.styleable.SimpleChartView_unit_color,
-                getResources().getColor(R.color.saswell_light_grey));
-
-        mXUnitText = ta.getString(R.styleable.SimpleChartView_x_unit_text);
-        mY1UnitText = ta.getString(R.styleable.SimpleChartView_y1_unit_text);
-        mY2UnitText = ta.getString(R.styleable.SimpleChartView_y2_unit_text);
-    }
-
-    /**
-     * 设置X轴单位符号
-     *
-     * @param xUnit
-     */
-    public void setXUnitText(String xUnit) {
-        mXUnitText = xUnit;
-    }
-
-    /**
-     * 绘制单位符号
-     *
-     * @param canvas
-     */
-    private void drawUnit(Canvas canvas) {
-        Paint p = new Paint();
-        p.setAntiAlias(true);
-        p.setStrokeWidth(dataStrokeWidth);
-        p.setColor(mUnitColor);
-
-        drawXUnit(canvas, p);
-        drawY1Unit(canvas, p);
-        drawY2Unit(canvas, p);
-    }
-
-    // 画横轴
-    private void drawXLine(Canvas canvas, Paint p) {
-        p.setColor(getResources().getColor(R.color.saswell_yellow));
-        canvas.drawLine(Xpoint, Ypoint, xLength + MarginLeft, Ypoint, p);
-    }
-
-    // 画灰色横轴
-    private void drawGreyXLine(Canvas canvas, Paint p) {
-        p.setColor(getResources().getColor(R.color.saswell_grey_line));
-        float startX = Xpoint + MarginLeft / 4;
-        // 纵向
-        for (int i = yScaleForData; (yLength - i * Yscale) >= 0; i += yScaleForData) {
-            float startY = Ypoint - i * Yscale;
-            canvas.drawLine(startX - MarginLeft / 4, startY, xLength
-                    + MarginLeft, startY, p);
-        }
-    }
-
-    // 画数据
-    private void drawData(Canvas canvas, float[] data, int dataColor) {
-        Paint p = new Paint();
-        p.setAntiAlias(true);
-        p.setStrokeWidth(dataStrokeWidth);
-        p.setTextSize(mXlabelSize);
-        // 横向
-        for (int i = 0; i < Xlabel.length; i++) {
-            int xLableInt = Integer.parseInt(Xlabel[i]);
-            float startX = Xpoint + i * Xscale + xFirstPointOffset;
-            if (xLableInt % xScaleForData == 0) {
-                p.setColor(lineColor);
-                canvas.drawText(this.Xlabel[i], startX - mXlabelSize / 3,
-                        Ypoint + mXlabelSize * 3 / 2, p);
-            }
-            p.setColor(dataColor);
-            canvas.drawCircle(startX, getDataY(data[i], Ylabel), circleRadius,
-                    p);
-        }
-
-        p.setTextSize(mYLabelSize);
-        // 纵向
-        for (int i = 0; (yLength - i * Yscale) >= 0; i += yScaleForData) {
-            p.setColor(lineColor);
-            canvas.drawText(this.Ylabel[i], MarginLeft / 4,
-                    getDataY(Float.valueOf(Ylabel[i]), Ylabel) + mYLabelSize
-                            / 3, p);
-            canvas.drawText(this.Ylabel2[i], this.getWidth() - MarginLeft,
-                    getDataY(Float.valueOf(Ylabel2[i]), Ylabel2) + mYLabelSize
-                            / 3, p);
-        }
-    }
-
-    // 获取room temp绘线Path数据
-    private void initRoomTempPath(float[] data) {
-        mRoomTempPath.reset();
-        // Path path = new Path();
-        float pointX;
-        float pointY;
-        // 横向
-        mRoomTempPath.moveTo(Xpoint + xFirstPointOffset,
-                getDataY(data[0], Ylabel));
-//        mRoomTempPath.moveTo(Xpoint + xFirstPointOffset,
-//                getDataY(data[0], Ylabel));
-        for (int i = 0; i < Xlabel.length; i++) {
-            float startX = Xpoint + i * Xscale + xFirstPointOffset;
-            // 绘制数据连线
-            if (i != 0) {
-                pointX = Xpoint + (i - 1) * Xscale + xFirstPointOffset;
-                pointY = getDataY(data[i - 1], Ylabel);
-                mRoomTempPath.lineTo(pointX, pointY);
-            }
-            if (i == Xlabel.length - 1) {
-                pointX = startX;
-                pointY = getDataY(data[i], Ylabel);
-                mRoomTempPath.lineTo(pointX, pointY);
-            }
-        }
-        mRoomTempPathMeasure = new PathMeasure(mRoomTempPath, false);
-    }
-
-    /**
-     * 获取target temp绘线Path数据
-     *
-     * @param data
-     */
-    private void initTargetTempPath(float[] data) {
-        mTargetTempPath.reset();
-        float pointX;
-        float pointY;
-        // 横向
-        mTargetTempPath.moveTo(Xpoint + xFirstPointOffset,
-                getDataY(data[0], Ylabel));
-        for (int i = 0; i < Xlabel.length; i++) {
-            float startX = Xpoint + i * Xscale + xFirstPointOffset;
-            // 绘制数据连线
-            if (i != 0) {
-                pointX = Xpoint + (i - 1) * Xscale + xFirstPointOffset;
-                pointY = getDataY(data[i - 1], Ylabel);
-                mTargetTempPath.lineTo(pointX, pointY);
-            }
-            if (i == Xlabel.length - 1) {
-                pointX = startX;
-                pointY = getDataY(data[i], Ylabel);
-                mTargetTempPath.lineTo(pointX, pointY);
-            }
-        }
-        mTargetTempPathMeasure = new PathMeasure(mTargetTempPath, false);
-    }
-
-    // 绘制矩形图
-//    private void drawRect(Canvas canvas, float[] data, int dataColor) {
-//        Paint p = new Paint();
-//        float left;
-//        float top;
-//        float right;
-//        float bottom;
-//        float stopY = getDataY(Float.parseFloat(Ylabel[Ylabel.length - 1]),
-//                Ylabel);// 灰色线Y轴位置
-//        float rectYScale = (Ypoint - stopY) / 100;
-//
-//        p.setAntiAlias(true);
-//        p.setStrokeWidth(dataStrokeWidth);
-//        p.setColor(dataColor);
-//
-//        // 横向
-//        for (int i = 0; i < Xlabel.length; i++) {
-//            // 绘制柱形图
-//            if (i != 0) {
-//                left = Xpoint + (i - 1) * Xscale + xFirstPointOffset + Xscale
-//                        / 6;
-//                top = Ypoint - data[i - 1] * rectYScale + lineStrokeWidth;// 要绘制的rect最终top值
-//                // 起点top + (起点top - 终点top) * mRectFration
-//                rectCurrentTops[i] = Ypoint - (Ypoint - top) * mRectFration;// 根据fraction动态更新top值
-//                right = left + Xscale * 4 / 6;
-//                bottom = Ypoint;
-//                canvas.drawRect(left, rectCurrentTops[i], right, bottom, p);// 每次valueAnimator更新时重绘最新top值
-//            }
-//        }
-//    }
-
-    private void drawY1Unit(Canvas canvas, Paint p) {
-        int maxYLabelValue = Integer.valueOf(Ylabel[Ylabel.length - 1]);
-        p.setTextSize(mYUnitTextSize);
-        float textWidth = p.measureText(mY1UnitText);
-        canvas.drawText(mY1UnitText, MarginLeft / 2 - textWidth / 2,
-                getDataY(maxYLabelValue, Ylabel) - mYLabelSize - mYLabelSize
-                        / 5, p);
-    }
-
-    private void drawY2Unit(Canvas canvas, Paint p) {
-        int maxYLabel2Value = Integer.valueOf(Ylabel2[Ylabel2.length - 1]);
-        p.setTextSize(mYUnitTextSize);
-        float textWidth = p.measureText(mY2UnitText);
-        canvas.drawText(mY2UnitText, this.getWidth() - MarginRight / 2
-                - textWidth * 3 / 4, getDataY(maxYLabel2Value, Ylabel2)
-                - mYLabelSize - mYLabelSize / 5, p);
-    }
-
-    private void drawXUnit(Canvas canvas, Paint p) {
-        p.setTextSize(mXUnitTextSize);
-        float textWidth = p.measureText(mXUnitText);
-        canvas.drawText(mXUnitText, this.getWidth() / 2 - textWidth / 2, Ypoint
-                + mXlabelSize * 3 + mXlabelSize / 5, p);
-    }
-
-    /**
-     * 获取data对应绘制Y点值
-     */
-    private float getDataY(float dataY, String[] Ylabel) {
-        float y0 = 0;
-        float y1 = 0;
-        try {
-            y0 = Float.parseFloat(Ylabel[0]);
-            y1 = Float.parseFloat(Ylabel[1]);
-        } catch (Exception e) {
-            return 0;
-        }
-        try {
-            return Ypoint - ((dataY - y0) * Yscale / (y1 - y0));
-        } catch (Exception e) {
-            return 0;
-        }
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right,
-                            int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        // LogUtils.error(TAG, "onLayout");
-        initParams();
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
 
-        if (onViewLayoutListener != null) {
-            onViewLayoutListener.onLayoutSuccess();
-        }
+        // getHeight()==h!=0
 
-        //创建一个与该View相同大小的缓冲区
-        mCacheBitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
-        mCacheCanvas = new Canvas();
-        //设置cacheCanvas将会绘制到内存中cacheBitmap上
-        mCacheCanvas.setBitmap(mCacheBitmap);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-//        mCacheCanvas.drawColor(Color.BLACK);
 
-        drawGreyXLine(mCacheCanvas, linePaint);
+        if(mChartEntityList==null)
+            return;
 
-        drawUnit(mCacheCanvas);
-
-//        if (powerOnTimeDataArray.length > 1) {
-//            drawRect(mCacheCanvas, powerOnTimeDataArray, powerTimeLineColor);
-//        }
-
-        mCacheCanvas.drawPath(mRoomTempPath, roomTempPaint);
-
-        if (roomTempDataArray.length > 1) {
-            drawData(mCacheCanvas, roomTempDataArray, roomTempLineColor);
+        // X axis and Y axis label
+        for(int i=0;i<mXAxisCount;i++){
+            float tempY=mOriginY-i*mUnitYDistance;
+            canvas.drawText(mYLabelArray[i],mMaxTextWidth-mYLabelWidthArray[i]+mUnitLeftPadding,tempY+mYLabelTextSize/2f,
+                    mYLabelPaint);
+            canvas.drawPath(mXAxisPathList.get(i),mXAxisPaint);
         }
 
-        mCacheCanvas.drawPath(mTargetTempPath, targetTempPaint);
-
-        if (targetTempDataArray.length > 1) {
-            drawData(mCacheCanvas, targetTempDataArray, targetTempLineColor);
+        // data path
+        for(int j=0;j<mPathList.size();j++){
+            Path path=mPathList.get(j);
+            canvas.drawPath(path, mDataLinePaintList.get(j));
         }
 
-        drawXLine(mCacheCanvas, linePaint);
+        // data point
+        for(int i=0;i<mChartData.size();i++){
 
-        Paint bmpPaint = new Paint();
-        //将cacheBitmap绘制到该View组件
-        canvas.drawBitmap(mCacheBitmap, 0, 0, bmpPaint);
+            List<Float> dataList=mChartData.get(i);
+            Paint dotPaint=mDotPaintList.get(i);
+
+            for(int j=0;j<dataList.size();j++){
+                canvas.drawCircle(mMarginLeft+mUnitXDistance*j,
+                        mOriginY-(dataList.get(j)-Float.valueOf(mYLabelArray[0]))*mPerDataToPx,
+                        mDataDotRadius,
+                        dotPaint);
+            }
+        }
+
+        // X axis label
+        for(int k=0;k<mLongestSize;k++){
+            String text=k<mXAxisLabelList.size()?mXAxisLabelList.get(k):"";
+            float tempTextWidth=mXLabelPaint.measureText(text);
+            canvas.drawText(text,
+                    mMarginLeft+mUnitXDistance*k-tempTextWidth/2,
+                    getHeight()-mXLabelTextSize,
+                    mXLabelPaint);
+        }
+
+    }
+
+    private void initData(){
+
+        mYLabelArray=new String[mXAxisCount];
+        mYLabelWidthArray=new float[mXAxisCount];
+
+        // is necessary
+        clearData();
+
+        for(ChartEntity entity:mChartEntityList){
+            mChartData.add(entity.getDataList());
+            mLineColorList.add(entity.getLineColor());
+            mDotColorList.add(entity.getDotColor());
+        }
+
+        float[] maxAndMin = Util.getMaxAndMin(mChartData);
+
+        float delta= maxAndMin[0]- maxAndMin[1];
+        float unit=delta/(mXAxisCount-1);
+
+        float maxTextWidth=0;
+        for(int i=0;i<mXAxisCount;i++){
+            float v= maxAndMin[1]-mTranslateRatio*unit+unit*i;
+            mYLabelArray[i]=String.valueOf(Math.round(v));
+            float textWidth=mYLabelPaint.measureText(mYLabelArray[i]);
+            mYLabelWidthArray[i]=textWidth;
+            if(textWidth>maxTextWidth)
+                maxTextWidth=textWidth;
+        }
+
+        mMaxTextWidth= (int) (maxTextWidth+0.5f);
+        mMarginLeft=mMaxTextWidth+mUnitLeftPadding*4;
+
+        mPerDataToPx=mUnitYDistance/unit;
+    }
+
+    private void initDataPaints(){
+        for(int color:mLineColorList){
+            Paint dataLinePaint;
+            if(color!=0)
+                dataLinePaint=Util.generatePaint(color,mDataLineStrokeWidth, Paint.Style.STROKE);
+            else
+                dataLinePaint=Util.generatePaint(Color.parseColor("#0000ff"),mDataLineStrokeWidth,Paint.Style.STROKE);
+
+            mDataLinePaintList.add(dataLinePaint);
+        }
+
+        for(int color:mDotColorList){
+            Paint dotPaint;
+            if (color!=0)
+                dotPaint=Util.generatePaint(color,DEFAULT_STROKE_WIDTH, Paint.Style.FILL);
+            else
+                dotPaint=Util.generatePaint(Color.parseColor("#000000"),DEFAULT_STROKE_WIDTH, Paint.Style.FILL);
+
+            mDotPaintList.add(dotPaint);
+        }
+    }
+
+    private void initPath(){
+        mPathList=new ArrayList<>();
+        mPathMeasureList=new ArrayList<>();
+
+        for(List<Float> list:mChartData){
+            Path path=new Path();
+            path.moveTo(mMarginLeft,
+                    mOriginY-(list.get(0)-Float.valueOf(mYLabelArray[0]))*mPerDataToPx);
+            for(int n=0;n<list.size()-1;n++){
+                path.lineTo(mMarginLeft+mUnitXDistance*(n+1),
+                        mOriginY-(list.get(n+1)-Float.valueOf(mYLabelArray[0]))*mPerDataToPx);
+            }
+
+            PathMeasure pathMeasure=new PathMeasure(path,false);
+
+            mPathList.add(path);
+            mPathMeasureList.add(pathMeasure);
+        }
+
+        mXAxisPathList=new ArrayList<>();
+
+        for(int i=0;i<mXAxisCount;i++){
+            Path path=new Path();
+            float tempY=mOriginY-i*mUnitYDistance;
+            path.moveTo(mMaxTextWidth+mUnitLeftPadding*2,tempY);
+            path.lineTo(mContentWidth,tempY);
+
+            mXAxisPathList.add(path);
+        }
+    }
+
+    private void clearData(){
+        mChartData.clear();
+        mLineColorList.clear();
+        mDotColorList.clear();
+
+        mDataLinePaintList.clear();
+        mDotPaintList.clear();
     }
 
     private void startAnimation() {
+
         if (mValueAnimator != null) {
             mValueAnimator.cancel();
         }
-        final float targetTempLength = mTargetTempPathMeasure.getLength();
-        final float roomTempLength = mRoomTempPathMeasure.getLength();
+
         mValueAnimator = ValueAnimator.ofFloat(1, 0);
-        mValueAnimator.setDuration(duration);
-        // 减速插值器
+        mValueAnimator.setDuration(mAnimationDuration);
         mValueAnimator.setInterpolator(new DecelerateInterpolator());
         mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+
                 float fraction = (Float) animation.getAnimatedValue();
-                // 更新mtargetTempEffect
-                mtargetTempEffect = new DashPathEffect(new float[] {
-                        targetTempLength, targetTempLength }, fraction
-                        * targetTempLength);
-                targetTempPaint.setPathEffect(mtargetTempEffect);
-                // 更新mRoomTempEffect
-                mRoomTempEffect = new DashPathEffect(new float[] {
-                        roomTempLength, roomTempLength }, fraction
-                        * roomTempLength);
-                roomTempPaint.setPathEffect(mRoomTempEffect);
-                // 更新rect绘制fraction进度
-                mRectFration = 1 - fraction;// fraction是1->0 我们需要的柱形图绘制比例是0->1
-                //postInvalidate();
+
+                for(int i=0;i<mPathMeasureList.size();i++){
+
+                    PathMeasure pathMeasure=mPathMeasureList.get(i);
+
+                    float length=pathMeasure.getLength();
+                    DashPathEffect effect=new DashPathEffect(
+                            new float[]{length,length},
+                            fraction*length
+                    );
+                    mDataLinePaintList.get(i).setPathEffect(effect);
+                }
+
                 invalidate();
             }
         });
+
         mValueAnimator.start();
     }
 
-    private int px2dip(float pxValue) {
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (pxValue / scale + 0.5f);
-    }
-
-    private int px2sp(float pxValue) {
-        final float fontScale = getResources().getDisplayMetrics().scaledDensity;
-        return (int) (pxValue / fontScale + 0.5f);
-    }
-
-    public interface OnViewLayoutListener {
-        public void onLayoutSuccess();
-    }
-
-    public void setOnViewLayoutListener(
-            OnViewLayoutListener onViewLayoutListener) {
-        this.onViewLayoutListener = onViewLayoutListener;
-    }
-
-    private OnViewLayoutListener onViewLayoutListener;
 }
