@@ -10,7 +10,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -32,16 +32,15 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-version = "0.0.1"
-def siteUrl = 'https://github.com/FrankHongS/MyLogger'    // project homepage
-def gitUrl = 'https://github.com/FrankHongS/MyLogger.git' // project git
-group = "com.hon.mylogger"
+version = "1.0.1"
+def siteUrl = 'https://github.com/FrankHongS/LT-02'    // project homepage
+def gitUrl = 'https://github.com/FrankHongS/LT-02.git' // project git
+group = "com.frankhon.mylogger"
 
 install {
     repositories.mavenInstaller {
@@ -49,7 +48,7 @@ install {
         pom {
             project {
                 packaging 'aar'
-                name 'PhotoPreviewLayout'
+                name 'MyLogger'
                 url siteUrl
                 licenses {
                     license {

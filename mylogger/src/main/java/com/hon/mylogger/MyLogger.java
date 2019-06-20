@@ -1,19 +1,17 @@
 package com.hon.mylogger;
 
-import android.util.Log;
-
 /**
  * Created by Frank_Hon on 2/14/2019.
  * E-mail: v-shhong@microsoft.com
  */
 public final class MyLogger {
 
-    private static final MyLoggerFacade LOGGER_FACADE=new MyLoggerFacade();
+    private static final MyLoggerFacade LOGGER_FACADE = new MyLoggerFacade();
 
-    private MyLogger(){
+    private MyLogger() {
         throw new AssertionError();
     }
-    
+
     public static void v(String message, Object... args) {
         LOGGER_FACADE.v(message, args);
     }
@@ -98,7 +96,7 @@ public final class MyLogger {
         LOGGER_FACADE.log(priority, t, message, args);
     }
 
-    public static void tag(String tag){
+    public static void tag(String tag) {
         LOGGER_FACADE.tag(tag);
     }
 }
