@@ -14,4 +14,10 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void timber(){
+        Timber.plant(new DebugTree());
+        Timber.d("hello world !");
+    }
 }

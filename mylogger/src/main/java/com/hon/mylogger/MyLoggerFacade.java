@@ -1,17 +1,30 @@
 package com.hon.mylogger;
 
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- * Created by Frank_Hon on 6/18/2019.
+ * Created by Frank_Hon on 6/20/2019.
  * E-mail: v-shhong@microsoft.com
  */
-public abstract class Tree {
+class MyLoggerFacade {
     private final ThreadLocal<String> explicitTag = new ThreadLocal<>();
+
+    private static final int MAX_LOG_LENGTH = 4000;
+    private static final int MAX_TAG_LENGTH = 23;
+    private static final Pattern ANONYMOUS_CLASS = Pattern.compile("(\\$[a-zA-Z]+)+$");
+
+    private String[] fqcnIgnore = {
+            MyLogger.class.getName(),
+            MyLoggerFacade.class.getName()
+    };
 
     public void v(String message, Object... args) {
         prepareLog(Log.VERBOSE, null, message, args);
@@ -121,21 +134,40 @@ public abstract class Tree {
         log(priority, tag, message, t);
     }
 
-    public boolean isLoggable(String tag, int priority) {
-        return isLoggable(priority);
-    }
+    private void log(int priority, String tag, String message, Throwable t) {
+        if (message.length() < MAX_LOG_LENGTH) {
+            if (priority == Log.ASSERT) {
+                Log.wtf(tag, message);
+            } else {
+                Log.println(priority, tag, message);
+            }
 
-    public boolean isLoggable(int priority) {
-        return true;
-    }
-
-    private String getTag() {
-        String temp = explicitTag.get();
-        if (temp != null) {
-            explicitTag.remove();
+            return;
         }
-        return temp;
+
+        int i = 0;
+        int length = message.length();
+        while (i < length) {
+            int newLine = message.indexOf('\n', i);
+            if (newLine == -1) {
+                newLine = length;
+            }
+
+            do {
+                int end = Math.min(newLine, i + MAX_LOG_LENGTH);
+                String part = message.substring(i, end);
+                if (priority == Log.ASSERT) {
+                    Log.wtf(tag, part);
+                } else {
+                    Log.println(priority, tag, part);
+                }
+                i = end;
+            } while (i < newLine);
+            i++;
+        }
     }
+
+
 
     private String getStackTraceString(Throwable t) {
         StringWriter sw = new StringWriter(256);
@@ -145,14 +177,50 @@ public abstract class Tree {
         return sw.toString();
     }
 
-    /**
-     * Write a log message to its destination. Called for all level-specific methods by default.
-     *
-     * @param priority Log level. See [Log] for constants.
-     * @param tag      Explicit or inferred tag. May be `null`.
-     * @param message  Formatted log message. May be `null`, but then `t` will not be.
-     * @param t        Accompanying exceptions. May be `null`, but then `message` will not be.
-     */
-    protected abstract void log(int priority, String tag, String message, Throwable t);
+    public boolean isLoggable(String tag, int priority) {
+        return isLoggable(priority);
+    }
 
+    public boolean isLoggable(int priority) {
+        return BuildConfig.DEBUG;
+    }
+
+    private String getTag() {
+        String tag = explicitTag.get();
+        if (tag != null) {
+            explicitTag.remove();
+        }
+
+        if (TextUtils.isEmpty(tag)) {
+            StackTraceElement[] stackTraceElements = new Throwable().getStackTrace();
+            for (StackTraceElement element : stackTraceElements) {
+                if (!Arrays.asList(fqcnIgnore).contains(element.getClassName().split("\\$")[0])) {
+                    return createStackElementTag(element);
+                }
+            }
+        } else {
+            return tag;
+        }
+
+        return "MyLogger";
+    }
+
+    private String createStackElementTag(StackTraceElement element) {
+        String className = element.getClassName();
+        String tag = className.substring(className.lastIndexOf('.') + 1);
+        Matcher matcher = ANONYMOUS_CLASS.matcher(tag);
+        if (matcher.find()) {
+            tag = matcher.replaceAll("");
+        }
+
+        if (tag.length() > MAX_TAG_LENGTH || Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            tag = tag.substring(0, MAX_TAG_LENGTH);
+        }
+
+        return tag;
+    }
+
+    void tag(String tag){
+        explicitTag.set(tag);
+    }
 }

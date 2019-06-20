@@ -32,7 +32,7 @@ public class StockService extends Service {
 
     @Override
     public void onCreate() {
-        MyLogger.d(getClass(), "onCreate");
+        MyLogger.d("onCreate");
         super.onCreate();
 
         mApiService=ApiServiceImpl.getInstance();
@@ -40,7 +40,7 @@ public class StockService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLogger.d(getClass(), "onStartCommand");
+        MyLogger.d("onStartCommand");
 
         Toast.makeText(this, "service is watching stock :)", Toast.LENGTH_SHORT).show();
 
@@ -78,7 +78,7 @@ public class StockService extends Service {
 
     @Override
     public void onDestroy() {
-        MyLogger.d(getClass(), "onDestroy");
+        MyLogger.d("onDestroy");
         Toast.makeText(this, "service is stopping", Toast.LENGTH_SHORT).show();
         super.onDestroy();
         mStockDisposable.dispose();

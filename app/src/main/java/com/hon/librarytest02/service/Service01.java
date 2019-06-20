@@ -38,7 +38,7 @@ public class Service01 extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        MyLogger.d(getClass(),"onCreate");
+        MyLogger.d("onCreate");
 
         Intent notificationIntent = new Intent(this, ServiceActivity.class);
         PendingIntent pendingIntent =
@@ -69,7 +69,7 @@ public class Service01 extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MyLogger.d(getClass(),"onStartCommand");
+        MyLogger.d("onStartCommand");
 
         Subscription subscription=Observable.interval(3, TimeUnit.MINUTES)
                 .subscribe(new Subscriber<Long>() {
@@ -111,13 +111,13 @@ public class Service01 extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        MyLogger.d(getClass(),"onBind");
+        MyLogger.d("onBind");
         return mBinder;
     }
 
     @Override
     public void onDestroy() {
-        MyLogger.d(getClass(),"onDestroy");
+        MyLogger.d("onDestroy");
         super.onDestroy();
 
         mCompositeSubscription.clear();
@@ -126,7 +126,7 @@ public class Service01 extends Service {
     public static class MyBinder extends Binder{
 
         public void startWork(){
-            MyLogger.d(getClass(),"startWork");
+            MyLogger.d("startWork");
         }
     }
 }

@@ -8,49 +8,97 @@ import android.util.Log;
  */
 public final class MyLogger {
 
-    private static final boolean DEBUG=BuildConfig.DEBUG;
+    private static final MyLoggerFacade LOGGER_FACADE=new MyLoggerFacade();
 
-    public static void i(String tag,String message){
-        Log.i(tag, message);
+    private MyLogger(){
+        throw new AssertionError();
+    }
+    
+    public static void v(String message, Object... args) {
+        LOGGER_FACADE.v(message, args);
     }
 
-    public static void i(Class<?> clz,String message){
-        Log.i(clz.getSimpleName(), message);
+    public static void v(Throwable t, String message, Object... args) {
+        LOGGER_FACADE.v(t, message, args);
     }
 
-    public static void d(String tag,String message){
-        if(DEBUG){
-            Log.d(tag, message);
-        }
+    public static void v(Throwable t) {
+        LOGGER_FACADE.v(t);
     }
 
-    public static void d(Class<?> clz,String message){
-        if(DEBUG){
-            Log.d(clz.getSimpleName(), message);
-        }
+    public static void d(String message, Object... args) {
+        LOGGER_FACADE.d(message, args);
     }
 
-    public static void w(String tag,String message){
-        if(DEBUG){
-            Log.w(tag, message);
-        }
+    public static void d(Throwable t, String message, Object... args) {
+        LOGGER_FACADE.d(t, message, args);
     }
 
-    public static void w(Class<?> clz,String message){
-        if(DEBUG){
-            Log.w(clz.getSimpleName(), message);
-        }
+    public static void d(Throwable t) {
+        LOGGER_FACADE.d(t);
     }
 
-    public static void e(String tag,String message){
-        if(DEBUG){
-            Log.e(tag, message);
-        }
+    public static void i(String message, Object... args) {
+        LOGGER_FACADE.i(message, args);
     }
 
-    public static void e(Class<?> clz,String message){
-        if(DEBUG){
-            Log.e(clz.getSimpleName(), message);
-        }
+    public static void i(Throwable t, String message, Object... args) {
+        LOGGER_FACADE.i(t, message, args);
+    }
+
+    public static void i(Throwable t) {
+        LOGGER_FACADE.i(t);
+    }
+
+    public static void w(String message, Object... args) {
+        LOGGER_FACADE.w(message, args);
+    }
+
+    public static void w(Throwable t, String message, Object... args) {
+        LOGGER_FACADE.w(t, message, args);
+    }
+
+    public static void w(Throwable t) {
+        LOGGER_FACADE.w(t);
+    }
+
+    public static void e(String message, Object... args) {
+        LOGGER_FACADE.e(message, args);
+    }
+
+    public static void e(Throwable t, String message, Object... args) {
+        LOGGER_FACADE.e(t, message, args);
+    }
+
+    public static void e(Throwable t) {
+        LOGGER_FACADE.e(t);
+    }
+
+    public static void wtf(String message, Object... args) {
+        LOGGER_FACADE.wtf(message, args);
+    }
+
+    public static void wtf(Throwable t, String message, Object... args) {
+        LOGGER_FACADE.wtf(t, message, args);
+    }
+
+    public static void wtf(Throwable t) {
+        LOGGER_FACADE.wtf(t);
+    }
+
+    public static void log(int priority, Throwable t) {
+        LOGGER_FACADE.log(priority, t);
+    }
+
+    public static void log(int priority, String message, Object... args) {
+        LOGGER_FACADE.log(priority, message, args);
+    }
+
+    public static void log(int priority, Throwable t, String message, Object... args) {
+        LOGGER_FACADE.log(priority, t, message, args);
+    }
+
+    public static void tag(String tag){
+        LOGGER_FACADE.tag(tag);
     }
 }

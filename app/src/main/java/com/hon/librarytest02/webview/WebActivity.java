@@ -115,20 +115,20 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
                 mLoadingBar.setVisibility(View.VISIBLE);
-                MyLogger.d(WebActivity.class,"onPageStarted");
+                MyLogger.d("onPageStarted");
             }
 
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);
-                MyLogger.d(WebActivity.class,"onLoadResource");
+                MyLogger.d("onLoadResource");
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 mLoadingBar.setVisibility(View.INVISIBLE);
-                MyLogger.d(WebActivity.class,"onPageFinished");
+                MyLogger.d("onPageFinished");
             }
         });
     }
@@ -138,7 +138,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                MyLogger.d(WebActivity.class,"console: "+consoleMessage.message());
+                MyLogger.d("console: "+consoleMessage.message());
                 return super.onConsoleMessage(consoleMessage);
             }
 
