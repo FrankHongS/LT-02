@@ -1,4 +1,4 @@
-package com.hon.librarytest02.rxJava;
+package com.hon.librarytest02.rxjava;
 
 /**
  * Created by Frank_Hon on 6/21/2019.

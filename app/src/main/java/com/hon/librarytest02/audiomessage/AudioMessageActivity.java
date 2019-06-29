@@ -103,11 +103,8 @@ public class AudioMessageActivity extends BaseActivity {
     public void onClick(View view){
         switch (view.getId()){
             case R.id.btn_play_audio:
-                mAudioMessageButton.playAudio(new MediaPlayer.OnCompletionListener() {
-                    @Override
-                    public void onCompletion(MediaPlayer mp) {
+                mAudioMessageButton.playAudio(mp -> {
 
-                    }
                 });
                 break;
             default:

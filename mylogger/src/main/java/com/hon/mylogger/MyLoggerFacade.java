@@ -4,6 +4,10 @@ import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
@@ -20,6 +24,9 @@ class MyLoggerFacade {
     private static final int MAX_LOG_LENGTH = 4000;
     private static final int MAX_TAG_LENGTH = 23;
     private static final Pattern ANONYMOUS_CLASS = Pattern.compile("(\\$[a-zA-Z]+)+$");
+
+    private String mWriteLogFilePath;
+    private static final String LOG_FILE_NAME = "my_logger.txt";
 
     private String[] fqcnIgnore = {
             MyLogger.class.getName(),
@@ -132,6 +139,8 @@ class MyLoggerFacade {
         }
 
         log(priority, tag, message, t);
+
+        writeLog2File(priority,tag,message);
     }
 
     private void log(int priority, String tag, String message, Throwable t) {
@@ -167,6 +176,39 @@ class MyLoggerFacade {
         }
     }
 
+    private void writeLog2File(int priority, String tag, String message) {
+
+        if (mWriteLogFilePath == null || "".equals(mWriteLogFilePath)) {
+            return;
+        }
+
+        File dir = new File(mWriteLogFilePath);
+        if (!dir.exists()) {
+            if (!dir.mkdirs()) {
+                return;
+            }
+        }
+
+        String appendMessage = "\r\n"
+                + Util.getNowMDHMSTime()
+                + "\r\n"
+                + Util.mapLogPriority(priority)
+                + "    "
+                + tag
+                + "\r\n"
+                + message;
+        File file = new File(dir, LOG_FILE_NAME);
+        try {
+            FileWriter filerWriter = new FileWriter(file, true);
+            BufferedWriter bufWriter = new BufferedWriter(filerWriter);
+            bufWriter.write(appendMessage);
+            bufWriter.newLine();
+            bufWriter.close();
+            filerWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private String getStackTraceString(Throwable t) {
@@ -220,7 +262,11 @@ class MyLoggerFacade {
         return tag;
     }
 
-    void tag(String tag){
+    void tag(String tag) {
         explicitTag.set(tag);
+    }
+
+    void setLogFilePath(String logFilePath) {
+        this.mWriteLogFilePath = logFilePath;
     }
 }

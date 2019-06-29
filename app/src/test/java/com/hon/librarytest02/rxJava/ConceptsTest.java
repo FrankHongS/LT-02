@@ -62,7 +62,6 @@ public class ConceptsTest {
 
         Disposable disposable = Flowable.just(1, 2, 3, 4, 5)
                 .subscribeOn(Schedulers.single())
-                .observeOn(Schedulers.io())
                 .map(i -> {
                     if (i == 4) {
                         System.out.println("map: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
@@ -70,6 +69,7 @@ public class ConceptsTest {
                     }
                     return i * i;
                 })
+                .observeOn(Schedulers.io())
                 .subscribe(
                         i -> {
                             System.out.println(i);
