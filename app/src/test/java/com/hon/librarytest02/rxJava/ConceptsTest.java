@@ -108,4 +108,75 @@ public class ConceptsTest {
                 .andThen(Single.just(count.get()))
                 .subscribe(System.out::println);
     }
+
+    @Test
+    public void lifecycle(){
+        Observable.range(1,10)
+                .map(i->{
+                    Thread.sleep(2000);
+                    return i*i;
+                })
+                .doOnSubscribe(disposable -> System.out.println("onSubscribe"))
+                .subscribe(
+                        i->{
+                            System.out.println(i);
+                            System.out.println(Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+                        },
+                        Throwable::printStackTrace
+                );
+
+        System.out.println("onComplete: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+    }
+
+    @Test
+    public void compose(){
+        Observable.range(1,10)
+                .compose(upstream ->
+                    upstream.subscribeOn(Schedulers.io())
+                            .observeOn(Schedulers.single())
+                ).subscribe();
+    }
+
+    @Test
+    public void operator() throws InterruptedException {
+        int[] numbers={1,3,5,6,8};
+
+        Flowable.defer(()->Flowable.fromArray(1,3,5,6,8))
+                .distinct()
+                .take(3)
+                .map(i->{
+                    printThreadName("outer");
+                    return i;
+                })
+//                .subscribeOn(Schedulers.io())
+                .concatMapEager(i->{
+//                    Thread.sleep((10-i)*100);
+                    return Flowable.just(i)
+                            .map(n->{
+                                printThreadName("inner");
+                                return n*n;
+                            })
+                            .subscribeOn(Schedulers.io())
+//                            .observeOn(Schedulers.single())
+                            ;
+                })
+//                .subscribeOn(Schedulers.io())
+//                .map(i->{
+//                    printThreadName("outer2");
+//                    return i;
+//                })
+                .observeOn(Schedulers.single())
+                .subscribe(
+                        i->{
+                            System.out.println(i);
+                            printThreadName("onNext");
+                        }
+                );
+
+        Thread.sleep(3000);
+    }
+
+    private void printThreadName(String tag){
+        System.out.println(tag+": "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+    }
 }

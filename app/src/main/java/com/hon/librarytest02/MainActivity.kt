@@ -16,6 +16,7 @@ import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.chart.ChartActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.lifecycle.LifecycleActivity
+import com.hon.librarytest02.saveInstance.SaveInstanceActivity
 import com.hon.librarytest02.service.ServiceActivity
 import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
@@ -26,54 +27,55 @@ import com.hon.librarytest02.workmanager.WorkManagerActivity
 
 class MainActivity : AppCompatActivity() {
 
-    private var recyclerView:RecyclerView?=null
+    private var recyclerView: RecyclerView? = null
 
-    private var titles= arrayOf("WorkManager","Service","Job Scheduler","ButterKnife",
-            "WebView","Timeline View","Audio Message","Text","ChartView",
-            "Spider","Stock","Lifecycle")
+    private var titles = arrayOf("WorkManager", "Service", "Job Scheduler", "ButterKnife",
+            "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
+            "Spider", "Stock", "Lifecycle", "Save Instance")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        recyclerView=findViewById(R.id.rv_main)
-        recyclerView?.addItemDecoration(DividerItemDecoration(this,DividerItemDecoration.VERTICAL))
-        recyclerView?.layoutManager=LinearLayoutManager(this)
-        recyclerView?.adapter=MainAdapter(this,titles,object :MainAdapter.OnItemClickListener{
+        recyclerView = findViewById(R.id.rv_main)
+        recyclerView?.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        recyclerView?.layoutManager = LinearLayoutManager(this)
+        recyclerView?.adapter = MainAdapter(this, titles, object : MainAdapter.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                when(position){
-                    0->navigate(WorkManagerActivity::class.java)
-                    1->navigate(ServiceActivity::class.java)
-                    2->navigate(JobSchedulerActivity::class.java)
-                    3->navigate(Test02Activity::class.java)
-                    4->navigate(WebActivity::class.java)
-                    5->navigate(TimelineViewActivity::class.java)
-                    6->navigate(AudioMessageActivity::class.java)
-                    7->navigate(TextActivity::class.java)
-                    8->navigate(ChartActivity::class.java)
-                    9->navigate(SpiderActivity::class.java)
-                    10->navigate(WatchStockActivity::class.java)
-                    11->navigate(LifecycleActivity::class.java)
+                when (position) {
+                    0 -> navigate(WorkManagerActivity::class.java)
+                    1 -> navigate(ServiceActivity::class.java)
+                    2 -> navigate(JobSchedulerActivity::class.java)
+                    3 -> navigate(Test02Activity::class.java)
+                    4 -> navigate(WebActivity::class.java)
+                    5 -> navigate(TimelineViewActivity::class.java)
+                    6 -> navigate(AudioMessageActivity::class.java)
+                    7 -> navigate(TextActivity::class.java)
+                    8 -> navigate(ChartActivity::class.java)
+                    9 -> navigate(SpiderActivity::class.java)
+                    10 -> navigate(WatchStockActivity::class.java)
+                    11 -> navigate(LifecycleActivity::class.java)
+                    12 -> navigate(SaveInstanceActivity::class.java)
                 }
             }
         })
     }
 
-    fun navigate(target:Class<out Activity>){
-        startActivity(Intent(this@MainActivity,target))
+    fun navigate(target: Class<out Activity>) {
+        startActivity(Intent(this@MainActivity, target))
     }
 
-    fun onClick(view:View){
+    fun onClick(view: View) {
 
-        val intent=Intent(this,WorkManagerActivity::class.java)
+        val intent = Intent(this, WorkManagerActivity::class.java)
 
         startActivity(intent)
     }
 
-    class MainAdapter(val context:Context,val titleList:Array<String>,val onItemClickListener: OnItemClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    class MainAdapter(val context: Context, val titleList: Array<String>, val onItemClickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            return MainViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_main_item,parent,false))
+            return MainViewHolder(LayoutInflater.from(context).inflate(R.layout.layout_main_item, parent, false))
         }
 
         override fun getItemCount(): Int {
@@ -81,19 +83,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            val mainViewHolder:MainViewHolder=holder as MainViewHolder
-            mainViewHolder.bindView(titleList[position],onItemClickListener,position)
+            val mainViewHolder: MainViewHolder = holder as MainViewHolder
+            mainViewHolder.bindView(titleList[position], onItemClickListener, position)
         }
 
-        interface OnItemClickListener{
+        interface OnItemClickListener {
             fun onItemClick(position: Int)
         }
 
-        class MainViewHolder(item:View):RecyclerView.ViewHolder(item){
+        class MainViewHolder(item: View) : RecyclerView.ViewHolder(item) {
 
-            fun bindView(titleStr:String,onItemClickListener: OnItemClickListener,position: Int){
-                val title:TextView=itemView.findViewById(R.id.tv_title)
-                title.text=titleStr
+            fun bindView(titleStr: String, onItemClickListener: OnItemClickListener, position: Int) {
+                val title: TextView = itemView.findViewById(R.id.tv_title)
+                title.text = titleStr
                 itemView.setOnClickListener {
                     onItemClickListener.onItemClick(position)
                 }

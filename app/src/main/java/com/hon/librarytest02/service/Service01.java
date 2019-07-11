@@ -4,21 +4,20 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.IBinder;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.hon.librarytest02.R;
 import com.hon.mylogger.MyLogger;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.Observable;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Frank Hon on 2019/2/17 9:02 PM.
@@ -29,7 +28,7 @@ public class Service01 extends Service {
     private IBinder mBinder;
 
     private int mCount=0;
-    private CompositeSubscription mCompositeSubscription;
+    private CompositeDisposable mCompositeDisposable;
 
     /**
      *  onCreate invoked when startService first executing.
@@ -57,7 +56,7 @@ public class Service01 extends Service {
         startForeground(1, notification);
 
         mBinder=new MyBinder();
-        mCompositeSubscription = new CompositeSubscription();
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     /**
@@ -71,39 +70,26 @@ public class Service01 extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         MyLogger.d("onStartCommand");
 
-        Subscription subscription=Observable.interval(3, TimeUnit.MINUTES)
-                .subscribe(new Subscriber<Long>() {
-                    @Override
-                    public void onCompleted() {
+        Disposable disposable= Observable.interval(3, TimeUnit.MINUTES)
+                .subscribe(ignored->{
+                    Intent notificationIntent = new Intent(Service01.this, ServiceActivity.class);
+                    PendingIntent pendingIntent =
+                            PendingIntent.getActivity(Service01.this, 0, notificationIntent, 0);
 
-                    }
+                    Notification notification =
+                            new NotificationCompat.Builder(Service01.this, "test")
+                                    .setContentTitle("title")
+                                    .setContentText("notification message"+(++mCount))
+                                    // important!, not showing if not set
+                                    .setSmallIcon(R.mipmap.ic_launcher_round)
+                                    .setContentIntent(pendingIntent)
+                                    .setTicker("ticker")
+                                    .build();
 
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Long aLong) {
-                        Intent notificationIntent = new Intent(Service01.this, ServiceActivity.class);
-                        PendingIntent pendingIntent =
-                                PendingIntent.getActivity(Service01.this, 0, notificationIntent, 0);
-
-                        Notification notification =
-                                new NotificationCompat.Builder(Service01.this, "test")
-                                        .setContentTitle("title")
-                                        .setContentText("notification message"+(++mCount))
-                                        // important!, not showing if not set
-                                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                                        .setContentIntent(pendingIntent)
-                                        .setTicker("ticker")
-                                        .build();
-
-                        startForeground(1, notification);
-                    }
+                    startForeground(1, notification);
                 });
 
-        mCompositeSubscription.add(subscription);
+        mCompositeDisposable.add(disposable);
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -120,7 +106,7 @@ public class Service01 extends Service {
         MyLogger.d("onDestroy");
         super.onDestroy();
 
-        mCompositeSubscription.clear();
+        mCompositeDisposable.dispose();
     }
 
     public static class MyBinder extends Binder{
