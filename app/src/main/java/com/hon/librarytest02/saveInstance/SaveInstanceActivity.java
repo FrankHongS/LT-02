@@ -1,6 +1,7 @@
 package com.hon.librarytest02.saveInstance;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,18 +13,21 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hon.librarytest02.R;
+import com.hon.mylogger.MyLogger;
 import com.jakewharton.rxbinding3.view.RxView;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.exceptions.OnErrorNotImplementedException;
-import io.reactivex.functions.Function;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.subjects.Subject;
 
 /**
  * Created by Frank_Hon on 7/10/2019.
@@ -49,7 +53,8 @@ public class SaveInstanceActivity extends AppCompatActivity {
         mDisposables = new CompositeDisposable();
 
 //        Disposable disposable=method01();
-        Disposable disposable = method02();
+//        Disposable disposable = method02();
+        Disposable disposable = method03();
 
         mDisposables.add(disposable);
     }
@@ -112,17 +117,89 @@ public class SaveInstanceActivity extends AppCompatActivity {
                 );
     }
 
-    private void method03(){
+    private Disposable method03() {
+
+        Observable<SubmitEvent> submitEvents=RxView.clicks(submitView)
+                .map(ignored->new SubmitEvent(nameView.getText().toString()));
+
+        Observable<SubmitAction> submitActions=submitEvents.map(
+                event->new SubmitAction(event.name)
+        );
+
+        SubmitUIModel initialState = SubmitUIModel.idle();
+//
+        ObservableTransformer<SubmitAction, SubmitResult> submit =
+                actions -> actions.flatMap(action -> MaskService.getInstance().setName(action.name)
+                        .map(response -> SubmitResult.SUCCESS)
+                        .onErrorReturn(t -> SubmitResult.failure(t.getMessage()))
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .startWith(SubmitResult.IN_FLIGHT));
+
+        Observable<SubmitResult> results=submitActions.compose(submit);
+
+        Observable<SubmitUIModel> uiModels=results.scan(initialState, (state, result) -> {
+            if(result==SubmitResult.IN_FLIGHT){
+                return SubmitUIModel.inProgress();
+            }
+
+            if(result==SubmitResult.SUCCESS){
+                return SubmitUIModel.success();
+            }
+
+            if(result==SubmitResult.FAILURE){
+                return SubmitUIModel.failure(result.getErrorMessage());
+            }
+
+            throw new IllegalArgumentException("Unknown result: "+result);
+        });
+//
+//        ObservableTransformer<CheckNameAction, CheckNameResult> checkName =
+//                actions -> actions.delay(200, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+//                                .flatMap(action -> MaskService.getInstance().checkName(action.name)
+//                                .map(response -> CheckNameResult.SUCCESS)
+//                                .onErrorReturn(t -> CheckNameResult.failure(t.getMessage()))
+//                                .observeOn(AndroidSchedulers.mainThread())
+//                                .startWith(CheckNameResult.IN_FLIGHT));
+
+//        Observable<Result> results=Observable.merge(
+//
+//        );
+//        Observable<SubmitUIModel> uiModels=
 //        ObservableTransformer<SubmitEvent, SubmitUIModel> submitUI=
 //                events->events.publish(new Function<Observable<SubmitEvent>, ObservableSource<SubmitUIModel>>() {
 //                    @Override
 //                    public ObservableSource<SubmitUIModel> apply(Observable<SubmitEvent> submitEventObservable) throws Exception {
 //                        return Observable.merge(
-//                                submitEventObservable.ofType(),
-//                                submitEventObservable.ofType()
+//                                submitEventObservable.ofType(SubmitEvent.class),
+//                                submitEventObservable.ofType(CheckNameEvent.class)
 //                        );
 //                    }
 //                });
+
+        return uiModels.subscribe(
+                model -> {
+                    submitView.setEnabled(!model.inProgress);
+                    progressView.setVisibility(model.inProgress ? View.VISIBLE : View.GONE);
+                    if (!model.inProgress) {
+                        if (model.success) {
+                            finish();
+                        } else {
+                            if(!TextUtils.isEmpty(model.errorMessage)){
+                                Toast.makeText(this, "Fail to set name: " + model.errorMessage,
+                                        Toast.LENGTH_SHORT).show();
+                            }else {
+                                MyLogger.d("initial state");
+                            }
+                        }
+                    }
+                }, t -> {
+                    throw new OnErrorNotImplementedException(t);
+                }
+        );
+    }
+
+    private void method04(){
+//        Subject<SubmitUIEvent>
     }
 
     @Override

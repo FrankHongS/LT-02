@@ -15,15 +15,19 @@ final class SubmitUIModel {
         this.errorMessage = errorMessage;
     }
 
-    static SubmitUIModel inProgress(){
-        return new SubmitUIModel(true,false,"");
+    static SubmitUIModel inProgress() {
+        return new SubmitUIModel(true, false, "");
     }
 
-    static SubmitUIModel success(){
-        return new SubmitUIModel(false,true,"");
+    static SubmitUIModel success() {
+        return new SubmitUIModel(false, true, "");
     }
 
-    static SubmitUIModel failure(String errorMessage){
-        return new SubmitUIModel(false,false,errorMessage);
+    static SubmitUIModel failure(String errorMessage) {
+        return new SubmitUIModel(false, false, errorMessage);
+    }
+
+    static SubmitUIModel idle() {
+        return new SubmitUIModel(false, false, null);
     }
 }

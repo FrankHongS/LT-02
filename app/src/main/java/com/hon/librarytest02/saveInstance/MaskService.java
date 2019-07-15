@@ -48,4 +48,20 @@ public class MaskService {
                 .subscribeOn(Schedulers.io());
     }
 
+    public Observable<String> checkName(String name){
+        MyLogger.d(name);
+        return Observable.just(name)
+                .flatMap(s->{
+                    Thread.sleep(3000);
+                    int r=new Random().nextInt(10);
+
+                    if(r%2==0){
+                        return Observable.error(new RuntimeException("even number is bad ..."));
+                    }else {
+                        return Observable.just(s);
+                    }
+                })
+                .subscribeOn(Schedulers.io());
+    }
+
 }
