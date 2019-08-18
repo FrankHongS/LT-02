@@ -44,6 +44,7 @@
             android:theme="@style/NoActionBar"/>
         <activity android:name=".lifecycle.LifecycleActivity" />
         <activity android:name=".saveInstance.SaveInstanceActivity" />
+        <activity android:name=".transition.TransitionActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

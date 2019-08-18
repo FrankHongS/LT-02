@@ -2,12 +2,16 @@ package com.hon.librarytest02.rxJava;
 
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -64,7 +68,7 @@ public class ConceptsTest {
                 .subscribeOn(Schedulers.single())
                 .map(i -> {
                     if (i == 4) {
-                        System.out.println("map: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+                        System.out.println("map: " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
                         throw new IllegalStateException("2 is bad...");
                     }
                     return i * i;
@@ -73,14 +77,14 @@ public class ConceptsTest {
                 .subscribe(
                         i -> {
                             System.out.println(i);
-                            System.out.println("onNext: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+                            System.out.println("onNext: " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
                         },
                         throwable -> {
                             throwable.printStackTrace();
-                            System.out.println("onError: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+                            System.out.println("onError: " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
                         },
-                        ()->{
-                            System.out.println("onComplete: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+                        () -> {
+                            System.out.println("onComplete: " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
                         }
                 );
 
@@ -89,7 +93,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void concurrent(){
+    public void concurrent() {
         Flowable.range(1, 10)
                 .parallel()
                 .runOn(Schedulers.computation())
@@ -99,7 +103,7 @@ public class ConceptsTest {
     }
 
     @Test
-    public void deferDependent(){
+    public void deferDependent() {
         AtomicInteger count = new AtomicInteger();
 
         Observable.range(1, 10)
@@ -110,54 +114,54 @@ public class ConceptsTest {
     }
 
     @Test
-    public void lifecycle(){
-        Observable.range(1,10)
-                .map(i->{
+    public void lifecycle() {
+        Observable.range(1, 10)
+                .map(i -> {
                     Thread.sleep(2000);
-                    return i*i;
+                    return i * i;
                 })
                 .doOnSubscribe(disposable -> System.out.println("onSubscribe"))
                 .subscribe(
-                        i->{
+                        i -> {
                             System.out.println(i);
                             System.out.println(Thread.currentThread().getName() + " " + Thread.currentThread().getId());
                         },
                         Throwable::printStackTrace
                 );
 
-        System.out.println("onComplete: "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+        System.out.println("onComplete: " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
     }
 
     @Test
-    public void compose(){
-        Observable.range(1,10)
+    public void compose() {
+        Observable.range(1, 10)
                 .compose(upstream ->
-                    upstream.subscribeOn(Schedulers.io())
-                            .observeOn(Schedulers.single())
+                        upstream.subscribeOn(Schedulers.io())
+                                .observeOn(Schedulers.single())
                 ).subscribe();
     }
 
     @Test
     public void operator() throws InterruptedException {
-        int[] numbers={1,3,5,6,8};
+        int[] numbers = {1, 3, 5, 6, 8};
 
-        Flowable.defer(()->Flowable.fromArray(1,3,5,6,8))
+        Flowable.defer(() -> Flowable.fromArray(1, 3, 5, 6, 8))
                 .distinct()
                 .take(3)
-                .map(i->{
+                .map(i -> {
                     printThreadName("outer");
                     return i;
                 })
 //                .subscribeOn(Schedulers.io())
-                .concatMapEager(i->{
+                .concatMapEager(i -> {
 //                    Thread.sleep((10-i)*100);
                     return Flowable.just(i)
-                            .map(n->{
+                            .map(n -> {
                                 printThreadName("inner");
-                                return n*n;
+                                return n * n;
                             })
                             .subscribeOn(Schedulers.io())
-//                            .observeOn(Schedulers.single())
+                            .observeOn(Schedulers.single())
                             ;
                 })
 //                .subscribeOn(Schedulers.io())
@@ -165,9 +169,9 @@ public class ConceptsTest {
 //                    printThreadName("outer2");
 //                    return i;
 //                })
-                .observeOn(Schedulers.single())
+//                .observeOn(Schedulers.single())
                 .subscribe(
-                        i->{
+                        i -> {
                             System.out.println(i);
                             printThreadName("onNext");
                         }
@@ -176,7 +180,55 @@ public class ConceptsTest {
         Thread.sleep(3000);
     }
 
-    private void printThreadName(String tag){
-        System.out.println(tag+": "+Thread.currentThread().getName() + " " + Thread.currentThread().getId());
+    @SuppressWarnings("all")
+    @Test
+    public void operator02() {
+
+        Observable.just("1")
+                .map(new Function<String, Integer>() {
+                    @Override
+                    public Integer apply(String s) throws Exception {
+                        return Integer.valueOf(s);
+                    }
+                })
+                .subscribe(System.out::println);
+
+
+        Observable.just(1)
+                .flatMap(new Function<Integer, ObservableSource<String>>() {
+                    @Override
+                    public ObservableSource<String> apply(Integer i) throws Exception {
+                        return Observable.fromArray("Joey", "Chandler", "Ross");
+                    }
+                })
+                .subscribe(System.out::println);
+
+        Observable<Integer> observable1 = Observable.just(1, 2, 3, 4);
+        Observable<Integer> observable2 = Observable.just(3, 4, 5);
+
+        observable1.zipWith(observable2, (first, last) -> first + last)
+                .subscribe(System.out::println);
+    }
+
+    @SuppressWarnings("all")
+    @Test
+    public void backpressure() throws InterruptedException {
+        Observable.interval(1, TimeUnit.MICROSECONDS)
+                .flatMap(aLong -> Observable.range(0,10000000))
+                .map(num->String.valueOf(num))
+                .observeOn(Schedulers.newThread())
+                .subscribe(num -> {
+                            Thread.sleep(1000);
+                            System.out.println(num);
+                        },
+                        Throwable::printStackTrace);
+
+        Thread.sleep(10000);
+
+        Flowable.create()
+    }
+
+    private void printThreadName(String tag) {
+        System.out.println(tag + ": " + Thread.currentThread().getName() + " " + Thread.currentThread().getId());
     }
 }
