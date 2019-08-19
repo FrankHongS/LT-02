@@ -37,8 +37,8 @@ public final class NavigationController {
     public void navigateTo(Fragment target, Pair<View, String> transitionPair) {
         fragmentManager.beginTransaction()
                 .replace(containerId, target)
-                .addSharedElement(transitionPair.first, transitionPair.second)
                 .addToBackStack(null)
+                .addSharedElement(transitionPair.first, transitionPair.second)
                 .commit();
     }
 

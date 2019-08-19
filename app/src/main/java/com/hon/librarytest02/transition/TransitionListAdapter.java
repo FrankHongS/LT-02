@@ -1,6 +1,7 @@
 package com.hon.librarytest02.transition;
 
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,9 +81,12 @@ public class TransitionListAdapter extends ListAdapter<ItemEntity, RecyclerView.
 
             avatar.setOnClickListener(v -> {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(position);
+                    onItemClickListener.onItemClick(position, entity, avatar);
                 }
             });
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                avatar.setTransitionName("avatar"+position);
+            }
 
             Glide.with(itemView.getContext())
                     .load(entity.getImageId())
@@ -103,7 +107,7 @@ public class TransitionListAdapter extends ListAdapter<ItemEntity, RecyclerView.
 
     public interface OnItemClickListener {
 
-        void onItemClick(int position);
+        void onItemClick(int position, ItemEntity entity, View sharedView);
 
     }
 }
