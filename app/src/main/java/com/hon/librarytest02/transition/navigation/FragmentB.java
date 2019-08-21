@@ -1,4 +1,4 @@
-package com.hon.librarytest02.transition;
+package com.hon.librarytest02.transition.navigation;
 
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.hon.librarytest02.R;
+import com.hon.mylogger.MyLogger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,16 +47,16 @@ public class FragmentB extends Fragment {
         View view = inflater.inflate(R.layout.fragment_transition_b, container, false);
         ButterKnife.bind(this, view);
 
-
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         setSharedElementEnterTransition(
                 TransitionInflater.from(getContext()).inflateTransition(R.transition.move)
         );
+
+        handler.postDelayed(()->{
+            MyLogger.tag("Hong");
+            MyLogger.d("startPostponedEnterTransition");
+            startPostponedEnterTransition();
+        }, 4000);
+        postponeEnterTransition();
 
         Bundle args = getArguments();
         if (args != null) {
@@ -67,26 +68,38 @@ public class FragmentB extends Fragment {
             }
 
             Glide.with(view)
-//                    .load("https://avatars3.githubusercontent.com/u/9608466?s=400&v=4")
-                    .load(imageId)
+                    .load("https://avatars3.githubusercontent.com/u/9608466?s=400&v=4")
+//                    .load(imageId)
                     .apply(new RequestOptions().placeholder(R.mipmap.ic_launcher))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            startPostponedEnterTransition();
+//                            startPostponedEnterTransition();
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            startPostponedEnterTransition();
+//                            startPostponedEnterTransition();
                             return false;
                         }
                     })
                     .into(avatar);
         }
 
-        handler.postDelayed(this::startPostponedEnterTransition,2000);
-        postponeEnterTransition();
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        MyLogger.tag("Hong");
+        MyLogger.d("onDestroy");
+        handler.removeCallbacksAndMessages(null);
     }
 }

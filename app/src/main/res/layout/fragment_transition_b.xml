@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"

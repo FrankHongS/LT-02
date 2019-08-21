@@ -22,12 +22,13 @@ public class TransitionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transition);
+//        setContentView(R.layout.activity_transition);
+        setContentView(R.layout.activity_transition_navigation);
 
-        navigationController = new NavigationController(this, R.id.fragment_container);
-        if (savedInstanceState == null) {
-            navigationController.init(new FragmentA());
-        }
+//        navigationController = new NavigationController(this, R.id.fragment_container);
+//        if (savedInstanceState == null) {
+//            navigationController.init(new FragmentA());
+//        }
     }
 
     public void navigateTo(Fragment target){
