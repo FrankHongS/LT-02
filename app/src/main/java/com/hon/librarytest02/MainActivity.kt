@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.frankhon.launchmodetest.LaunchModeActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.chart.ChartActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
@@ -32,7 +33,8 @@ class MainActivity : AppCompatActivity() {
 
     private var titles = arrayOf("WorkManager", "Service", "Job Scheduler", "ButterKnife",
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
-            "Spider", "Stock", "Lifecycle", "Save Instance", "Transition")
+            "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
+            "Launch Mode")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                     11 -> navigate(LifecycleActivity::class.java)
                     12 -> navigate(SaveInstanceActivity::class.java)
                     13 -> navigate(TransitionActivity::class.java)
+                    14 -> navigate(LaunchModeActivity::class.java)
                 }
             }
         })

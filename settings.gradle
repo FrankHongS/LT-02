@@ -1,1 +1,1 @@
-include ':app', ':apt_annotation', ':apt_processor', ':mylogger', ':simplechartview'
+include ':app', ':apt_annotation', ':apt_processor', ':mylogger', ':simplechartview', ':launchmodetest'

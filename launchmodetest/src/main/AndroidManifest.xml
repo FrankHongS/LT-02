@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.frankhon.launchmodetest" >
+
+    <application>
+        <activity android:name=".LaunchModeActivity"/>
+        <activity android:name=".activities.StandardActivity"
+            android:launchMode="standard"/>
+        <activity android:name=".activities.SingleTopActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".activities.SingleTaskActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".activities.SingleInstanceActivity"
+            android:launchMode="singleInstance"/>
+    </application>
+
+</manifest>
