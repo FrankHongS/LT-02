@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
  * E-mail: v-shhong@microsoft.com
  */
 public class BaseLaunchModeActivity extends AppCompatActivity {
+
     @BindView(R2.id.tv_launch_mode)
     TextView hint;
 

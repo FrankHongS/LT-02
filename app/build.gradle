@@ -47,6 +47,9 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
+
 //    implementation "io.reactivex:rxandroid:1.1.0"
 
     // runtime permission
@@ -75,12 +78,10 @@ dependencies {
     annotationProcessor project(':apt_processor')
     implementation project(path: ':mylogger')
     implementation project(path: ':simplechartview')
+    implementation project(path: ':launchmodetest')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.1.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.1.0'
-    implementation project(path: ':launchmodetest')
 
 }

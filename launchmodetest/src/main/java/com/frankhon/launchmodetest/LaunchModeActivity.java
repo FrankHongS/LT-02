@@ -3,6 +3,7 @@ package com.frankhon.launchmodetest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -21,12 +22,15 @@ import butterknife.OnClick;
  * E-mail: v-shhong@microsoft.com
  */
 public class LaunchModeActivity extends AppCompatActivity {
+    private static final String TAG = "launchMode";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_launch_mode);
         ButterKnife.bind(this);
+
+        Log.d(TAG, "onCreate: "+this+" task id: "+getTaskId());
     }
 
     @OnClick(R2.id.btn_standard)
@@ -41,7 +45,9 @@ public class LaunchModeActivity extends AppCompatActivity {
 
     @OnClick(R2.id.btn_single_task)
     void singleTask() {
-        navigateTo(SingleTaskActivity.class);
+        Intent intent=new Intent(this,SingleTaskActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @OnClick(R2.id.btn_single_instance)

@@ -55,7 +55,7 @@ public class FragmentB extends Fragment {
             MyLogger.tag("Hong");
             MyLogger.d("startPostponedEnterTransition");
             startPostponedEnterTransition();
-        }, 4000);
+        }, 1000);
         postponeEnterTransition();
 
         Bundle args = getArguments();
@@ -74,13 +74,13 @@ public class FragmentB extends Fragment {
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-//                            startPostponedEnterTransition();
+                            startPostponedEnterTransition();
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-//                            startPostponedEnterTransition();
+                            startPostponedEnterTransition();
                             return false;
                         }
                     })

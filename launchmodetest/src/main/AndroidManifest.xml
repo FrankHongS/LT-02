@@ -8,7 +8,8 @@
         <activity android:name=".activities.SingleTopActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".activities.SingleTaskActivity"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask"
+            android:taskAffinity=".test01"/>
         <activity android:name=".activities.SingleInstanceActivity"
             android:launchMode="singleInstance"/>
     </application>
