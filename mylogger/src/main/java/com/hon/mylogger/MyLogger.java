@@ -96,11 +96,15 @@ public final class MyLogger {
         LOGGER_FACADE.log(priority, t, message, args);
     }
 
+    public static void setLoggable(boolean isLoggable) {
+        LOGGER_FACADE.setLoggable(isLoggable);
+    }
+
     public static void tag(String tag) {
         LOGGER_FACADE.tag(tag);
     }
 
-    public static void initLogFilePath(String logFilePath){
+    public static void initLogFilePath(String logFilePath) {
         LOGGER_FACADE.setLogFilePath(logFilePath);
     }
 }

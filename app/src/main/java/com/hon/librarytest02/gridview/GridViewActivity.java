@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.hon.librarytest02.R;
+import com.hon.mylogger.MyLogger;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,6 +34,15 @@ public class GridViewActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         initView();
+
+        MyLogger.tag("shuai");
+        MyLogger.d("onCreate: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyLogger.d("onResume: ");
     }
 
     private void initView() {
@@ -65,6 +75,7 @@ public class GridViewActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
+            MyLogger.d("getItemCount");
             return 10;
         }
 
