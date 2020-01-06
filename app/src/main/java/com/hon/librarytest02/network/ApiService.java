@@ -13,6 +13,6 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     @GET("hs")
-    Observable<Stock> getStockInfo(@Query("gid") String stockId,@Query("key") String apiKey);
+    Observable<Stock> getStockInfo(@Query("gid") String stockId, @Query("key") String apiKey);
 
 }
