@@ -2,6 +2,8 @@ package com.frankhon.launchmodetest.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.Log;
 import android.widget.TextView;
 

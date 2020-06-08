@@ -19,6 +19,7 @@ import com.hon.librarytest02.gridview.GridViewActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.lifecycle.LifecycleActivity
 import com.hon.librarytest02.saveInstance.SaveInstanceActivity
+import com.hon.librarytest02.searchview.SearchViewActivity
 import com.hon.librarytest02.service.ServiceActivity
 import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var titles = arrayOf("WorkManager", "Service", "Job Scheduler", "ButterKnife",
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
             "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
-            "Launch Mode","StaggerGridView")
+            "Launch Mode", "StaggerGridView", "SearchView")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                     13 -> navigate(TransitionActivity::class.java)
                     14 -> navigate(LaunchModeActivity::class.java)
                     15 -> navigate(GridViewActivity::class.java)
+                    16 -> navigate(SearchViewActivity::class.java)
                 }
             }
         })

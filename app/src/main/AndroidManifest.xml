@@ -46,6 +46,7 @@
         <activity android:name=".saveInstance.SaveInstanceActivity" />
         <activity android:name=".transition.TransitionActivity" />
         <activity android:name=".gridview.GridViewActivity" />
+        <activity android:name=".searchview.SearchViewActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

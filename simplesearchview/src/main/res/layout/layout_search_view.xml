@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="3dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/ib_search_back"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_arrow_back"
+                tools:ignore="ContentDescription" />
+
+            <EditText
+                android:id="@+id/et_search"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:ems="10"
+                android:gravity="start|center"
+                android:hint="@string/search_hint"
+                android:imeOptions="actionSearch|flagNoExtractUi"
+                android:singleLine="true"
+                android:textColor="#212121"
+                android:visibility="visible"
+                tools:ignore="Autofill,LabelFor,TextFields">
+
+                <!--<requestFocus />-->
+
+            </EditText>
+
+            <ImageButton
+                android:id="@+id/ib_search_clear"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@null"
+                android:layout_gravity="center"
+                app:srcCompat="@mipmap/ic_action_clear_black"
+                android:visibility="gone"
+                tools:ignore="ContentDescription" />
+
+        </LinearLayout>
+        <ListView
+            android:id="@+id/lv_suggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            tools:listitem="@layout/item_search_suggestion" />
+    </androidx.cardview.widget.CardView>
+</merge>
