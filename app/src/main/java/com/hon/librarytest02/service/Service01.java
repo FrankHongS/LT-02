@@ -39,21 +39,21 @@ public class Service01 extends Service {
         super.onCreate();
         MyLogger.d("onCreate");
 
-        Intent notificationIntent = new Intent(this, ServiceActivity.class);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-        Notification notification =
-                new NotificationCompat.Builder(this, "test")
-                        .setContentTitle("title")
-                        .setContentText("notification message")
-                        // important!, not showing if not set
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
-                        .setContentIntent(pendingIntent)
-                        .setTicker("ticker")
-                        .build();
-
-        startForeground(1, notification);
+//        Intent notificationIntent = new Intent(this, ServiceActivity.class);
+//        PendingIntent pendingIntent =
+//                PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//
+//        Notification notification =
+//                new NotificationCompat.Builder(this, "test")
+//                        .setContentTitle("title")
+//                        .setContentText("notification message")
+//                        // important!, not showing if not set
+//                        .setSmallIcon(R.mipmap.ic_launcher_round)
+//                        .setContentIntent(pendingIntent)
+//                        .setTicker("ticker")
+//                        .build();
+//
+//        startForeground(1, notification);
 
         mBinder=new MyBinder();
         mCompositeDisposable = new CompositeDisposable();

@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.4"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -37,7 +37,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
 
-version = "1.0.2"
+version = "1.0.4"
 def siteUrl = 'https://github.com/FrankHongS/LT-02'    // project homepage
 def gitUrl = 'https://github.com/FrankHongS/LT-02.git' // project git
 group = "com.frankhon.mylogger"

@@ -25,6 +25,8 @@ class MyLoggerFacade {
     private static final int MAX_TAG_LENGTH = 23;
     private static final Pattern ANONYMOUS_CLASS = Pattern.compile("(\\$[a-zA-Z]+)+$");
 
+    private boolean isLoggable = true;
+
     private String mWriteLogFilePath;
     private static final String LOG_FILE_NAME = "my_logger.txt";
 
@@ -140,7 +142,7 @@ class MyLoggerFacade {
 
         log(priority, tag, message, t);
 
-        writeLog2File(priority,tag,message);
+        writeLog2File(priority, tag, message);
     }
 
     private void log(int priority, String tag, String message, Throwable t) {
@@ -219,12 +221,16 @@ class MyLoggerFacade {
         return sw.toString();
     }
 
-    public boolean isLoggable(String tag, int priority) {
+    private boolean isLoggable(String tag, int priority) {
         return isLoggable(priority);
     }
 
-    public boolean isLoggable(int priority) {
-        return BuildConfig.DEBUG;
+    private boolean isLoggable(int priority) {
+        return isLoggable;
+    }
+
+    public void setLoggable(boolean isLoggable) {
+        this.isLoggable = isLoggable;
     }
 
     private String getTag() {

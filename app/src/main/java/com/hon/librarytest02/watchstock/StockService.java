@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.hon.librarytest02.network.ApiServiceImpl;
 import com.hon.librarytest02.util.Constants;
 import com.hon.librarytest02.util.Util;
@@ -14,7 +16,6 @@ import com.hon.mylogger.MyLogger;
 
 import java.util.concurrent.TimeUnit;
 
-import androidx.annotation.Nullable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -35,7 +36,7 @@ public class StockService extends Service {
         MyLogger.d("onCreate");
         super.onCreate();
 
-        mApiService=ApiServiceImpl.getInstance();
+        mApiService = ApiServiceImpl.getInstance();
     }
 
     @Override
@@ -48,9 +49,12 @@ public class StockService extends Service {
                 "Hello",
                 "service is watching stock :)");
 
-        String stockId=intent.getStringExtra(WatchStockActivity.KEY_STOCK_ID);
-        int increase=intent.getIntExtra(WatchStockActivity.KEY_INCREASE,2);
-        int decrease=intent.getIntExtra(WatchStockActivity.KEY_DECREASE,2);
+        String stockId = intent.getStringExtra(WatchStockActivity.KEY_STOCK_ID);
+        float cost = intent.getFloatExtra(WatchStockActivity.KEY_COST, 0f);
+        int increase = intent.getIntExtra(WatchStockActivity.KEY_INCREASE, 2);
+        int decrease = intent.getIntExtra(WatchStockActivity.KEY_DECREASE, 2);
+        int profit = intent.getIntExtra(WatchStockActivity.KEY_PROFIT, 20);
+        int loss = intent.getIntExtra(WatchStockActivity.KEY_LOSS, 10);
 
         mStockDisposable = Observable
                 .interval(2, TimeUnit.MINUTES)
@@ -60,11 +64,11 @@ public class StockService extends Service {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError(throwable -> {/*do nothing*/})
                 .subscribe(
-                       stock -> {
-                           if("200".equals(stock.resultCode)){
-                               updateStockInfo(stock,increase,decrease);
-                           }
-                       }
+                        stock -> {
+                            if ("200".equals(stock.resultCode)) {
+                                updateStockInfo(stock, cost, increase, decrease, profit, loss);
+                            }
+                        }
                 );
 
         return START_REDELIVER_INTENT;
@@ -84,36 +88,54 @@ public class StockService extends Service {
         mStockDisposable.dispose();
     }
 
-    private void updateStockInfo(Stock stock, int increase, int decrease){
-        Stock.StockResult result=stock.result.get(0);
-        float increasePercent=Math.round(Float.valueOf(result.data.increasePer)*100)/100f;
+    private void updateStockInfo(Stock stock, float cost, int increase, int decrease, int profit, int loss) {
+        Stock.StockResult result = stock.result.get(0);
+        float increasePercent = Math.round(Float.valueOf(result.data.increasePer) * 100) / 100f;
 
-        String title=result.data.name;
+        String title = result.data.name;
 
         String percent;
-        if(increasePercent>=0){
-            percent="涨 "+increasePercent+"%";
-        }else {
-            percent="跌 "+(-increasePercent)+"%";
+        if (increasePercent >= 0) {
+            percent = "涨 " + increasePercent + "%";
+        } else {
+            percent = "跌 " + (-increasePercent) + "%";
         }
 
-        String nowPrice=result.data.nowPrice;
+        String nowPrice = result.data.nowPrice;
 
-        String text=String.format(("%s   现价 %s"),percent,nowPrice);
-        if((increasePercent<0&&-increasePercent<decrease)||(increasePercent>0&&increasePercent<increase)) {
-            sendNotification(Constants.StockNotification.STOCK_CHANNEL_ID,
-                    title,
-                    text
-            );
-        }else {
+        String text = String.format(("%s   现价 %s"), percent, nowPrice);
+
+        if ((increasePercent < 0 && -increasePercent >= decrease) || (increasePercent > 0 && increasePercent >= increase)) {
             sendNotification(Constants.StockNotification.STOCK_WATCH_OUT_CHANNEL_ID,
                     title,
                     text
             );
+        } else if (checkPrice(nowPrice, cost, profit, loss)) {
+            sendNotification(Constants.StockNotification.STOCK_WATCH_OUT_CHANNEL_ID,
+                    title,
+                    text
+            );
+        } else {
+            sendNotification(Constants.StockNotification.STOCK_CHANNEL_ID,
+                    title,
+                    String.format(("%s   现价 %s"), "***", "**")
+            );
         }
     }
 
-    private void sendNotification(String channelId,String title, String text) {
+    private boolean checkPrice(String nowPrice, float cost, int profit, int loss) {
+        float curPrice = Float.valueOf(nowPrice);
+        if (curPrice > cost) {
+            float increaseRate = (curPrice - cost) / cost;
+            return increaseRate >= profit * 1f / 100;
+        } else {
+            float decreaseRate = (cost - curPrice) / cost;
+            return decreaseRate > loss * 1f / 100;
+        }
+
+    }
+
+    private void sendNotification(String channelId, String title, String text) {
         Notification notification = Util.createNotification(WatchStockActivity.class,
                 channelId,
                 title,
