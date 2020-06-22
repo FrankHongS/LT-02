@@ -18,7 +18,7 @@ public class DefaultSearchSuggestionGenerator extends SearchSuggestionGenerator 
     private final SearchHistoryDao searchHistoryDao;
 
     public DefaultSearchSuggestionGenerator(Context context) {
-        searchHistoryDao = SearchHistoryDao.getInstance(context, getMaxCount());
+        searchHistoryDao = SearchHistoryDao.getInstance(context);
     }
 
     @Override

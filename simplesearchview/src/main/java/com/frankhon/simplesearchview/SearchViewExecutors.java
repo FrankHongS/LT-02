@@ -17,7 +17,7 @@ class SearchViewExecutors {
 
     Executor getDiskIO() {
         if (diskIO == null) {
-            diskIO = Executors.newSingleThreadExecutor();
+            diskIO = Executors.newFixedThreadPool(3);
         }
         return diskIO;
     }

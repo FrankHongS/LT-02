@@ -26,21 +26,20 @@ public class SearchHistoryDao {
 
     private final SearchHistoryDatabase dbHelper;
     private SQLiteDatabase db;
-    private final int maxCount;
+    private int maxCount = 6;
 
     private boolean isDBClosed = false;
 
-    private SearchHistoryDao(Context context, int maxCount) {
+    private SearchHistoryDao(Context context) {
         this.dbHelper = new SearchHistoryDatabase(context.getApplicationContext());
         this.db = dbHelper.getWritableDatabase();
-        this.maxCount = maxCount;
     }
 
-    public static SearchHistoryDao getInstance(Context context, int maxCount) {
+    public static SearchHistoryDao getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (SearchHistoryDao.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = new SearchHistoryDao(context, maxCount);
+                    INSTANCE = new SearchHistoryDao(context);
                 }
             }
         }
@@ -58,6 +57,10 @@ public class SearchHistoryDao {
             dbHelper.close();
             isDBClosed = true;
         }
+    }
+
+    public void setHistoryCount(int maxCount) {
+        this.maxCount = maxCount;
     }
 
     public void insert(String text) {

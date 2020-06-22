@@ -14,8 +14,4 @@ public abstract class SearchSuggestionGenerator {
         return null;
     }
 
-    public int getMaxCount(){
-        return 6;
-    }
-
 }

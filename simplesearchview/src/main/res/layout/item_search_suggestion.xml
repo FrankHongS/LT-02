@@ -10,7 +10,7 @@
         android:id="@+id/iv_suggestion_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        app:srcCompat="@mipmap/ic_search_black"
+        app:srcCompat="@drawable/ic_search_black"
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"

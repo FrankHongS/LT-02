@@ -6,7 +6,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +20,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.frankhon.simplesearchview.db.SearchHistoryDao;
-import com.frankhon.simplesearchview.generator.DefaultSearchSuggestionGenerator;
+import com.frankhon.simplesearchview.db.entity.SearchItem;
 import com.frankhon.simplesearchview.generator.SearchSuggestionGenerator;
 
 import java.util.ArrayList;
@@ -35,15 +35,21 @@ import java.util.List;
  */
 public class SearchViewGroup extends FrameLayout {
 
-    private SearchItemAdapter mSearchItemAdapter;
     private List<String> mSuggestions;
     private ListView mSuggestionView;
     private EditText mSearchText;
     private ImageButton mClearButton;
     private ImageButton mBackButton;
+    // search history
+    private View mSearchHistoryLayout;
+    private RecyclerView mHistoryRecyclerView;
+    private ImageButton mClearHistoryButton;
 
     private String mSearchHint;
+    private boolean isSearchHistoryVisible = false;
+    private SearchHistoryItemAdapter mSearchHistoryItemAdapter;
 
+    private SearchItemAdapter mSearchItemAdapter;
     private SearchSuggestionGenerator mSuggestionGenerator;
     private SearchHistoryDao mSearchHistoryDao;
     private final SearchViewExecutors searchViewExecutors;
@@ -66,11 +72,14 @@ public class SearchViewGroup extends FrameLayout {
         super(context, attrs, defStyleAttr);
 
         LayoutInflater.from(getContext()).inflate(R.layout.layout_search_view, this, true);
+        searchViewExecutors = new SearchViewExecutors();
+        mSearchHistoryDao = SearchHistoryDao.getInstance(getContext());
+        mSearchHistoryDao.init();
+
         initAttrs(attrs);
         bindView();
         bindListeners();
 
-        searchViewExecutors = new SearchViewExecutors();
     }
 
     private void initAttrs(AttributeSet attrs) {
@@ -88,10 +97,20 @@ public class SearchViewGroup extends FrameLayout {
         mBackButton = findViewById(R.id.ib_search_back);
         mSuggestionView = findViewById(R.id.lv_suggestions);
 
+        mSearchHistoryLayout = findViewById(R.id.layout_search_history);
+        mHistoryRecyclerView = findViewById(R.id.rv_search_history);
+        mClearHistoryButton = findViewById(R.id.ib_delete_history);
+
         mSearchText.setHint(mSearchHint);
         mSuggestions = new ArrayList<>();
         mSearchItemAdapter = new SearchItemAdapter(getContext(), mSuggestions);
         mSuggestionView.setAdapter(mSearchItemAdapter);
+        mSearchHistoryLayout.setVisibility(isSearchHistoryVisible ? VISIBLE : GONE);
+        mSearchHistoryItemAdapter = new SearchHistoryItemAdapter(searchViewExecutors.getDiskIO());
+        mHistoryRecyclerView.setAdapter(mSearchHistoryItemAdapter);
+        if (isSearchHistoryVisible) {
+            updateSearchHistory();
+        }
     }
 
     private void bindListeners() {
@@ -99,7 +118,6 @@ public class SearchViewGroup extends FrameLayout {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Log.d("SearchViewGroup", "onEditorAction: " + actionId);
                     onSearch(v.getText().toString());
                     return true;
                 }
@@ -111,7 +129,6 @@ public class SearchViewGroup extends FrameLayout {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK && !mSuggestions.isEmpty()) {
-                    Log.d("SearchViewGroup", "onKey: KEYCODE_BACK");
                     clearView();
                     return true;
                 }
@@ -177,6 +194,12 @@ public class SearchViewGroup extends FrameLayout {
                 mSearchText.setText(query);
             }
         });
+        mClearHistoryButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchHistoryItemAdapter.submitList(new ArrayList<SearchItem>());
+            }
+        });
     }
 
     private void displaySuggestions(final String query) {
@@ -224,6 +247,9 @@ public class SearchViewGroup extends FrameLayout {
         }
         clearView();
         saveQuery(query);
+        if (isSearchHistoryVisible){
+            updateSearchHistory();
+        }
     }
 
     private void saveQuery(final String query) {
@@ -246,6 +272,23 @@ public class SearchViewGroup extends FrameLayout {
         mState = State.INITIAL;
     }
 
+    private void updateSearchHistory(){
+        searchViewExecutors.getDiskIO()
+                .execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        final List<SearchItem> searchItems = mSearchHistoryDao.getAllItems();
+                        searchViewExecutors.getMainThread()
+                                .execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mSearchHistoryItemAdapter.submitList(searchItems);
+                                    }
+                                });
+                    }
+                });
+    }
+
     private void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getApplicationWindowToken(), 0);
@@ -263,11 +306,11 @@ public class SearchViewGroup extends FrameLayout {
         }
     }
 
+    public void setHistoryCount(int maxCount) {
+        mSearchHistoryDao.setHistoryCount(maxCount);
+    }
+
     public void setSuggestionGenerator(SearchSuggestionGenerator suggestionGenerator) {
-        if (suggestionGenerator instanceof DefaultSearchSuggestionGenerator) {
-            mSearchHistoryDao = SearchHistoryDao.getInstance(getContext(), suggestionGenerator.getMaxCount());
-            mSearchHistoryDao.init();
-        }
         this.mSuggestionGenerator = suggestionGenerator;
     }
 
