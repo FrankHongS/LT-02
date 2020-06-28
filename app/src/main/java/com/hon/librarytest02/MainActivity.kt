@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     private var titles = arrayOf("WorkManager", "Service", "Job Scheduler", "ButterKnife",
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
             "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
-            "Launch Mode", "StaggerGridView", "SearchView")
+            "Launch Mode", "StaggerGridView", "SearchView", "Test")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

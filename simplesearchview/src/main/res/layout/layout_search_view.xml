@@ -16,8 +16,8 @@
 
             <ImageButton
                 android:id="@+id/ib_search_back"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/default_search_input_height"
+                android:layout_height="@dimen/default_search_input_height"
                 android:layout_gravity="center"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
@@ -28,7 +28,7 @@
             <EditText
                 android:id="@+id/et_search"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="@dimen/default_search_input_height"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginEnd="8dp"
@@ -47,20 +47,18 @@
                 android:layout_toStartOf="@id/ib_search_clear"
                 tools:ignore="Autofill,LabelFor,TextFields"
                 >
-
                 <!--<requestFocus />-->
-
             </EditText>
 
             <ImageButton
                 android:id="@+id/ib_search_clear"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/default_search_input_height"
+                android:layout_height="@dimen/default_search_input_height"
                 android:layout_gravity="center"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:background="@null"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_action_clear_black"
                 tools:ignore="ContentDescription" />
 

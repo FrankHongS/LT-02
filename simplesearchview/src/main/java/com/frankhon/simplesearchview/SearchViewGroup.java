@@ -2,6 +2,8 @@ package com.frankhon.simplesearchview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -59,6 +61,8 @@ public class SearchViewGroup extends FrameLayout {
 
     private boolean isTextFromSuggestion = false;
     private State mState = State.INITIAL;
+    private String mQuery;
+    private boolean isInstanceStateRestored = false;
 
     public SearchViewGroup(@NonNull Context context) {
         this(context, null);
@@ -80,6 +84,23 @@ public class SearchViewGroup extends FrameLayout {
         bindView();
         bindListeners();
 
+    }
+
+    @Nullable
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState savedState = new SavedState(superState);
+//        savedState.query = mQuery;
+        return savedState;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+//        mQuery = savedState.query;
+        isInstanceStateRestored = true;
     }
 
     private void initAttrs(AttributeSet attrs) {
@@ -114,6 +135,7 @@ public class SearchViewGroup extends FrameLayout {
     }
 
     private void bindListeners() {
+        //当输入完成时
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -124,6 +146,7 @@ public class SearchViewGroup extends FrameLayout {
                 return false;
             }
         });
+        //当按系统返回键时
         //todo 不起作用，有bug
         mSearchText.setOnKeyListener(new OnKeyListener() {
             @Override
@@ -135,17 +158,7 @@ public class SearchViewGroup extends FrameLayout {
                 return false;
             }
         });
-        mSearchText.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    displaySuggestions("");
-                    mState = State.EDITING;
-                } else {
-                    hideSuggestions();
-                }
-            }
-        });
+        //当搜索框文本改变时
         mSearchText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -157,15 +170,31 @@ public class SearchViewGroup extends FrameLayout {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String query = s.toString();
+                mQuery = s.toString();
+                mClearButton.setVisibility(TextUtils.isEmpty(mQuery) ? GONE : VISIBLE);
+                if (isInstanceStateRestored) {
+                    isInstanceStateRestored = false;
+                    return;
+                }
                 if (!isTextFromSuggestion) {
-                    displaySuggestions(query);
+                    displaySuggestions(mQuery);
                 } else {
                     isTextFromSuggestion = false;
                 }
-                mClearButton.setVisibility(TextUtils.isEmpty(query) ? GONE : VISIBLE);
             }
         });
+        //当搜索框焦点发生改变时
+        //当view重建时，会先执行afterTextChanged，然后onFocusChange
+        mSearchText.setOnFocusChangeListener(new OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    displaySuggestions(mQuery);
+                    mState = State.EDITING;
+                }
+            }
+        });
+        //当按清除按钮时
         mClearButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,6 +202,7 @@ public class SearchViewGroup extends FrameLayout {
                 mSearchText.requestFocus();
             }
         });
+        //当按左边返回箭头时
         mBackButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -247,7 +277,7 @@ public class SearchViewGroup extends FrameLayout {
         }
         clearView();
         saveQuery(query);
-        if (isSearchHistoryVisible){
+        if (isSearchHistoryVisible) {
             updateSearchHistory();
         }
     }
@@ -272,7 +302,7 @@ public class SearchViewGroup extends FrameLayout {
         mState = State.INITIAL;
     }
 
-    private void updateSearchHistory(){
+    private void updateSearchHistory() {
         searchViewExecutors.getDiskIO()
                 .execute(new Runnable() {
                     @Override
@@ -330,8 +360,45 @@ public class SearchViewGroup extends FrameLayout {
         void onClick();
     }
 
+    //搜索框不同状态
     private enum State {
         INITIAL,
         EDITING
+    }
+
+    static class SavedState extends BaseSavedState {
+        public static final Creator<SavedState> CREATOR =
+                new Creator<SavedState>() {
+                    @Override
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    @Override
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+        State searchViewSate;
+        String query;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            try {
+                searchViewSate = Enum.valueOf(State.class, in.readString());
+            } catch (IllegalArgumentException e) {
+                searchViewSate = State.INITIAL;
+            }
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeString(searchViewSate.toString());
+        }
     }
 }

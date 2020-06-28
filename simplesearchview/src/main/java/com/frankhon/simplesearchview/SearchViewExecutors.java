@@ -30,8 +30,12 @@ class SearchViewExecutors {
     }
 
     void release() {
-        diskIO.shutdown();
-        mainThread.release();
+        if (diskIO != null) {
+            diskIO.shutdown();
+        }
+        if (mainThread != null) {
+            mainThread.release();
+        }
     }
 
     static final class MainThreadExecutor implements Executor {
