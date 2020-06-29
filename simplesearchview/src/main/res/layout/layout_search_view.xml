@@ -36,17 +36,15 @@
                 android:background="@null"
                 android:ems="10"
                 android:gravity="start|center"
-                android:hint="@string/search_hint"
                 android:imeOptions="actionSearch|flagNoExtractUi"
                 android:singleLine="true"
                 android:textColor="#212121"
-                android:visibility="visible"
                 android:layout_toRightOf="@id/ib_search_back"
                 android:layout_toEndOf="@id/ib_search_back"
                 android:layout_toLeftOf="@id/ib_search_clear"
                 android:layout_toStartOf="@id/ib_search_clear"
-                tools:ignore="Autofill,LabelFor,TextFields"
-                >
+                tools:ignore="LabelFor,TextFields"
+                android:importantForAutofill="no">
                 <!--<requestFocus />-->
             </EditText>
 

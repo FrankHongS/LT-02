@@ -37,7 +37,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-version = "1.0.0"
+version = "1.0.2"
 def siteUrl = 'https://github.com/FrankHongS/LT-02'    // project homepage
 def gitUrl = 'https://github.com/FrankHongS/LT-02.git' // project git
 group = "com.frankhon.simplesearchview"

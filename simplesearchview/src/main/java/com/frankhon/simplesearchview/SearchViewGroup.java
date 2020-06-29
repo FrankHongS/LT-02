@@ -2,7 +2,6 @@ package com.frankhon.simplesearchview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -89,17 +88,12 @@ public class SearchViewGroup extends FrameLayout {
     @Nullable
     @Override
     protected Parcelable onSaveInstanceState() {
-        Parcelable superState = super.onSaveInstanceState();
-        SavedState savedState = new SavedState(superState);
-//        savedState.query = mQuery;
-        return savedState;
+        return super.onSaveInstanceState();
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        SavedState savedState = (SavedState) state;
-        super.onRestoreInstanceState(savedState.getSuperState());
-//        mQuery = savedState.query;
+        super.onRestoreInstanceState(state);
         isInstanceStateRestored = true;
     }
 
@@ -364,41 +358,5 @@ public class SearchViewGroup extends FrameLayout {
     private enum State {
         INITIAL,
         EDITING
-    }
-
-    static class SavedState extends BaseSavedState {
-        public static final Creator<SavedState> CREATOR =
-                new Creator<SavedState>() {
-                    @Override
-                    public SavedState createFromParcel(Parcel in) {
-                        return new SavedState(in);
-                    }
-
-                    @Override
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                };
-        State searchViewSate;
-        String query;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private SavedState(Parcel in) {
-            super(in);
-            try {
-                searchViewSate = Enum.valueOf(State.class, in.readString());
-            } catch (IllegalArgumentException e) {
-                searchViewSate = State.INITIAL;
-            }
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeString(searchViewSate.toString());
-        }
     }
 }
