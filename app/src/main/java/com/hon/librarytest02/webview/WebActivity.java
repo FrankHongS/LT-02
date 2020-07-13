@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.ConsoleMessage;
+import android.webkit.CookieManager;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
@@ -47,11 +48,11 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         initView();
     }
 
-    private void initView(){
-        mEditText=findViewById(R.id.et_website);
-        mLoadButton=findViewById(R.id.btn_load);
-        mLoadingBar=findViewById(R.id.pb_loading);
-        mWebView=findViewById(R.id.wv_main);
+    private void initView() {
+        mEditText = findViewById(R.id.et_website);
+        mLoadButton = findViewById(R.id.btn_load);
+        mLoadingBar = findViewById(R.id.pb_loading);
+        mWebView = findViewById(R.id.wv_main);
 
         mLoadButton.setOnClickListener(this);
 
@@ -64,7 +65,7 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_load:
                 loadWebView();
                 break;
@@ -73,13 +74,14 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    private void loadWebView(){
+    private void loadWebView() {
         //方式1. 加载一个网页：
-        if(!TextUtils.isEmpty(mEditText.getText())){
-            String urlAfterChecked=getUrlAfterChecked(mEditText.getText().toString());
+        if (!TextUtils.isEmpty(mEditText.getText())) {
+            String urlAfterChecked = getUrlAfterChecked(mEditText.getText().toString());
             mEditText.setText(urlAfterChecked, TextView.BufferType.NORMAL);
+            MyLogger.d("url=" + urlAfterChecked + ", cookie=" + CookieManager.getInstance().getCookie(urlAfterChecked));
             mWebView.loadUrl(urlAfterChecked);
-        }else{
+        } else {
             Toast.makeText(this, "website can't be empty :)", Toast.LENGTH_SHORT).show();
         }
 
@@ -94,15 +96,15 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void setWebView(){
-        WebSettings settings=mWebView.getSettings();
+    private void setWebView() {
+        WebSettings settings = mWebView.getSettings();
 
         // enable js
         settings.setJavaScriptEnabled(true);
     }
 
-    private void setWebClient(){
-        mWebView.setWebViewClient(new WebViewClient(){
+    private void setWebClient() {
+        mWebView.setWebViewClient(new WebViewClient() {
 
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -121,24 +123,24 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onLoadResource(WebView view, String url) {
                 super.onLoadResource(view, url);
-                MyLogger.d("onLoadResource");
+//                MyLogger.d("onLoadResource");
             }
 
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
                 mLoadingBar.setVisibility(View.INVISIBLE);
-                MyLogger.d("onPageFinished");
+                MyLogger.d("onPageFinished: cookie=" + CookieManager.getInstance().getCookie(url));
             }
         });
     }
 
-    private void setWebChromeClient(){
-        mWebView.setWebChromeClient(new WebChromeClient(){
+    private void setWebChromeClient() {
+        mWebView.setWebChromeClient(new WebChromeClient() {
 
             @Override
             public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                MyLogger.d("console: "+consoleMessage.message());
+                MyLogger.d("console: " + consoleMessage.message());
                 return super.onConsoleMessage(consoleMessage);
             }
 
@@ -164,12 +166,12 @@ public class WebActivity extends AppCompatActivity implements View.OnClickListen
         });
     }
 
-    private String getUrlAfterChecked(String originUrl){
-        if(!originUrl.startsWith("http://")&&!originUrl.startsWith("https://")){
-            if(!originUrl.startsWith("www.")){
-                originUrl="www."+originUrl;
+    private String getUrlAfterChecked(String originUrl) {
+        if (!originUrl.startsWith("http://") && !originUrl.startsWith("https://")) {
+            if (!originUrl.startsWith("www.")) {
+                originUrl = "www." + originUrl;
             }
-            originUrl="http://"+originUrl;
+            originUrl = "http://" + originUrl;
         }
 
         return originUrl;

@@ -49,6 +49,7 @@
         <activity android:name=".transition.TransitionActivity" />
         <activity android:name=".gridview.GridViewActivity" />
         <activity android:name=".searchview.SearchViewActivity" />
+        <activity android:name=".downloader.DownloadActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

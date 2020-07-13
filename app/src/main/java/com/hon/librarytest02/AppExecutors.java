@@ -16,7 +16,7 @@ public final class AppExecutors {
 
     private AppExecutors() {
         diskIO = Executors.newSingleThreadExecutor();
-        networkIO = Executors.newFixedThreadPool(3);
+        networkIO = Executors.newFixedThreadPool(10);
     }
 
     public static AppExecutors getInstance() {
