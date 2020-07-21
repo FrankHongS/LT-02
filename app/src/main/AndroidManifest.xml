@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name=".LibraryTest"
@@ -50,6 +51,8 @@
         <activity android:name=".gridview.GridViewActivity" />
         <activity android:name=".searchview.SearchViewActivity" />
         <activity android:name=".downloader.DownloadActivity" />
+        <activity android:name=".camera.CameraActivity"
+            android:theme="@style/CameraNoActionBar"/>
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"
