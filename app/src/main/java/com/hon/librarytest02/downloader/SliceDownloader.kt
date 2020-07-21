@@ -12,9 +12,9 @@ import java.util.concurrent.Executor
  */
 class SliceDownloader(private val target: File,
                       private val uri: String,
-                      private val threadCount: Int,
                       private val executor: Executor,
-                      private val downloadCallback: Callback) : Runnable {
+                      private val downloadCallback: Callback,
+                      private val threadCount: Int = 6) : Runnable {
 
     private val downloaderList = arrayListOf<UnitDownloader>()
     private val unitCallback = object : Callback {

@@ -39,4 +39,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_message"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <EditText
+        android:id="@+id/et_download_index"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:ems="10"
+        android:inputType="number"
+        tools:text="Name"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_download"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/et_thread_count"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:ems="10"
+        android:inputType="number"
+        tools:text="Name"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_download"
+        app:layout_constraintStart_toEndOf="@+id/et_download_index" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,10 @@
 package com.hon.librarytest02.downloader
 
 import com.hon.mylogger.MyLogger
-import java.io.*
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.InputStream
+import java.io.RandomAccessFile
 import java.net.HttpURLConnection
 import java.net.URL
 
@@ -28,7 +31,7 @@ class UnitDownloader(private val from: Long,
             //set Request Range
             connection.setRequestProperty("Range", "bytes=$from-$to")
             connection.connect()
-            inputStream = connection.inputStream
+            inputStream = BufferedInputStream(connection.inputStream)
             randomAccessFile = RandomAccessFile(target, "rw")
             randomAccessFile.seek(from)
             val buffer = ByteArray(1024 * 1024)
