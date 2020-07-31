@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.hon.librarytest02"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -73,6 +73,12 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
+
+    // cameraX
+    def camerax_version = "1.0.0-beta07"
+    api "androidx.camera:camera-camera2:$camerax_version"
+    api "androidx.camera:camera-lifecycle:$camerax_version"
+    api "androidx.camera:camera-view:1.0.0-alpha14"
 
     implementation project(':apt_annotation')
     annotationProcessor project(':apt_processor')

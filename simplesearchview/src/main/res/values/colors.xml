@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_search_text_hint">#aaaaaa</color>
+    <color name="color_search_text">#212121</color>
+</resources>

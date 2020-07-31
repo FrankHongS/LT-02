@@ -18,4 +18,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:searchHint="输入歌曲名或艺术家名字" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

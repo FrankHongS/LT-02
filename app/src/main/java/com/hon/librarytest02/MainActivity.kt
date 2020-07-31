@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.frankhon.launchmodetest.LaunchModeActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.CameraActivity
+import com.hon.librarytest02.camera.camerax.CameraShootingPage
 import com.hon.librarytest02.chart.ChartActivity
 import com.hon.librarytest02.downloader.DownloadActivity
 import com.hon.librarytest02.gridview.GridViewActivity
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                     15 -> navigate(GridViewActivity::class.java)
                     16 -> navigate(SearchViewActivity::class.java)
                     17 -> navigate(DownloadActivity::class.java)
-                    18 -> navigate(CameraActivity::class.java)
+                    18 -> navigate(CameraShootingPage::class.java)
                 }
             }
         })

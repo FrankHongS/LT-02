@@ -54,6 +54,9 @@
         <activity android:name=".downloader.DownloadActivity" />
         <activity android:name=".camera.CameraActivity"
             android:theme="@style/CameraNoActionBar"/>
+        <activity android:name=".camera.camerax.CameraShootingPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/CameraNoActionBar"/>
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"
