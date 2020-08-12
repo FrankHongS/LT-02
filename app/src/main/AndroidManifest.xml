@@ -36,16 +36,16 @@
         <activity android:name=".service.ServiceActivity" />
         <activity android:name=".jobschedule.JobSchedulerActivity" />
         <activity android:name=".webview.WebActivity"
-            android:theme="@style/NoActionBar"/>
+            android:theme="@style/NoActionBar2"/>
         <activity android:name=".timelineview.TimelineViewActivity" />
         <activity android:name=".audiomessage.AudioMessageActivity" />
         <activity android:name=".text.TextActivity" />
         <activity android:name=".chart.ChartActivity"
-            android:theme="@style/NoActionBar"/>
+            android:theme="@style/NoActionBar2"/>
         <activity android:name=".spider.SpiderActivity" />
         <activity android:name=".watchstock.WatchStockActivity"
             android:launchMode="singleTop"
-            android:theme="@style/NoActionBar"/>
+            android:theme="@style/NoActionBar1"/>
         <activity android:name=".lifecycle.LifecycleActivity" />
         <activity android:name=".saveInstance.SaveInstanceActivity" />
         <activity android:name=".transition.TransitionActivity" />
@@ -53,10 +53,12 @@
         <activity android:name=".searchview.SearchViewActivity" />
         <activity android:name=".downloader.DownloadActivity" />
         <activity android:name=".camera.CameraActivity"
-            android:theme="@style/CameraNoActionBar"/>
+            android:theme="@style/NoActionBar1"/>
         <activity android:name=".camera.camerax.CameraShootingPage"
             android:screenOrientation="portrait"
-            android:theme="@style/CameraNoActionBar"/>
+            android:theme="@style/NoActionBar1"/>
+        <activity android:name=".glide.GlideActivity"
+            android:theme="@style/NoActionBar1"/>
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

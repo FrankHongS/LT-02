@@ -14,8 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.frankhon.simplesearchview.db.entity.SearchItem;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 /**
@@ -25,7 +23,7 @@ import java.util.concurrent.Executor;
 public class SearchHistoryItemAdapter extends ListAdapter<SearchItem, SearchHistoryItemAdapter.SearchHistoryViewHolder> {
 
     protected SearchHistoryItemAdapter(Executor executor) {
-        super(new AsyncDifferConfig.Builder<SearchItem>(
+        super(new AsyncDifferConfig.Builder<>(
                 new DiffUtil.ItemCallback<SearchItem>() {
                     @Override
                     public boolean areItemsTheSame(@NonNull SearchItem oldItem, @NonNull SearchItem newItem) {
@@ -55,9 +53,8 @@ public class SearchHistoryItemAdapter extends ListAdapter<SearchItem, SearchHist
         holder.bindView(history, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<SearchItem> temp = new ArrayList<>(getCurrentList());
-                temp.remove(position);
-                submitList(temp);
+                // todo to be tested(需要测一下)
+                notifyItemRemoved(position);
             }
         });
     }

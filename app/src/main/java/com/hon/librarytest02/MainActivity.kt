@@ -14,10 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.frankhon.launchmodetest.LaunchModeActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
-import com.hon.librarytest02.camera.CameraActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
 import com.hon.librarytest02.chart.ChartActivity
 import com.hon.librarytest02.downloader.DownloadActivity
+import com.hon.librarytest02.glide.GlideActivity
 import com.hon.librarytest02.gridview.GridViewActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.lifecycle.LifecycleActivity
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
             "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
             "Launch Mode", "StaggerGridView", "SearchView", "Download",
-            "Camera")
+            "Camera", "Glide")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
                     16 -> navigate(SearchViewActivity::class.java)
                     17 -> navigate(DownloadActivity::class.java)
                     18 -> navigate(CameraShootingPage::class.java)
+                    19 -> navigate(GlideActivity::class.java)
                 }
             }
         })

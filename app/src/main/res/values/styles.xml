@@ -4,18 +4,22 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/product_font_family</item>
+        <item name="title">@string/app_title</item>
     </style>
 
-    <style name="CameraNoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="NoActionBar1" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/product_font_family</item>
     </style>
 
-    <style name="NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="NoActionBar2" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="colorPrimary">@color/webviewPrimary</item>
         <item name="colorPrimaryDark">@color/webviewPrimaryDark</item>
         <item name="colorAccent">@color/webviewAccent</item>
+        <item name="android:fontFamily">@font/product_font_family</item>
     </style>
 
     <style name="Theme.AudioRecord.Dialog" parent="@android:style/Theme.Dialog">

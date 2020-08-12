@@ -1,3 +1,2 @@
-include ':downloader'
 include ':app', ':apt_annotation', ':apt_processor', ':mylogger',  ':launchmodetest'
 include ':simplechartview',':simplesearchview'
