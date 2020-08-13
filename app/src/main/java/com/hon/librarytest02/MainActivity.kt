@@ -21,6 +21,7 @@ import com.hon.librarytest02.glide.GlideActivity
 import com.hon.librarytest02.gridview.GridViewActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.lifecycle.LifecycleActivity
+import com.hon.librarytest02.ndk.NDKTestActivity
 import com.hon.librarytest02.saveInstance.SaveInstanceActivity
 import com.hon.librarytest02.searchview.SearchViewActivity
 import com.hon.librarytest02.service.ServiceActivity
@@ -40,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
             "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
             "Launch Mode", "StaggerGridView", "SearchView", "Download",
-            "Camera", "Glide")
+            "Camera", "Glide", "NDK")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                     17 -> navigate(DownloadActivity::class.java)
                     18 -> navigate(CameraShootingPage::class.java)
                     19 -> navigate(GlideActivity::class.java)
+                    20 -> navigate(NDKTestActivity::class.java)
                 }
             }
         })

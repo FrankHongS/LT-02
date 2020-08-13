@@ -204,22 +204,27 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     private void takePhoto() {
+        if (hideSearchingImage()) {
+            return;
+        }
         try {
             CameraDevice cameraDevice = mCurrentFacing == 0 ? mFrontDevice : mBackDevice;
             CameraCharacteristics characteristics = mCurrentFacing == 0 ? mFrontCharacteristics : mBackCharacteristics;
             CameraCaptureSession captureSession = mCurrentFacing == 0 ? mFrontCaptureSession : mBackCaptureSession;
             CaptureRequest captureRequest = buildCaptureRequest(cameraDevice, mImageReader.getSurface(), characteristics);
-            captureSession.capture(captureRequest, new CameraCaptureSession.CaptureCallback() {
-                @Override
-                public void onCaptureStarted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, long timestamp, long frameNumber) {
-                    MyLogger.d("onCaptureStarted");
-                }
+            if (captureRequest != null) {
+                captureSession.stopRepeating();
+                captureSession.abortCaptures();
+                captureSession.capture(captureRequest, new CameraCaptureSession.CaptureCallback() {
+                    @Override
+                    public void onCaptureStarted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, long timestamp, long frameNumber) {
+                    }
 
-                @Override
-                public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-                    MyLogger.d("onCaptureCompleted");
-                }
-            }, mBackgroundHandler);
+                    @Override
+                    public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+                    }
+                }, mBackgroundHandler);
+            }
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -232,8 +237,17 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             mCurrentFacing = 0;
         }
-        mPreviewTexture.setVisibility(View.VISIBLE);
         openDevice();
+        hideSearchingImage();
+    }
+
+    private boolean hideSearchingImage() {
+        if (mSearchingImage.getVisibility() == View.VISIBLE) {
+            mSearchingImage.setVisibility(View.GONE);
+            mPreviewTexture.setVisibility(View.VISIBLE);
+            return true;
+        }
+        return false;
     }
 
     @SuppressLint("MissingPermission")

@@ -3,7 +3,7 @@ package com.hon.librarytest02.camera;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 
 import com.hon.mylogger.MyLogger;
 
@@ -56,6 +56,7 @@ public final class RotateUtil {
             ExifInterface exifInterface = new ExifInterface(path);
             int orientation = exifInterface.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            MyLogger.d(orientation+"");
             switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     degree = 90;

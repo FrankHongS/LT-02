@@ -13,6 +13,11 @@ import com.hon.mylogger.MyLogger;
  */
 public class LibraryTest extends Application {
 
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
+    }
+
     @SuppressLint("StaticFieldLeak")
     public static Context sContext;
 
