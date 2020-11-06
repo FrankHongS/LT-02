@@ -60,6 +60,7 @@
         <activity android:name=".glide.GlideActivity"
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".ndk.NDKTestActivity" />
+        <activity android:name=".async.AsyncActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

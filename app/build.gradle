@@ -46,12 +46,17 @@ android {
 //            jni.srcDirs = [] //屏蔽掉默认的jni编译生成过程
 //        }
 //    }
+    packagingOptions {
+        exclude 'META-INF/proguard/coroutines.pro'
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation deps.kotlin.kotlin_lib
     implementation deps.kotlin.core_ktx
+    implementation deps.kotlin.kotlin_coroutine
+    implementation deps.kotlin.lifecyclescope
 
     implementation deps.support.appCompat
     implementation deps.support.material

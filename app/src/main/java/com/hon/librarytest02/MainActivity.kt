@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.frankhon.launchmodetest.LaunchModeActivity
+import com.hon.librarytest02.async.AsyncActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
 import com.hon.librarytest02.chart.ChartActivity
@@ -41,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
             "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
             "Launch Mode", "StaggerGridView", "SearchView", "Download",
-            "Camera", "Glide", "NDK")
+            "Camera", "Glide", "NDK", "Coroutine")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +75,7 @@ class MainActivity : AppCompatActivity() {
                     18 -> navigate(CameraShootingPage::class.java)
                     19 -> navigate(GlideActivity::class.java)
                     20 -> navigate(NDKTestActivity::class.java)
+                    21 -> navigate(AsyncActivity::class.java)
                 }
             }
         })
