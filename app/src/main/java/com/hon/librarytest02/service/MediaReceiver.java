@@ -13,6 +13,17 @@ import com.hon.mylogger.MyLogger;
 public class MediaReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        MyLogger.d("onReceive");
+        String action = intent.getAction();
+        MyLogger.d("action: " + action);
+        switch (action) {
+            case "Pause":
+                break;
+            case "Next":
+                break;
+            case "Previous":
+                break;
+            default:
+                break;
+        }
     }
 }

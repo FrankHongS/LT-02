@@ -106,6 +106,15 @@ dependencies {
     api "androidx.camera:camera-lifecycle:$camerax_version"
     api "androidx.camera:camera-view:1.0.0-alpha14"
 
+    def media2_version = "1.1.1"
+
+    // Interacting with MediaSessions
+    implementation "androidx.media2:media2-session:$media2_version"
+//    // optional - UI widgets for VideoView and MediaControlView
+//    implementation "androidx.media2:media2-widget:$media2_version"
+//    // optional - Implementation of a SessionPlayer
+//    implementation "androidx.media2:media2-player:$media2_version"
+
     implementation project(':apt_annotation')
     annotationProcessor project(':apt_processor')
     implementation project(path: ':mylogger')
