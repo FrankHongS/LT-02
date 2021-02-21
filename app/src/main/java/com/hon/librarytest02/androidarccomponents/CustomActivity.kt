@@ -1,4 +1,4 @@
-package com.hon.librarytest02.lifecycle
+package com.hon.librarytest02.androidarccomponents
 
 import android.annotation.SuppressLint
 import android.app.Activity

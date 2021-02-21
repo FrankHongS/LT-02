@@ -46,7 +46,7 @@
         <activity android:name=".watchstock.WatchStockActivity"
             android:launchMode="singleTop"
             android:theme="@style/NoActionBar1"/>
-        <activity android:name=".lifecycle.LifecycleActivity" />
+        <activity android:name=".androidarccomponents.LifecycleActivity" />
         <activity android:name=".saveInstance.SaveInstanceActivity" />
         <activity android:name=".transition.TransitionActivity" />
         <activity android:name=".gridview.GridViewActivity" />
@@ -60,7 +60,12 @@
         <activity android:name=".glide.GlideActivity"
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".ndk.NDKTestActivity" />
-        <activity android:name=".async.AsyncActivity" />
+        <activity android:name=".coroutine.AsyncActivity" />
+        <activity android:name=".androidarccomponents.viewmodel.VMActivity" />
+        <activity android:name=".androidarccomponents.AndroidArchitectureComponentsActivity" />
+        <activity android:name=".snackbar.SnackBarActivity"
+            android:theme="@style/SapphireImmersiveTheme"/>
+        <activity android:name=".looprecyclerview.LoopRecyclerViewActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"

@@ -30,4 +30,29 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="SapphireImmersiveTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="snackbarButtonStyle">@style/SapphireSnackbarButton</item>
+        <item name="snackbarStyle">@style/SapphireSnackbar</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="SapphireSnackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:paddingLeft">32dp</item>
+        <item name="android:paddingRight">32dp</item>
+        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingBottom">7dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="SapphireSnackbarButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingRight">0dp</item>
+    </style>
+
 </resources>

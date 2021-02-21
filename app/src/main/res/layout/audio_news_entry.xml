@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="145dp"
+    android:layout_margin="15dp"
+    android:background="@drawable/audio_news_card_bg">
+
+    <FrameLayout
+        android:id="@+id/audio_news_title"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|center_vertical"
+            android:textSize="16sp"
+            android:text="听新闻"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="56dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/audio_news_wave_1"/>
+
+        <TextView
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/ic_arrow_dark_day"
+            android:text="更多"
+            android:textStyle="bold"/>
+    </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/audio_news_list"
+        android:layout_width="match_parent"
+        android:layout_height="99dp"
+        android:layout_below="@id/audio_news_title"
+        tools:itemCount="3"
+        tools:listitem="@layout/audio_news_card_item" />
+</RelativeLayout>

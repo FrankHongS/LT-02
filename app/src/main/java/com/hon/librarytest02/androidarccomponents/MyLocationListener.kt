@@ -1,4 +1,4 @@
-package com.hon.librarytest02.lifecycle
+package com.hon.librarytest02.androidarccomponents
 
 import android.content.Context
 import android.util.Log
@@ -11,36 +11,36 @@ import androidx.lifecycle.OnLifecycleEvent
  * E-mail: v-shhong@microsoft.com
  */
 class MyLocationListener(
-        private val context:Context,
-        private val lifecycle:Lifecycle,
-        private val callback:(String)->Unit
-):LifecycleObserver {
+        private val context: Context,
+        private val lifecycle: Lifecycle,
+        private val callback: (String) -> Unit
+) : LifecycleObserver {
 
     init {
         lifecycle.addObserver(this)
     }
 
-    private var enable=false
+    private var enable = false
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    fun start(){
-        Log.d("hon","start")
-        if (enable){
+    fun start() {
+        Log.d("hon", "start")
+        if (enable) {
             // connect
         }
     }
 
-    fun enable(){
-        Log.d("hon","enable")
-        enable=true
-        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)){
+    fun enable() {
+        Log.d("hon", "enable")
+        enable = true
+        if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
             // connect if not connected
         }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    fun stop(){
-        Log.d("hon","stop")
+    fun stop() {
+        Log.d("hon", "stop")
         //disconnect if connected
     }
 

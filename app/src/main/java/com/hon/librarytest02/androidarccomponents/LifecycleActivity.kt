@@ -1,4 +1,4 @@
-package com.hon.librarytest02.lifecycle
+package com.hon.librarytest02.androidarccomponents
 
 import android.os.Bundle
 import android.os.Handler
@@ -19,15 +19,15 @@ class LifecycleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lifecycle)
 
-        myLocationListener= MyLocationListener(this,lifecycle){
-            position->run {
+        myLocationListener = MyLocationListener(this, lifecycle) { position ->
+            run {
                 Log.d("hon", position)
             }
         }
 
         Handler(Looper.getMainLooper())
                 .postDelayed(
-                        {myLocationListener.enable()},3000
+                        { myLocationListener.enable() }, 3000
                 )
     }
 

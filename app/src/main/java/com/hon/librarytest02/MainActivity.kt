@@ -13,7 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.frankhon.launchmodetest.LaunchModeActivity
-import com.hon.librarytest02.async.AsyncActivity
+import com.hon.librarytest02.androidarccomponents.AndroidArchitectureComponentsActivity
+import com.hon.librarytest02.coroutine.AsyncActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
 import com.hon.librarytest02.chart.ChartActivity
@@ -21,11 +22,13 @@ import com.hon.librarytest02.downloader.DownloadActivity
 import com.hon.librarytest02.glide.GlideActivity
 import com.hon.librarytest02.gridview.GridViewActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
-import com.hon.librarytest02.lifecycle.LifecycleActivity
+import com.hon.librarytest02.androidarccomponents.LifecycleActivity
+import com.hon.librarytest02.looprecyclerview.LoopRecyclerViewActivity
 import com.hon.librarytest02.ndk.NDKTestActivity
 import com.hon.librarytest02.saveInstance.SaveInstanceActivity
 import com.hon.librarytest02.searchview.SearchViewActivity
 import com.hon.librarytest02.service.ServiceActivity
+import com.hon.librarytest02.snackbar.SnackBarActivity
 import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
 import com.hon.librarytest02.timelineview.TimelineViewActivity
@@ -40,9 +43,9 @@ class MainActivity : AppCompatActivity() {
 
     private var titles = arrayOf("WorkManager", "Service", "Job Scheduler", "ButterKnife",
             "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
-            "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
+            "Spider", "Stock", "Android Architecture Components", "Save Instance", "Transition",
             "Launch Mode", "StaggerGridView", "SearchView", "Download",
-            "Camera", "Glide", "NDK", "Coroutine")
+            "Camera", "Glide", "NDK", "Coroutine", "SnackBar", "Loop RecyclerView")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +68,7 @@ class MainActivity : AppCompatActivity() {
                     8 -> navigate(ChartActivity::class.java)
                     9 -> navigate(SpiderActivity::class.java)
                     10 -> navigate(WatchStockActivity::class.java)
-                    11 -> navigate(LifecycleActivity::class.java)
+                    11 -> navigate(AndroidArchitectureComponentsActivity::class.java)
                     12 -> navigate(SaveInstanceActivity::class.java)
                     13 -> navigate(TransitionActivity::class.java)
                     14 -> navigate(LaunchModeActivity::class.java)
@@ -76,6 +79,8 @@ class MainActivity : AppCompatActivity() {
                     19 -> navigate(GlideActivity::class.java)
                     20 -> navigate(NDKTestActivity::class.java)
                     21 -> navigate(AsyncActivity::class.java)
+                    22 -> navigate(SnackBarActivity::class.java)
+                    23 -> navigate(LoopRecyclerViewActivity::class.java)
                 }
             }
         })
