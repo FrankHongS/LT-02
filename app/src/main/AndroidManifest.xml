@@ -74,6 +74,12 @@
         <service android:name=".watchstock.StockService"
             android:process=":stock"/>
         <service android:name=".service.Service02" />
+        <service android:name=".service.MediaService" />
+
+        <receiver
+            android:name=".service.MediaReceiver"
+            android:exported="false">
+        </receiver>
     </application>
 
 </manifest>

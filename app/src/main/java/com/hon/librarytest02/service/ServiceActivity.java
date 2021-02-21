@@ -1,6 +1,7 @@
 package com.hon.librarytest02.service;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -14,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.hon.librarytest02.R;
+import com.hon.librarytest02.util.Constants;
+import com.hon.librarytest02.util.Util;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -40,6 +43,10 @@ public class ServiceActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Util.createNotificationChannel("player", "player",
+                    NotificationManager.IMPORTANCE_LOW);
+        }
     }
 
     @Override
@@ -82,6 +89,9 @@ public class ServiceActivity extends AppCompatActivity {
                 break;
             case R.id.btn_stop_intent_service:
                 stopService(new Intent(this, Service02.class));
+                break;
+            case R.id.btn_start_media:
+                startService(new Intent(this, MediaService.class));
                 break;
             default:
                 break;
