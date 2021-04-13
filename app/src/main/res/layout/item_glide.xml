@@ -5,6 +5,14 @@
     android:layout_height="200dp"
     android:padding="8dp">
 
+    <TextView
+        android:id="@+id/tv_index"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="16sp"
+        android:gravity="center"
+        tools:text="1." />
+
     <ImageView
         android:id="@+id/iv_glide"
         android:layout_width="match_parent"

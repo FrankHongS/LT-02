@@ -1,11 +1,14 @@
 package com.hon.librarytest02.glide
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hon.librarytest02.R
 import kotlinx.android.synthetic.main.activity_glide.*
+import org.greenrobot.eventbus.EventBus
 
 /**
  * Created by Frank_Hon on 8/11/2020.
@@ -39,11 +42,32 @@ class GlideActivity : AppCompatActivity() {
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("frankhongit", "onCreate: ")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_glide)
 
         initView()
 
+    }
+
+    override fun onStart() {
+        Log.d("frankhon", "onStart: ")
+        super.onStart()
+    }
+
+    override fun onRestart() {
+        Log.d("frankhon", "onRestart: ")
+        super.onRestart()
+    }
+
+    override fun onResume() {
+        Log.d("frankhon", "onResume: ")
+        super.onResume()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        Log.d("frankhon", "onNewIntent: ")
+        super.onNewIntent(intent)
     }
 
     private fun initView() {

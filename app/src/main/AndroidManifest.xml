@@ -58,6 +58,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".glide.GlideActivity"
+            android:launchMode="singleTask"
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".ndk.NDKTestActivity" />
         <activity android:name=".async.AsyncActivity" />
@@ -70,6 +71,7 @@
             android:process=":stock"/>
         <service android:name=".service.Service02" />
         <service android:name=".service.MediaService" />
+        <service android:name=".service.MediaPlaybackService" />
 
         <receiver
             android:name=".service.MediaReceiver"

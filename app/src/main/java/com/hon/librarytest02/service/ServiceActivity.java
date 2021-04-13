@@ -91,7 +91,7 @@ public class ServiceActivity extends AppCompatActivity {
                 stopService(new Intent(this, Service02.class));
                 break;
             case R.id.btn_start_media:
-                startService(new Intent(this, MediaService.class));
+                startService(new Intent(this, MediaPlaybackService.class));
                 break;
             default:
                 break;

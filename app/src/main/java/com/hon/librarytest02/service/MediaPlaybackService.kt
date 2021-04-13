@@ -1,10 +1,16 @@
 package com.hon.librarytest02.service
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.media.MediaBrowserServiceCompat
+import androidx.media.session.MediaButtonReceiver
+import com.hon.librarytest02.R
+import androidx.media.app.NotificationCompat as MediaNotificationCompat
 
 /**
  * Created by shuaihua on 2021/1/27 5:45 PM
@@ -42,6 +48,72 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
             // Set the session's token so that client activities can communicate with it.
             setSessionToken(sessionToken)
         }
+
+        // Given a media session and its context (usually the component containing the session)
+        // Create a NotificationCompat.Builder
+
+        // Get the session's metadata
+        val controller = mediaSession!!.controller
+//        val mediaMetadata = controller.metadata
+//        val description = mediaMetadata.description
+
+        val builder = NotificationCompat.Builder(this, "player").apply {
+            // Add the metadata for the currently playing track
+            setContentTitle("title")
+            setContentText("subtitle")
+            setSubText("description")
+//            setLargeIcon()
+
+            // Enable launching the player by clicking the notification
+            setContentIntent(controller.sessionActivity)
+
+            // Stop the service when the notification is swiped away
+            setDeleteIntent(
+                    MediaButtonReceiver.buildMediaButtonPendingIntent(
+                            this@MediaPlaybackService,
+                            PlaybackStateCompat.ACTION_STOP
+                    )
+            )
+
+            // Make the transport controls visible on the lockscreen
+            setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+            // Add an app icon and set its accent color
+            // Be careful about the color
+            setSmallIcon(R.drawable.ic_android_black_24dp)
+            color = ContextCompat.getColor(this@MediaPlaybackService, R.color.colorPrimaryDark)
+
+            // Add a pause button
+            addAction(
+                    NotificationCompat.Action(
+                            R.drawable.ic_baseline_pause_circle_filled_24,
+                            "Pause",
+                            MediaButtonReceiver.buildMediaButtonPendingIntent(
+                                    this@MediaPlaybackService,
+                                    PlaybackStateCompat.ACTION_PLAY_PAUSE
+                            )
+                    )
+            )
+
+            // Take advantage of MediaStyle features
+            setStyle(MediaNotificationCompat.MediaStyle()
+                    .setMediaSession(mediaSession!!.sessionToken)
+                    .setShowActionsInCompactView(0)
+
+                    // Add a cancel button
+                    .setShowCancelButton(true)
+                    .setCancelButtonIntent(
+                            MediaButtonReceiver.buildMediaButtonPendingIntent(
+                                    this@MediaPlaybackService,
+                                    PlaybackStateCompat.ACTION_STOP
+                            )
+                    )
+            )
+        }
+
+        // Display the notification and place the service in the foreground
+        startForeground(1, builder.build())
+
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
@@ -62,7 +134,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         return true
     }
 
-    override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
+    override fun onLoadChildren(parentMediaId: String, result: Result<List<MediaBrowserCompat.MediaItem>>) {
         //  Browsing not allowed
         if (MY_EMPTY_MEDIA_ROOT_ID == parentMediaId) {
             result.sendResult(null)
@@ -84,7 +156,7 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
         result.sendResult(mediaItems)
     }
 
-    class MySessionCallback : MediaSessionCompat.Callback(){
+    class MySessionCallback : MediaSessionCompat.Callback() {
 
         override fun onPrepare() {
             super.onPrepare()

@@ -115,6 +115,8 @@ dependencies {
 //    // optional - Implementation of a SessionPlayer
 //    implementation "androidx.media2:media2-player:$media2_version"
 
+    implementation deps.eventbus
+
     implementation project(':apt_annotation')
     annotationProcessor project(':apt_processor')
     implementation project(path: ':mylogger')

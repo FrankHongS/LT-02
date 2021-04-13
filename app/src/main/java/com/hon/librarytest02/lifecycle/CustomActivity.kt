@@ -12,20 +12,20 @@ import androidx.lifecycle.LifecycleRegistry
  * E-mail: v-shhong@microsoft.com
  */
 @SuppressLint("Registered")
-class CustomActivity :Activity(),LifecycleOwner{
+class CustomActivity : Activity(), LifecycleOwner {
 
     private lateinit var lifecycleRegistry: LifecycleRegistry
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        lifecycleRegistry= LifecycleRegistry(this)
-        lifecycleRegistry.currentState=Lifecycle.State.CREATED
+        lifecycleRegistry = LifecycleRegistry(this)
+        lifecycleRegistry.currentState = Lifecycle.State.CREATED
     }
 
     override fun onStart() {
         super.onStart()
-        lifecycleRegistry.currentState=Lifecycle.State.STARTED
+        lifecycleRegistry.currentState = Lifecycle.State.STARTED
     }
 
     override fun getLifecycle(): Lifecycle {
