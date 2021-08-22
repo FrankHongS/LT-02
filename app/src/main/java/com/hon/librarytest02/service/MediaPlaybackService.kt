@@ -11,7 +11,7 @@ import androidx.media.MediaBrowserServiceCompat
  * Email: shuaihua@staff.sina.com.cn
  */
 private const val MY_MEDIA_ROOT_ID = "media_root_id"
-private const val MY_EMPTY_MEDIA_ROOT_ID = "empey_root_id"
+private const val MY_EMPTY_MEDIA_ROOT_ID = "empty_root_id"
 private const val TAG = "MediaPlaybackService"
 
 class MediaPlaybackService : MediaBrowserServiceCompat() {
@@ -64,24 +64,24 @@ class MediaPlaybackService : MediaBrowserServiceCompat() {
 
     override fun onLoadChildren(parentId: String, result: Result<MutableList<MediaBrowserCompat.MediaItem>>) {
         //  Browsing not allowed
-        if (MY_EMPTY_MEDIA_ROOT_ID == parentMediaId) {
-            result.sendResult(null)
-            return
-        }
-
-        // Assume for example that the music catalog is already loaded/cached.
-
-        val mediaItems = emptyList<MediaBrowserCompat.MediaItem>()
-
-        // Check if this is the root menu:
-        if (MY_MEDIA_ROOT_ID == parentMediaId) {
-            // Build the MediaItem objects for the top level,
-            // and put them in the mediaItems list...
-        } else {
-            // Examine the passed parentMediaId to see which submenu we're at,
-            // and put the children of that menu in the mediaItems list...
-        }
-        result.sendResult(mediaItems)
+//        if (MY_EMPTY_MEDIA_ROOT_ID == parentMediaId) {
+//            result.sendResult(null)
+//            return
+//        }
+//
+//        // Assume for example that the music catalog is already loaded/cached.
+//
+//        val mediaItems = emptyList<MediaBrowserCompat.MediaItem>()
+//
+//        // Check if this is the root menu:
+//        if (MY_MEDIA_ROOT_ID == parentMediaId) {
+//            // Build the MediaItem objects for the top level,
+//            // and put them in the mediaItems list...
+//        } else {
+//            // Examine the passed parentMediaId to see which submenu we're at,
+//            // and put the children of that menu in the mediaItems list...
+//        }
+//        result.sendResult(mediaItems)
     }
 
     class MySessionCallback : MediaSessionCompat.Callback(){

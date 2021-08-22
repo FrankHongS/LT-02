@@ -1,15 +1,15 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.novoda.bintray-release'
 //apply plugin: 'com.jfrog.bintray'
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -43,14 +43,14 @@ def siteUrl = 'https://github.com/FrankHongS/LT-02'    // project homepage
 def gitUrl = 'https://github.com/FrankHongS/LT-02.git' // project git
 group = "com.frankhon.simplesearchview"
 
-publish {
-    userOrg = 'frank-hon'
-    groupId = this.group
-    artifactId = 'simplesearchview'
-    publishVersion = this.version
-    desc = ''
-    website = siteUrl
-}
+//publish {
+//    userOrg = 'frank-hon'
+//    groupId = this.group
+//    artifactId = 'simplesearchview'
+//    publishVersion = this.version
+//    desc = ''
+//    website = siteUrl
+//}
 
 // upload command
 // ./gradlew simplesearchview:bintrayUpload -PbintrayUser=password -PbintrayKey=apikey -PdryRun=false
@@ -70,4 +70,3 @@ publish {
 //        publish = true
 //    }
 //}
-

@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_main"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <include
+        layout="@layout/layout_floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.38" />
 
     <Button
-        android:id="@+id/btn_test_kotlin"
+        android:id="@+id/btn_control"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="16dp"
-        android:text="编辑"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="32dp"
         android:textAllCaps="false"
+        android:text="Button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

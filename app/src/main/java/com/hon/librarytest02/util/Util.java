@@ -26,8 +26,8 @@ public class Util {
         return LibraryTest.sContext.getResources().getString(resId);
     }
 
-    public static int dp2px(int value) {
-        final float scale = Resources.getSystem().getDisplayMetrics().densityDpi;
+    public static int dp2px(float value) {
+        float scale = Resources.getSystem().getDisplayMetrics().densityDpi;
         return (int) (value * (scale / 160) + 0.5f);
     }
 

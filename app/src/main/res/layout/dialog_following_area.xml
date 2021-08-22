@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/btn_area_dialog_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="4.5dp"
+        android:text="取消" />
+
+    <TextView
+        android:id="@+id/tv_area_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_area_dialog_cancel"
+        android:layout_marginTop="37.5dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="选择你喜欢的内容"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/tv_area_dialog_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_area_dialog_title"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="订阅感兴趣的内容后，你可以实时收到推荐的内容，也可以在关注频道发现更多订阅。"
+        android:textSize="16sp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_area_dialog_areas"
+        android:layout_width="wrap_content"
+        android:layout_height="330dp"
+        android:layout_below="@id/tv_area_dialog_subtitle"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="33dp"
+        tools:itemCount="18"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/item_area_dialog"
+        tools:spanCount="3" />
+
+    <Button
+        android:id="@+id/btn_area_dialog_follow"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/rv_area_dialog_areas"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="27.5dp"
+        android:layout_marginBottom="60dp"
+        android:background="@drawable/dialog_confirm_button_bg"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:text="一键订阅" />
+</RelativeLayout>

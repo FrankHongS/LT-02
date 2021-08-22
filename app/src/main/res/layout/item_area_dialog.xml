@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="12.5dp"
+    android:layout_marginBottom="15dp">
+
+    <TextView
+        android:id="@+id/tv_area_name"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@drawable/area_item_bg"
+        android:gravity="center"
+        android:paddingHorizontal="15dp"
+        android:text="头条"
+        android:textColor="#fe350e"
+        app:drawableEndCompat="@drawable/ic_area_check" />
+
+</FrameLayout>
