@@ -1,29 +1,14 @@
 package com.hon.librarytest02.floatingbtn
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.graphics.Shader
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
-import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
-import androidx.core.view.isVisible
-import androidx.core.view.marginRight
+import androidx.core.view.ViewCompat
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CircleCrop
-import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hon.librarytest02.R
 import com.hon.librarytest02.util.Util
-import kotlinx.android.synthetic.main.activity_floating_btn.*
+import kotlinx.android.synthetic.main.activity_floating_button.*
+import kotlinx.android.synthetic.main.layout_floating_button.*
 
 /**
  * Created by shuaihua on 2021/8/18 3:26 下午
@@ -35,7 +20,7 @@ class FloatingBtnActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_floating_btn)
+        setContentView(R.layout.activity_floating_button)
 
         // 圆形Image
         // 方式1
@@ -51,13 +36,14 @@ class FloatingBtnActivity : AppCompatActivity() {
 //            .apply(RequestOptions().optionalTransform(CircleCrop()))
             .into(iv_avatar)
         iv_avatar.startUpdateProgress(25)
-        iv_avatar.setOnClickListener {
+        btn_control.setOnClickListener {
             isExpand = !isExpand
             if (isExpand) {
-                fl_container.show()
+                floating_button_container.show()
             } else {
-                fl_container.hide(Util.dp2px(5f))
+                floating_button_container.hide(Util.dp2px(5f))
             }
         }
+        ViewCompat.setElevation(floating_button_container, Util.dp2px(8f).toFloat())
     }
 }

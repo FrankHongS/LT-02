@@ -61,6 +61,7 @@ public class CircleImageView extends AppCompatImageView {
 
     private float imageRotatedDegree = 0f;
     private float progressRotatedDegree = 0f;
+    private RectF arcRect = new RectF();
 
     public CircleImageView(Context context) {
         super(context);
@@ -124,8 +125,11 @@ public class CircleImageView extends AppCompatImageView {
         if (mBorderWidth != 0) {
 //            canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, mBorderRadius,
 //                    mBorderPaint);
-            canvas.drawArc(mBorderWidth / 2f, mBorderWidth / 2f, getWidth() - mBorderWidth / 2f,
-                    getHeight() - mBorderWidth / 2f, 270f,
+            arcRect.left = mBorderWidth / 2f;
+            arcRect.top = mBorderWidth / 2f;
+            arcRect.right = getWidth() - mBorderWidth / 2f;
+            arcRect.bottom = getHeight() - mBorderWidth / 2f;
+            canvas.drawArc(arcRect, 270f,
                     progressRotatedDegree, false, mBorderPaint);
         }
     }

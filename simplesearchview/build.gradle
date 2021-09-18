@@ -1,15 +1,15 @@
 apply plugin: 'com.android.library'
-//apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'com.novoda.bintray-release'
+//apply plugin: 'com.jfrog.bintray'
 
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -38,89 +38,35 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-version = "1.0.2"
+version = "1.0.21"
 def siteUrl = 'https://github.com/FrankHongS/LT-02'    // project homepage
 def gitUrl = 'https://github.com/FrankHongS/LT-02.git' // project git
 group = "com.frankhon.simplesearchview"
 
-//install {
-//    repositories.mavenInstaller {
-//        // This generates POM.xml with proper parameters
-//        pom {
-//            project {
-//                packaging 'aar'
-//                name 'SimpleSearchView'
-//                url siteUrl
-//                licenses {
-//                    license {
-//                        name 'The Apache Software License, Version 2.0'
-//                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                    }
-//                }
-//                developers {
-//                    developer {
-//                        id 'frank-hon'
-//                        name 'frank-hon'
-//                        email 'frank_hon@foxmail.com'
-//                    }
-//                }
-//                scm {
-//                    connection gitUrl
-//                    developerConnection gitUrl
-//                    url siteUrl
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//task sourcesJar(type: Jar) {
-//    from android.sourceSets.main.java.srcDirs
-//    classifier = 'sources'
-//}
-//
-//artifacts {
-//    archives sourcesJar
-//}
-//
-//android.libraryVariants.all { variant ->
-//    println variant.javaCompile.classpath.files
-//    if(variant.name == 'release') { //我们只需 release 的 javadoc
-//        task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
-//            // title = ''
-//            // description = ''
-//            source = variant.javaCompile.source
-//            classpath = files(variant.javaCompile.classpath.files, project.android.getBootClasspath())
-//            options {
-//                encoding "utf-8"
-//                links "http://docs.oracle.com/javase/7/docs/api/"
-//                linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-//            }
-//            exclude '**/BuildConfig.java'
-//            exclude '**/R.java'
-//        }
-//        task("javadoc${variant.name.capitalize()}Jar", type: Jar, dependsOn: "generate${variant.name.capitalize()}Javadoc") {
-//            classifier = 'javadoc'
-//            from tasks.getByName("generate${variant.name.capitalize()}Javadoc").destinationDir
-//        }
-//        artifacts {
-//            archives tasks.getByName("javadoc${variant.name.capitalize()}Jar")
-//        }
-//    }
+//publish {
+//    userOrg = 'frank-hon'
+//    groupId = this.group
+//    artifactId = 'simplesearchview'
+//    publishVersion = this.version
+//    desc = ''
+//    website = siteUrl
 //}
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    configurations = ['archives']
-    pkg {
-        repo = "maven"
-        name = "simplesearchview"                // project name in jcenter
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["Apache-2.0"]
-        publish = true
-    }
-}
+// upload command
+// ./gradlew simplesearchview:bintrayUpload -PbintrayUser=password -PbintrayKey=apikey -PdryRun=false
+
+//Properties properties = new Properties()
+//properties.load(project.rootProject.file('local.properties').newDataInputStream())
+//bintray {
+//    user = properties.getProperty("bintray.user")
+//    key = properties.getProperty("bintray.apikey")
+//    configurations = ['archives']
+//    pkg {
+//        repo = "maven"
+//        name = "simplesearchview"                // project name in jcenter
+//        websiteUrl = siteUrl
+//        vcsUrl = gitUrl
+//        licenses = ["Apache-2.0"]
+//        publish = true
+//    }
+//}
