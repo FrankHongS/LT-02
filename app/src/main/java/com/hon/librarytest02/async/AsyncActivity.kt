@@ -68,14 +68,14 @@ class AsyncActivity : AppCompatActivity() {
             val deferreds = listOf(
                     async {
                         Log.e(TAG, "协程执行结束 -2- 线程id：${Thread.currentThread().id}")
-                        delay(8 * 1000)
+                        delay(10 * 1000)
 //                        Thread.sleep(8*1000)
                         Log.e(TAG, "协程执行结束 -3- 线程id：${Thread.currentThread().id}")
                         "hello"
                     },
                     async {
                         Log.e(TAG, "协程执行结束 -4- 线程id：${Thread.currentThread().id}")
-                        delay(10 * 1000)// no blocking
+                        delay(8 * 1000)// no blocking
 //                        Thread.sleep(10*1000)//block thread
                         Log.e(TAG, "协程执行结束 -5- 线程id：${Thread.currentThread().id}")
                         "world !"

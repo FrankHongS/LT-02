@@ -18,7 +18,6 @@ import com.hon.mylogger.MyLogger;
  * Created by Frank_Hon on 1/10/2019.
  * E-mail: v-shhong@microsoft.com
  */
-@SuppressLint("Registered")
 public class Test02Activity extends AppCompatActivity{
 
     @BindView(R.id.test)

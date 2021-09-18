@@ -10,8 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Build;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.util.Pair;
 
 import com.hon.librarytest02.LibraryTest;
 import com.hon.librarytest02.R;
@@ -26,9 +29,21 @@ public class Util {
         return LibraryTest.sContext.getResources().getString(resId);
     }
 
-    public static int dp2px(float value) {
+    public static int dp2px(float dpValue) {
         final float scale = Resources.getSystem().getDisplayMetrics().densityDpi;
-        return (int) (value * (scale / 160) + 0.5f);
+        return (int) (dpValue * (scale / 160) + 0.5f);
+    }
+
+    public static int px2dp(float pxValue) {
+        final float scale = Resources.getSystem().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
+    public static DisplayMetrics getDisplayMetrics() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) LibraryTest.sContext.getSystemService(Context.WINDOW_SERVICE);
+        windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
+        return displayMetrics;
     }
 
     @TargetApi(Build.VERSION_CODES.O)

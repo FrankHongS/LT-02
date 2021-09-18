@@ -1,5 +1,6 @@
 package com.hon.librarytest02.rxJava;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.concurrent.TimeUnit;
@@ -212,6 +213,7 @@ public class ConceptsTest {
 
     @SuppressWarnings("all")
     @Test
+    @Ignore
     public void backpressure() throws InterruptedException {
         Observable.interval(1, TimeUnit.MICROSECONDS)
                 .flatMap(aLong -> Observable.range(0,10000000))
@@ -225,7 +227,6 @@ public class ConceptsTest {
 
         Thread.sleep(10000);
 
-        Flowable.create()
     }
 
     private void printThreadName(String tag) {

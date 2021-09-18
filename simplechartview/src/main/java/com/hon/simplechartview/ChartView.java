@@ -205,11 +205,7 @@ public class ChartView extends View {
                     case MotionEvent.ACTION_MOVE:
                         float deltaX = event.getX() - startX;
                         float deltaY = event.getY() - startY;
-                        if (Math.abs(deltaX) >= Math.abs(deltaY)) {
-                            getParent().requestDisallowInterceptTouchEvent(true);
-                        } else {
-                            getParent().requestDisallowInterceptTouchEvent(false);
-                        }
+                        getParent().requestDisallowInterceptTouchEvent(Math.abs(deltaX) >= Math.abs(deltaY));
                         startX = event.getX();
                         startY = event.getY();
                         break;
@@ -301,7 +297,7 @@ public class ChartView extends View {
 
             for (int j = 0; j < dataList.size(); j++) {
                 canvas.drawCircle(mMarginLeft + mUnitXDistance * j,
-                        mOriginY - (dataList.get(j) - Float.valueOf(mYLabelArray[0])) * mPerDataToPx,
+                        mOriginY - (dataList.get(j) - Float.parseFloat(mYLabelArray[0])) * mPerDataToPx,
                         mDataDotRadius,
                         dotPaint);
             }
@@ -383,10 +379,10 @@ public class ChartView extends View {
         for (List<Float> list : mChartData) {
             Path path = new Path();
             path.moveTo(mMarginLeft,
-                    mOriginY - (list.get(0) - Float.valueOf(mYLabelArray[0])) * mPerDataToPx);
+                    mOriginY - (list.get(0) - Float.parseFloat(mYLabelArray[0])) * mPerDataToPx);
             for (int n = 0; n < list.size() - 1; n++) {
                 path.lineTo(mMarginLeft + mUnitXDistance * (n + 1),
-                        mOriginY - (list.get(n + 1) - Float.valueOf(mYLabelArray[0])) * mPerDataToPx);
+                        mOriginY - (list.get(n + 1) - Float.parseFloat(mYLabelArray[0])) * mPerDataToPx);
             }
 
             PathMeasure pathMeasure = new PathMeasure(path, false);
