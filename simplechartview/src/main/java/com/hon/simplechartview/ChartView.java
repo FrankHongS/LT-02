@@ -55,12 +55,12 @@ public class ChartView extends View {
     private Paint mYLabelPaint;
     private Paint mXLabelPaint;
 
-    private List<Paint> mDataLinePaintList = new ArrayList<>();
-    private List<Paint> mDotPaintList = new ArrayList<>();
+    private final List<Paint> dataLinePaintList = new ArrayList<>();
+    private final List<Paint> dotPaintList = new ArrayList<>();
 
-    private List<List<Float>> mChartData = new ArrayList<>();
-    private List<Integer> mLineColorList = new ArrayList<>();
-    private List<Integer> mDotColorList = new ArrayList<>();
+    private final List<List<Float>> chartData = new ArrayList<>();
+    private final List<Integer> lineColorList = new ArrayList<>();
+    private final List<Integer> dotColorList = new ArrayList<>();
 
     private List<ChartEntity> mChartEntityList;
     private List<String> mXAxisLabelList;
@@ -98,15 +98,10 @@ public class ChartView extends View {
 
     public ChartView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
         setClickable(true);
-
         initAttrs(attrs);
-
         initPaints();
-
         solveScrollConflict();
-
     }
 
     private void initAttrs(AttributeSet attrs) {
@@ -133,18 +128,13 @@ public class ChartView extends View {
         mXAxisColor = a.getColor(R.styleable.ChartView_x_axis_color, Color.parseColor("#666666"));
 
         mAnimationDuration = (long) (a.getFloat(R.styleable.ChartView_animation_duration, 2.5f) * 1000);
-
         mXLabelMargin = a.getDimensionPixelSize(R.styleable.ChartView_x_label_margin_top, 28);
-
         a.recycle();
     }
 
     private void solveScrollConflict() {
-
         mScroller = new Scroller(getContext());
-
         final GestureDetector detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
-
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 if (velocityX < 0 && getScrollX() >= mContentWidth - getWidth()) {
@@ -155,25 +145,19 @@ public class ChartView extends View {
                     return false;
                 }
 
-                mScroller.fling(getScrollX(), 0, -(int) velocityX, 0,
-                        0, mContentWidth - getWidth(),
+                mScroller.fling(getScrollX(), 0, -(int) velocityX, 0, 0, mContentWidth - getWidth(),
                         0, 0);
                 return true;
             }
 
             @Override
             public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-
                 if (Math.abs(distanceX) >= Math.abs(distanceY)) {
                     if (distanceX > 0 && getScrollX() >= mContentWidth - getWidth()) {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                        return false;
+                        return true;
+                    } else if (distanceX < 0 && getScrollX() <= 0) {
+                        return true;
                     }
-                    if (distanceX < 0 && getScrollX() <= 0) {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                        return false;
-                    }
-
                 } else {
                     return false;
                 }
@@ -184,33 +168,16 @@ public class ChartView extends View {
                 } else if (distance + getScrollX() > mContentWidth - getWidth()) {
                     distance = mContentWidth - getWidth() - getScrollX();
                 }
-
                 scrollBy(distance, 0);
                 return true;
             }
         });
 
         setOnTouchListener(new OnTouchListener() {
-            float startX;
-            float startY;
-
             @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        startX = event.getX();
-                        startY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        float deltaX = event.getX() - startX;
-                        float deltaY = event.getY() - startY;
-                        getParent().requestDisallowInterceptTouchEvent(Math.abs(deltaX) >= Math.abs(deltaY));
-                        startX = event.getX();
-                        startY = event.getY();
-                        break;
-
-                }
+                getParent().requestDisallowInterceptTouchEvent(true);
                 return detector.onTouchEvent(event);
             }
         });
@@ -237,17 +204,14 @@ public class ChartView extends View {
         this.mXAxisLabelList = labelList;
 
         initData();
-
-        mLongestSize = Util.getLongestSize(mChartData);
+        mLongestSize = Util.getLongestSize(chartData);
         mContentWidth = mUnitXDistance * mLongestSize + mMarginLeft;
 
         mHeight = (int) (mUnitYDistance * (mXAxisCount - 1) + mUnitYDistance * mTranslateRatio + 3 * mXLabelTextSize + 3 * mDataDotRadius + mXLabelMargin);
         mOriginY = mHeight - 2 * mXLabelTextSize - mXLabelMargin;
 
         initDataPaints();
-
         initPath();
-
         startAnimation();
     }
 
@@ -264,9 +228,6 @@ public class ChartView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-
-        // getHeight()==h!=0
-
     }
 
     @Override
@@ -286,14 +247,13 @@ public class ChartView extends View {
         // data path
         for (int j = 0; j < mPathList.size(); j++) {
             Path path = mPathList.get(j);
-            canvas.drawPath(path, mDataLinePaintList.get(j));
+            canvas.drawPath(path, dataLinePaintList.get(j));
         }
 
         // data point
-        for (int i = 0; i < mChartData.size(); i++) {
-
-            List<Float> dataList = mChartData.get(i);
-            Paint dotPaint = mDotPaintList.get(i);
+        for (int i = 0; i < chartData.size(); i++) {
+            List<Float> dataList = chartData.get(i);
+            Paint dotPaint = dotPaintList.get(i);
 
             for (int j = 0; j < dataList.size(); j++) {
                 canvas.drawCircle(mMarginLeft + mUnitXDistance * j,
@@ -316,7 +276,6 @@ public class ChartView extends View {
     }
 
     private void initData() {
-
         mYLabelArray = new String[mXAxisCount];
         mYLabelWidthArray = new float[mXAxisCount];
 
@@ -324,12 +283,12 @@ public class ChartView extends View {
         clearData();
 
         for (ChartEntity entity : mChartEntityList) {
-            mChartData.add(entity.getDataList());
-            mLineColorList.add(entity.getLineColor());
-            mDotColorList.add(entity.getDotColor());
+            chartData.add(entity.getDataList());
+            lineColorList.add(entity.getLineColor());
+            dotColorList.add(entity.getDotColor());
         }
 
-        float[] maxAndMin = Util.getMaxAndMin(mChartData);
+        float[] maxAndMin = Util.getMaxAndMin(chartData);
 
         float delta = maxAndMin[0] - maxAndMin[1];
         float unit = delta / (mXAxisCount - 1);
@@ -346,29 +305,28 @@ public class ChartView extends View {
 
         mMaxTextWidth = (int) (maxTextWidth + 0.5f);
         mMarginLeft = mMaxTextWidth + mUnitLeftPadding * 4;
-
         mPerDataToPx = mUnitYDistance / unit;
     }
 
     private void initDataPaints() {
-        for (int color : mLineColorList) {
+        for (int color : lineColorList) {
             Paint dataLinePaint;
-            if (color != 0)
+            if (color != 0) {
                 dataLinePaint = Util.generatePaint(color, mDataLineStrokeWidth, Paint.Style.STROKE);
-            else
+            } else {
                 dataLinePaint = Util.generatePaint(Color.parseColor("#0000ff"), mDataLineStrokeWidth, Paint.Style.STROKE);
-
-            mDataLinePaintList.add(dataLinePaint);
+            }
+            dataLinePaintList.add(dataLinePaint);
         }
 
-        for (int color : mDotColorList) {
+        for (int color : dotColorList) {
             Paint dotPaint;
-            if (color != 0)
+            if (color != 0) {
                 dotPaint = Util.generatePaint(color, DEFAULT_STROKE_WIDTH, Paint.Style.FILL);
-            else
+            } else {
                 dotPaint = Util.generatePaint(Color.parseColor("#000000"), DEFAULT_STROKE_WIDTH, Paint.Style.FILL);
-
-            mDotPaintList.add(dotPaint);
+            }
+            dotPaintList.add(dotPaint);
         }
     }
 
@@ -376,7 +334,7 @@ public class ChartView extends View {
         mPathList = new ArrayList<>();
         mPathMeasureList = new ArrayList<>();
 
-        for (List<Float> list : mChartData) {
+        for (List<Float> list : chartData) {
             Path path = new Path();
             path.moveTo(mMarginLeft,
                     mOriginY - (list.get(0) - Float.parseFloat(mYLabelArray[0])) * mPerDataToPx);
@@ -390,30 +348,26 @@ public class ChartView extends View {
             mPathList.add(path);
             mPathMeasureList.add(pathMeasure);
         }
-
         mXAxisPathList = new ArrayList<>();
-
         for (int i = 0; i < mXAxisCount; i++) {
             Path path = new Path();
             float tempY = mOriginY - i * mUnitYDistance;
             path.moveTo(mMaxTextWidth + mUnitLeftPadding * 2, tempY);
             path.lineTo(mContentWidth, tempY);
-
             mXAxisPathList.add(path);
         }
     }
 
     private void clearData() {
-        mChartData.clear();
-        mLineColorList.clear();
-        mDotColorList.clear();
+        chartData.clear();
+        lineColorList.clear();
+        dotColorList.clear();
 
-        mDataLinePaintList.clear();
-        mDotPaintList.clear();
+        dataLinePaintList.clear();
+        dotPaintList.clear();
     }
 
     private void startAnimation() {
-
         if (mValueAnimator != null) {
             mValueAnimator.cancel();
         }
@@ -436,7 +390,7 @@ public class ChartView extends View {
                             new float[]{length, length},
                             fraction * length
                     );
-                    mDataLinePaintList.get(i).setPathEffect(effect);
+                    dataLinePaintList.get(i).setPathEffect(effect);
                 }
 
                 invalidate();

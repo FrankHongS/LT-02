@@ -29,7 +29,7 @@ internal class FloatingButtonAnimatedContainer @JvmOverloads constructor(
     private var rightViewEndPosition: Int = 0
     private var animatorSet: AnimatorSet? = null
 
-    private val animators = arrayListOf<Animator>()
+    private var isExpand = true
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
@@ -48,9 +48,11 @@ internal class FloatingButtonAnimatedContainer @JvmOverloads constructor(
     }
 
     fun hide(endPosition: Int = 0) {
-        if (animatorSet != null) {
-            animatorSet!!.cancel()
+        if (!isExpand) {
+            return
         }
+
+        animatorSet?.cancel()
         rightViewEndPosition = endPosition
         val leftAnimator = leftView?.let { left ->
             ObjectAnimator.ofFloat(left, View.ALPHA, 1f, 0f)
@@ -79,6 +81,7 @@ internal class FloatingButtonAnimatedContainer @JvmOverloads constructor(
             )
             doOnStart {
                 animatorSet = this
+                isExpand = false
             }
             doOnEnd {
                 animatorSet = null
@@ -87,9 +90,10 @@ internal class FloatingButtonAnimatedContainer @JvmOverloads constructor(
     }
 
     fun show() {
-        if (animatorSet != null) {
-            animatorSet!!.cancel()
+        if (isExpand) {
+            return
         }
+        animatorSet?.cancel()
         val leftAnimator = leftView?.let { left ->
             ObjectAnimator.ofFloat(left, View.ALPHA, 0f, 1f)
                 .apply {
@@ -117,6 +121,7 @@ internal class FloatingButtonAnimatedContainer @JvmOverloads constructor(
             )
             doOnStart {
                 animatorSet = this
+                isExpand = true
             }
             doOnEnd {
                 animatorSet = null

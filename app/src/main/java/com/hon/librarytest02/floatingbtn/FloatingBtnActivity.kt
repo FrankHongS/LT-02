@@ -9,6 +9,7 @@ import com.hon.librarytest02.R
 import com.hon.librarytest02.util.Util
 import kotlinx.android.synthetic.main.activity_floating_button.*
 import kotlinx.android.synthetic.main.layout_floating_button.*
+import kotlinx.coroutines.Dispatchers
 
 /**
  * Created by shuaihua on 2021/8/18 3:26 下午
@@ -45,5 +46,7 @@ class FloatingBtnActivity : AppCompatActivity() {
             }
         }
         ViewCompat.setElevation(floating_button_container, Util.dp2px(8f).toFloat())
+
+        Dispatchers.Default
     }
 }
