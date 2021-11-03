@@ -49,8 +49,8 @@ public class GridViewActivity extends AppCompatActivity {
     }
 
     private void initView() {
-//        staggeredGridView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        staggeredGridView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+//        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
 //        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
 //            @Override
 //            public int getSpanSize(int position) {
@@ -60,7 +60,7 @@ public class GridViewActivity extends AppCompatActivity {
 //                return 2;
 //            }
 //        });
-        staggeredGridView.setLayoutManager(layoutManager);
+//        staggeredGridView.setLayoutManager(layoutManager);
         staggeredGridView.setAdapter(new GridAdapter());
     }
 
@@ -69,17 +69,17 @@ public class GridViewActivity extends AppCompatActivity {
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//            switch (viewType){
-//                case 0:
-//                    return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered_grid_01, parent, false));
-//                case 1:
-//                    return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered_grid_02, parent, false));
-//                default:
-//                    break;
-//            }
-//
-//            return null;
-            return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered_grid_03, parent, false));
+            switch (viewType) {
+                case 0:
+                    return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered_grid_01, parent, false));
+                case 1:
+                    return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered_grid_02, parent, false));
+                default:
+                    break;
+            }
+
+            throw new RuntimeException("Not support type");
+//            return new GridViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_staggered_grid_03, parent, false));
 //            return new GridViewHolder(
 //                    new SinaRelativeLayout(parent.getContext())
 //            );
@@ -88,25 +88,25 @@ public class GridViewActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             GridViewHolder gridViewHolder = (GridViewHolder) holder;
-//            gridViewHolder.bindView(position);
-            holder.itemView.post(
-                    () -> {
-                        if (position == 1) {
-                            Log.d("frankhon", "onBindViewHolder: width=" + Util.px2dp(
-                                    gridViewHolder.itemView.getWidth()
-                            )+", "
-                                    + Util.px2dp(
-                                    ((ViewGroup)gridViewHolder.itemView).getChildAt(0).getWidth()
-                            )+","
-                                    + Util.px2dp(
-                                    gridViewHolder.itemView.getWidth()
-                            )
-                                    + ", height=" + Util.px2dp(
-                                    gridViewHolder.itemView.getHeight()
-                            ));
-                        }
-                    }
-            );
+            gridViewHolder.bindView(position);
+//            holder.itemView.post(
+//                    () -> {
+//                        if (position == 1) {
+//                            Log.d("frankhon", "onBindViewHolder: width=" + Util.px2dp(
+//                                    gridViewHolder.itemView.getWidth()
+//                            ) + ", "
+//                                    + Util.px2dp(
+//                                    ((ViewGroup) gridViewHolder.itemView).getChildAt(0).getWidth()
+//                            ) + ","
+//                                    + Util.px2dp(
+//                                    gridViewHolder.itemView.getWidth()
+//                            )
+//                                    + ", height=" + Util.px2dp(
+//                                    gridViewHolder.itemView.getHeight()
+//                            ));
+//                        }
+//                    }
+//            );
         }
 
         @Override
@@ -117,22 +117,34 @@ public class GridViewActivity extends AppCompatActivity {
 
         @Override
         public int getItemViewType(int position) {
-            return position % 2;
+            return 0;
         }
     }
 
     static class GridViewHolder extends RecyclerView.ViewHolder {
 
-//        @BindView(R.id.tv_staggered_item)
-//        TextView text;
-//
+        @BindView(R.id.tv_staggered_item)
+        TextView text;
+
         public GridViewHolder(@NonNull View itemView) {
             super(itemView);
-//            ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
-//
-//        public void bindView(int position) {
-//            text.setText(String.valueOf(position));
-//        }
+
+        public void bindView(int position) {
+            switch (position % 3) {
+                case 0:
+                    text.setText("Monica Monica Monica " + position);
+                    break;
+                case 1:
+                    text.setText("Chandler " + position);
+                    break;
+                case 2:
+                    text.setText("Joey " + position);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
