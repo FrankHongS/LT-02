@@ -18,6 +18,9 @@ import com.hon.librarytest02.R;
 import com.hon.librarytest02.util.Util;
 import com.hon.mylogger.MyLogger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,6 +32,8 @@ public class GridViewActivity extends AppCompatActivity {
 
     @BindView(R.id.rv_grid)
     RecyclerView staggeredGridView;
+    @BindView(R.id.gridTextView)
+    GridTextView gridTextView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +54,7 @@ public class GridViewActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        gridTextView.setData(Arrays.asList("Monica", "Chandler Bing", "Reachel Green", "Ross", "Joey Trribianni","hello worldworldworldworldyou are the best !"));
         staggeredGridView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 //        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
 //        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {

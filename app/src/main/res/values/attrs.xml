@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="TimelineView">
-
         <!--not less than 2-->
-        <attr name="nodeCount" format="integer"/>
-
+        <attr name="nodeCount" format="integer" />
         <!--small circle radius-->
-        <attr name="circleRadius" format="dimension"/>
-
-        <attr name="lineWidth" format="dimension"/>
-
-        <attr name="paintColor" format="color"/>
-
-        <attr name="selectedNode" format="integer"/>
-
-        <attr name="selectedNodeColor" format="color"/>
-
+        <attr name="circleRadius" format="dimension" />
+        <attr name="lineWidth" format="dimension" />
+        <attr name="paintColor" format="color" />
+        <attr name="selectedNode" format="integer" />
+        <attr name="selectedNodeColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="GridTextView">
+        <attr name="itemLayout" format="reference" />
+        <attr name="marginHorizontal" format="dimension" />
+        <attr name="marginVertical" format="dimension" />
+        <attr name="spanCount" format="integer"/>
     </declare-styleable>
 </resources>
