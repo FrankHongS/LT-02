@@ -2,7 +2,11 @@ package com.hon.librarytest02.viewmoretext
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.widget.NestedScrollView
 import com.hon.librarytest02.R
 import kotlinx.android.synthetic.main.activity_viewmore.*
 
@@ -31,6 +35,18 @@ class ViewMoreActivity : AppCompatActivity() {
         viewMore.setOnClickListener {
             if (!viewMore.isExpand()) {
                 viewMore.toggle()
+            }
+        }
+
+        container.setOnScrollChangeListener { v: NestedScrollView, _, _, _, _ ->
+            // We take the last son in the scrollview
+            val view = v[v.childCount - 1]
+            val diff = view.bottom - (v.height + v.scrollY)
+
+            // if diff is zero, then the bottom has been reached
+            if (diff == 0) {
+                Log.d("frankhon", "onCreate: bottom...")
+                Toast.makeText(this, "bottom", Toast.LENGTH_SHORT).show()
             }
         }
     }
