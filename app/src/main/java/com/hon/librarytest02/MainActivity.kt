@@ -33,6 +33,7 @@ import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
 import com.hon.librarytest02.timelineview.TimelineViewActivity
 import com.hon.librarytest02.transition.TransitionActivity
+import com.hon.librarytest02.viewmoretext.ViewMoreActivity
 import com.hon.librarytest02.watchstock.WatchStockActivity
 import com.hon.librarytest02.webview.WebActivity
 import com.hon.librarytest02.workmanager.WorkManagerActivity
@@ -45,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         "Floating Button",
         "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
         "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
-        "Launch Mode", "StaggerGridView", "SearchView", "Download",
+        "Launch Mode", "StaggerGridView", "View More Text", "SearchView", "Download",
         "Camera", "Glide", "NDK", "Coroutine", "Fixed Top Bar", "Dialog"
     )
 
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity() {
                     "Transition" -> navigate(TransitionActivity::class.java)
                     "Launch Mode" -> navigate(LaunchModeActivity::class.java)
                     "StaggerGridView" -> navigate(GridViewActivity::class.java)
+                    "View More Text" -> navigate(ViewMoreActivity::class.java)
                     "SearchView" -> navigate(SearchViewActivity::class.java)
                     "Download" -> navigate(DownloadActivity::class.java)
                     "Camera" -> navigate(CameraShootingPage::class.java)

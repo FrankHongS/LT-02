@@ -67,6 +67,7 @@
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".dialog.DialogActivity" />
         <activity android:name=".floatingbtn.FloatingBtnActivity" />
+        <activity android:name=".viewmoretext.ViewMoreActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"
