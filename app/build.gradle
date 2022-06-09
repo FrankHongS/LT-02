@@ -77,7 +77,6 @@ dependencies {
     implementation deps.lifecycle.viewmodel_savedstate
 
     def nav_version = "2.1.0-rc01"
-    // Java
     implementation "androidx.navigation:navigation-fragment:$nav_version"
     implementation "androidx.navigation:navigation-ui:$nav_version"
 
@@ -122,6 +121,13 @@ dependencies {
 //    implementation "androidx.media2:media2-player:$media2_version"
 
     implementation deps.eventbus
+
+    // Compose
+    implementation deps.compose.activity
+    implementation deps.compose.material
+    implementation deps.compose.animation
+    implementation deps.compose.ui_tooling
+    implementation deps.compose.lifecycle_viewmodel
 
     implementation project(':apt_annotation')
     annotationProcessor project(':apt_processor')

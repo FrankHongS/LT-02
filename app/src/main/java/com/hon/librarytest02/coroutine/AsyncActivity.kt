@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.hon.librarytest02.R
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.activity_async.*
 import kotlinx.coroutines.*
 
@@ -20,6 +21,7 @@ class AsyncActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_async)
+        clearFindViewByIdCache()
         Log.d(TAG, "主线程id：${Thread.currentThread().id}")
         btn_hello.setOnClickListener {
             Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show()
@@ -68,14 +70,14 @@ class AsyncActivity : AppCompatActivity() {
             val deferreds = listOf(
                     async {
                         Log.e(TAG, "协程执行结束 -2- 线程id：${Thread.currentThread().id}")
-                        delay(8 * 1000)
+                        delay(10 * 1000)
 //                        Thread.sleep(8*1000)
                         Log.e(TAG, "协程执行结束 -3- 线程id：${Thread.currentThread().id}")
                         "hello"
                     },
                     async {
                         Log.e(TAG, "协程执行结束 -4- 线程id：${Thread.currentThread().id}")
-                        delay(10 * 1000)// no blocking
+                        delay(8 * 1000)// no blocking
 //                        Thread.sleep(10*1000)//block thread
                         Log.e(TAG, "协程执行结束 -5- 线程id：${Thread.currentThread().id}")
                         "world !"

@@ -3,7 +3,6 @@ package com.hon.librarytest02
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.frankhon.launchmodetest.LaunchModeActivity
-import com.hon.librarytest02.async.AsyncActivity
+import com.hon.librarytest02.coroutine.AsyncActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
 import com.hon.librarytest02.chart.ChartActivity

@@ -61,13 +61,14 @@
             android:launchMode="singleTask"
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".ndk.NDKTestActivity" />
-        <activity android:name=".async.AsyncActivity" />
+        <activity android:name=".coroutine.AsyncActivity" />
         <activity android:name=".fixedtopbar.FixedTopBarActivity" />
         <activity android:name=".fixedtopbar.MaterialFixedTopBarActivity"
             android:theme="@style/NoActionBar1"/>
         <activity android:name=".dialog.DialogActivity" />
         <activity android:name=".floatingbtn.FloatingBtnActivity" />
         <activity android:name=".viewmoretext.ViewMoreActivity" />
+        <activity android:name=".itemdecoration.ItemDecorationActivity" />
 
         <service android:name=".service.Service01"/>
         <service android:name=".jobschedule.MyJobService"
