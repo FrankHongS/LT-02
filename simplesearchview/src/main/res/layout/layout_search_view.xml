@@ -18,9 +18,9 @@
                 android:id="@+id/ib_search_back"
                 android:layout_width="@dimen/default_search_input_height"
                 android:layout_height="@dimen/default_search_input_height"
-                android:layout_gravity="center"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
+                android:layout_gravity="center"
                 android:background="@null"
                 android:src="@drawable/ic_arrow_back"
                 tools:ignore="ContentDescription" />

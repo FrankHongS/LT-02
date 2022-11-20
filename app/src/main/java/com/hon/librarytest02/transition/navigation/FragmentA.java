@@ -49,9 +49,9 @@ public class FragmentA extends Fragment {
         View view = inflater.inflate(R.layout.fragment_transition_a, container, false);
         ButterKnife.bind(this, view);
 
-        setSharedElementReturnTransition(
-                TransitionInflater.from(getContext()).inflateTransition(R.transition.move)
-        );
+//        setSharedElementReturnTransition(
+//                TransitionInflater.from(getContext()).inflateTransition(R.transition.move)
+//        );
 
         return view;
     }

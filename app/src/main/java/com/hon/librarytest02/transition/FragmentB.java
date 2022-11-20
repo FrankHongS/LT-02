@@ -46,8 +46,6 @@ public class FragmentB extends Fragment {
         View view = inflater.inflate(R.layout.fragment_transition_b, container, false);
         ButterKnife.bind(this, view);
 
-
-
         return view;
     }
 
@@ -73,20 +71,20 @@ public class FragmentB extends Fragment {
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            startPostponedEnterTransition();
+//                            startPostponedEnterTransition();
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            startPostponedEnterTransition();
+//                            startPostponedEnterTransition();
                             return false;
                         }
                     })
                     .into(avatar);
         }
 
-        handler.postDelayed(this::startPostponedEnterTransition,2000);
-        postponeEnterTransition();
+//        handler.postDelayed(this::startPostponedEnterTransition, 10_000);
+//        postponeEnterTransition();
     }
 }

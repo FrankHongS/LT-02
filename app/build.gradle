@@ -62,9 +62,10 @@ dependencies {
     implementation deps.support.material
     implementation deps.support.constraintlayout
     implementation deps.support.cardview
+    implementation deps.support.preference
 
-    def work_version = "1.0.1"
-    implementation "android.arch.work:work-runtime:$work_version"
+//    def work_version = "2.7.1"
+//    implementation "android.arch.work:work-runtime:2.7.1"
 //    implementation "android.arch.work:work-runtime-ktx:$work_version"
 
     // ViewModel
@@ -111,14 +112,7 @@ dependencies {
     api "androidx.camera:camera-lifecycle:$camerax_version"
     api "androidx.camera:camera-view:1.0.0-alpha14"
 
-    def media2_version = "1.1.1"
-
-    // Interacting with MediaSessions
-    implementation "androidx.media2:media2-session:$media2_version"
-//    // optional - UI widgets for VideoView and MediaControlView
-//    implementation "androidx.media2:media2-widget:$media2_version"
-//    // optional - Implementation of a SessionPlayer
-//    implementation "androidx.media2:media2-player:$media2_version"
+    implementation "androidx.media:media:1.6.0"
 
     implementation deps.eventbus
 
@@ -135,6 +129,7 @@ dependencies {
     implementation project(path: ':simplechartview')
     implementation project(path: ':launchmodetest')
     implementation project(path: ':simplesearchview')
+    implementation project(path: ':customview')
 
     testImplementation deps.test.junit
     androidTestImplementation deps.test.runner

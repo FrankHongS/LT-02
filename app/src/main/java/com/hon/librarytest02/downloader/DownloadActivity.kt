@@ -2,7 +2,6 @@ package com.hon.librarytest02.downloader
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.hon.librarytest02.AppExecutors
 import com.hon.librarytest02.R
 import kotlinx.android.synthetic.main.activity_download.*
 import java.io.File

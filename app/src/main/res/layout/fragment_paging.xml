@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.frankhon.customview.paging.PagingRecyclerView
+        android:id="@+id/rv_paging"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:invisibleItemCount="3"
+        app:placeholderItemHeight="60dp"
+        tools:itemCount="10"
+        tools:listitem="@layout/item_paging_normal" />
+
+</FrameLayout>

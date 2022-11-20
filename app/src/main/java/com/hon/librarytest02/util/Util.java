@@ -63,15 +63,15 @@ public class Util {
                                                   String contentTitle,
                                                   String contentText) {
         Intent notificationIntent = new Intent(LibraryTest.sContext, target);
-        PendingIntent pendingIntent =
-                PendingIntent.getActivity(LibraryTest.sContext, 0, notificationIntent, 0);
+//        PendingIntent pendingIntent =
+//                PendingIntent.getActivity(LibraryTest.sContext, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(LibraryTest.sContext, channelId)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 // important!, not showing if not set
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentIntent(pendingIntent)
+//                .setContentIntent(pendingIntent)
                 .build();
 
         notification.defaults |= Notification.DEFAULT_ALL;

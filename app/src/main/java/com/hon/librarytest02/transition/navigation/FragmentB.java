@@ -51,12 +51,12 @@ public class FragmentB extends Fragment {
                 TransitionInflater.from(getContext()).inflateTransition(R.transition.move)
         );
 
-        handler.postDelayed(()->{
+        postponeEnterTransition();//需要在onCreateView中执行
+        handler.postDelayed(() -> {
             MyLogger.tag("Hong");
             MyLogger.d("startPostponedEnterTransition");
             startPostponedEnterTransition();
-        }, 1000);
-        postponeEnterTransition();
+        }, 1_000);
 
         Bundle args = getArguments();
         if (args != null) {
@@ -68,19 +68,19 @@ public class FragmentB extends Fragment {
             }
 
             Glide.with(view)
-                    .load("https://avatars3.githubusercontent.com/u/9608466?s=400&v=4")
+                    .load("https://avatars3.githubusercontent.com")
 //                    .load(imageId)
                     .apply(new RequestOptions().placeholder(R.mipmap.ic_launcher))
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            startPostponedEnterTransition();
+//                            startPostponedEnterTransition();
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            startPostponedEnterTransition();
+//                            startPostponedEnterTransition();
                             return false;
                         }
                     })

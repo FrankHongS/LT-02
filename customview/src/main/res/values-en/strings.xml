@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cv_paging_loading">loading…</string>
+    <string name="cv_paging_load_error">Error, click to retry</string>
+    <string name="cv_paging_no_more">No more content</string>
+</resources>

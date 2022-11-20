@@ -72,9 +72,9 @@ public class Service01 extends Service {
 
         Disposable disposable= Observable.interval(3, TimeUnit.MINUTES)
                 .subscribe(ignored->{
-                    Intent notificationIntent = new Intent(Service01.this, ServiceActivity.class);
-                    PendingIntent pendingIntent =
-                            PendingIntent.getActivity(Service01.this, 0, notificationIntent, 0);
+//                    Intent notificationIntent = new Intent(Service01.this, ServiceActivity.class);
+//                    PendingIntent pendingIntent =
+//                            PendingIntent.getActivity(Service01.this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
                     Notification notification =
                             new NotificationCompat.Builder(Service01.this, "test")
@@ -82,7 +82,7 @@ public class Service01 extends Service {
                                     .setContentText("notification message"+(++mCount))
                                     // important!, not showing if not set
                                     .setSmallIcon(R.mipmap.ic_launcher_round)
-                                    .setContentIntent(pendingIntent)
+//                                    .setContentIntent(pendingIntent)
                                     .setTicker("ticker")
                                     .build();
 

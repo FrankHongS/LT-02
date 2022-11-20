@@ -1,0 +1,26 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="preference"
+        android:title="title_basic_preference"
+        app:iconSpaceReserved="false"/>
+
+    <Preference
+        android:key="stylized"
+        android:summary="summary_stylish_preference"
+        app:iconSpaceReserved="false"/>
+
+    <Preference
+        android:icon="@android:drawable/ic_menu_camera"
+        android:key="icon"
+        android:summary="summary_icon_preference"
+        android:title="title_icon_preference" />
+
+    <Preference
+        android:key="single_line_title"
+        android:summary="summary_single_line_title_preference"
+        android:title="title_single_line_title_preference"
+        app:singleLineTitle="true" />
+
+</PreferenceScreen>

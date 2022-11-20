@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.frankhon.launchmodetest.LaunchModeActivity
-import com.hon.librarytest02.coroutine.AsyncActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
 import com.hon.librarytest02.chart.ChartActivity
+import com.hon.librarytest02.coroutine.AsyncActivity
+import com.hon.librarytest02.customview.CustomViewActivity
 import com.hon.librarytest02.dialog.DialogActivity
-import com.hon.librarytest02.downloader.DownloadActivity
+import com.hon.librarytest02.downloader.DownloadManagerActivity
 import com.hon.librarytest02.fixedtopbar.FixedTopBarActivity
 import com.hon.librarytest02.floatingbtn.FloatingBtnActivity
 import com.hon.librarytest02.glide.GlideActivity
@@ -25,6 +26,7 @@ import com.hon.librarytest02.gridview.GridViewActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.lifecycle.LifecycleActivity
 import com.hon.librarytest02.ndk.NDKTestActivity
+import com.hon.librarytest02.preference.PreferenceActivity
 import com.hon.librarytest02.saveInstance.SaveInstanceActivity
 import com.hon.librarytest02.searchview.SearchViewActivity
 import com.hon.librarytest02.service.ServiceActivity
@@ -35,21 +37,19 @@ import com.hon.librarytest02.transition.TransitionActivity
 import com.hon.librarytest02.viewmoretext.ViewMoreActivity
 import com.hon.librarytest02.watchstock.WatchStockActivity
 import com.hon.librarytest02.webview.WebActivity
-import com.hon.librarytest02.workmanager.WorkManagerActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private var titles = arrayOf(
+        "Custom View", "Preference",
         "WorkManager", "Service", "Job Scheduler", "ButterKnife",
         "Floating Button",
         "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
         "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
-        "Launch Mode", "StaggerGridView", "View More Text", "SearchView", "Download",
+        "Launch Mode", "StaggerGridView", "View More Text", "SearchView", "Downloader",
         "Camera", "Glide", "NDK", "Coroutine", "Fixed Top Bar", "Dialog"
     )
-
-    private var isInEditMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +60,9 @@ class MainActivity : AppCompatActivity() {
             it.layoutManager = LinearLayoutManager(this)
             it.adapter = MainAdapter(titles) { _, title ->
                 when (title) {
+                    "Custom View" -> navigate(CustomViewActivity::class.java)
                     "Floating Button" -> navigate(FloatingBtnActivity::class.java)
-                    "WorkManager" -> navigate(WorkManagerActivity::class.java)
+                    "Preference" -> navigate(PreferenceActivity::class.java)
                     "Service" -> navigate(ServiceActivity::class.java)
                     "Job Scheduler" -> navigate(JobSchedulerActivity::class.java)
                     "ButterKnife" -> navigate(Test02Activity::class.java)
@@ -79,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                     "StaggerGridView" -> navigate(GridViewActivity::class.java)
                     "View More Text" -> navigate(ViewMoreActivity::class.java)
                     "SearchView" -> navigate(SearchViewActivity::class.java)
-                    "Download" -> navigate(DownloadActivity::class.java)
+                    "Downloader" -> navigate(DownloadManagerActivity::class.java)
                     "Camera" -> navigate(CameraShootingPage::class.java)
                     "Glide" -> navigate(GlideActivity::class.java)
                     "NDK" -> navigate(NDKTestActivity::class.java)
@@ -89,14 +90,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        btn_test_kotlin.setOnClickListener {
-            isInEditMode = !isInEditMode
-            btn_test_kotlin.text = if (isInEditMode) "完成" else "编辑"
-        }
     }
 
-    private fun navigate(target: Class<out Activity>) {
+    private fun <T : Activity> navigate(target: Class<T>) {
         startActivity(Intent(this@MainActivity, target))
     }
 
