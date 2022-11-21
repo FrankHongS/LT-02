@@ -34,3 +34,6 @@ dependencies {
     implementation deps.support.appCompat
     implementation deps.support.material
 }
+
+version = "1.0.0"
+group = "com.frankhon.customview"
