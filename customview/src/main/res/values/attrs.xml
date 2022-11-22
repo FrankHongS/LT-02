@@ -3,5 +3,8 @@
     <declare-styleable name="PagingRecyclerView">
         <attr name="placeholderItemHeight" format="dimension" />
         <attr name="invisibleItemCount" format="integer" />
+        <attr name="loadingLayout" format="reference" />
+        <attr name="errorLayout" format="reference" />
+        <attr name="noMoreLayout" format="reference" />
     </declare-styleable>
 </resources>
