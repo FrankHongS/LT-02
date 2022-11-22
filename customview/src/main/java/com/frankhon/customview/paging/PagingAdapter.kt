@@ -15,7 +15,8 @@ import com.frankhon.customview.R
  * Created by Frank Hon on 2022/11/19 12:07 下午.
  * E-mail: frank_hon@foxmail.com
  */
-abstract class PagingAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class PagingAdapter<T>(private val pageLimit: Int) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         private const val TYPE_NORMAL = 0
@@ -25,7 +26,7 @@ abstract class PagingAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>(
     }
 
     protected val dataList = mutableListOf<T>()
-    private var pagingState = PagingState.STATE_NORMAL
+    internal var pagingState = PagingState.STATE_NORMAL
     private lateinit var recyclerView: RecyclerView
     private var onLoadListener: (PagingAdapter<T>.() -> Unit)? = null
     private val onPagingScrollListener by lazy {
@@ -41,18 +42,22 @@ abstract class PagingAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>(
     // invisible item count when paging
     private var invisibleItemCount = 2
 
+    private var loadingLayout: Int = R.layout.cv_item_paging_loading_default
+    private var errorLayout: Int = R.layout.cv_item_paging_error_default
+    private var noMoreLayout: Int = R.layout.cv_item_paging_no_more_default
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_LOADING -> LoadingViewHolder(
-                parent.inflate(R.layout.cv_item_paging_loading_default)
+                parent.inflate(loadingLayout)
                     .updateHeight(placeholderItemHeight)
             )
             TYPE_ERROR -> ErrorViewHolder(
-                parent.inflate(R.layout.cv_item_paging_error_default)
+                parent.inflate(errorLayout)
                     .updateHeight(placeholderItemHeight)
             )
             TYPE_NO_MORE -> NoMoreViewHolder(
-                parent.inflate(R.layout.cv_item_paging_no_more_default)
+                parent.inflate(noMoreLayout)
                     .updateHeight(placeholderItemHeight)
             )
             else -> onCreateNormalViewHolder(parent, viewType)
@@ -112,28 +117,31 @@ abstract class PagingAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>(
     open fun getNormalItemViewType(position: Int): Int = TYPE_NORMAL
 
     @SuppressLint("NotifyDataSetChanged")
-    fun addData(newData: List<T>?) {
-        newData?.takeIf { it.isNotEmpty() }?.let {
-            pagingState = PagingState.STATE_NORMAL
-            dataList.addAll(it)
-            notifyDataSetChanged()
-        } ?: kotlin.run {
-            pagingState = PagingState.STATE_NO_MORE
-            notifyItemChanged(itemCount)
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(newData: List<T>) {
-        if (dataList == newData) {
-            return
-        }
+    fun setData(newData: List<T>, shouldCheck: Boolean = true) {
         pagingState = PagingState.STATE_NORMAL
+        if (shouldCheck) {
+            checkIfNoMore(newData.size)
+        }
         dataList.run {
             clear()
             addAll(newData)
         }
         notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun addData(newData: List<T>?, shouldCheck: Boolean = true) {
+        newData?.takeIf { it.isNotEmpty() }?.let {
+            pagingState = PagingState.STATE_NORMAL
+            dataList.addAll(it)
+            if (shouldCheck) {
+                checkIfNoMore(it.size)
+            }
+            notifyDataSetChanged()
+        } ?: kotlin.run {
+            pagingState = PagingState.STATE_NO_MORE
+            notifyItemChanged(itemCount)
+        }
     }
 
     fun markErrorState() {
@@ -161,6 +169,24 @@ abstract class PagingAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>(
 
     internal fun setInvisibleItemCountWhenPaging(invisibleItemCount: Int) {
         this.invisibleItemCount = invisibleItemCount
+    }
+
+    internal fun setLoadingLayout(@LayoutRes loadingLayout: Int) {
+        this.loadingLayout = loadingLayout
+    }
+
+    internal fun setErrorLayout(@LayoutRes errorLayout: Int) {
+        this.errorLayout = errorLayout
+    }
+
+    internal fun setNoMoreLayout(@LayoutRes noMoreLayout: Int) {
+        this.noMoreLayout = noMoreLayout
+    }
+
+    private fun checkIfNoMore(size: Int) {
+        if (size % pageLimit != 0) {
+            pagingState = PagingState.STATE_NO_MORE
+        }
     }
 
     private fun pagingWhenScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -204,7 +230,7 @@ abstract class PagingAdapter<T> : RecyclerView.Adapter<RecyclerView.ViewHolder>(
         }
     }
 
-    enum class PagingState {
+    internal enum class PagingState {
         STATE_NORMAL,
         STATE_LOADING,
         STATE_ERROR,

@@ -3,6 +3,6 @@
 
     <string name="cv_paging_loading">加载中…</string>
     <string name="cv_paging_load_error">加载失败，点击重试</string>
-    <string name="cv_paging_no_more">没有更多内容</string>
+    <string name="cv_paging_no_more">没有更多内容了</string>
 
 </resources>
