@@ -34,6 +34,7 @@ class LyricsView @JvmOverloads constructor(
     private val lyricColor: Int
     private val highlightLyricColor: Int
 
+    private var originLyrics: List<Pair<Long, String>>? = null
     private var lyrics: List<Pair<Long, List<String>>>? = null
     private var totalLineCount = 0
     private var maxScrollHeight = 0
@@ -147,19 +148,6 @@ class LyricsView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * 设置歌词列表，并将长歌词换行，转换成多行歌词;
-     * Note: post是为了获取width
-     */
-    fun setLyrics(list: List<Pair<Long, String>>, action: (() -> Unit)? = null) {
-        post {
-            lyrics = transformLyrics(list)
-            maxScrollHeight = max(0, ((lyrics!!.size - 1) * lineHeight).toInt())
-            invalidate()
-            action?.invoke()
-        }
-    }
-
     fun reset() {
         lyrics = null
         totalLineCount = 0
@@ -173,15 +161,33 @@ class LyricsView @JvmOverloads constructor(
     }
 
     /**
+     * 设置歌词列表，并将长歌词换行，转换成多行歌词;
+     * Note: post是为了获取width
+     */
+    fun setLyrics(list: List<Pair<Long, String>>, action: (() -> Unit)? = null) {
+        if (originLyrics == list) {
+            action?.invoke()
+            return
+        }
+        originLyrics = list
+        post {
+            lyrics = transformLyrics(list)
+            maxScrollHeight = max(0, ((lyrics!!.size - 1) * lineHeight).toInt())
+            invalidate()
+            action?.invoke()
+        }
+    }
+
+    /**
      * 更新当前播放歌词
      */
-    fun updateCurLyricTime(curLyricTime: Long) {
+    fun updateCurLyricTime(curLyricTime: Long, shouldSmooth: Boolean = true) {
         lyrics?.takeIf { it.isNotEmpty() }?.let {
             val (lastLyricsTime, _) = it.last()
             if (curLyricTime >= lastLyricsTime) {
                 if (curIndex != it.size - 1) {
                     curIndex = it.size - 1
-                    smoothScrollTo(totalLineCount - 1)
+                    scrollToLine(totalLineCount - 1, shouldSmooth)
                 }
             } else {
                 var lineCount = 0
@@ -189,7 +195,7 @@ class LyricsView @JvmOverloads constructor(
                     if (curLyricTime < lyricTime) {
                         if (curIndex != index - 1) {
                             curIndex = index - 1
-                            smoothScrollTo(lineCount - 1)
+                            scrollToLine(lineCount - 1, shouldSmooth)
                         }
                         return
                     } else {
@@ -253,14 +259,20 @@ class LyricsView @JvmOverloads constructor(
         return tempLyrics
     }
 
-    private fun smoothScrollTo(lineIndex: Int) {
+    private fun scrollToLine(lineIndex: Int, shouldSmooth: Boolean) {
         if (lineIndex < 0) {
             return
         }
         if (!isTouching) {
-            val dy = lineIndex * lineHeight - scrollY
-            scroller.startScroll(0, scrollY, 0, dy.toInt(), 800)
+            if (shouldSmooth) {
+                val dy = lineIndex * lineHeight - scrollY
+                scroller.startScroll(0, scrollY, 0, dy.toInt(), 800)
+                invalidate()
+            } else {
+                scrollTo(0, (lineIndex * lineHeight).toInt())
+            }
+        } else {
+            invalidate()
         }
-        invalidate()
     }
 }
