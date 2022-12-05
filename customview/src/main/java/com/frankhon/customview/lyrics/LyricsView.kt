@@ -166,7 +166,7 @@ class LyricsView @JvmOverloads constructor(
     fun setLyrics(list: List<Pair<Long, String>>, action: (() -> Unit)? = null) {
         post {
             lyrics = transformLyrics(list)
-            maxScrollHeight = max(0, ((lyrics!!.size - 1) * lineHeight).toInt())
+            maxScrollHeight = max(0, ((totalLineCount - 1) * lineHeight).toInt())
             invalidate()
             action?.invoke()
         }
