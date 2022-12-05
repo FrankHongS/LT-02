@@ -34,7 +34,6 @@ class LyricsView @JvmOverloads constructor(
     private val lyricColor: Int
     private val highlightLyricColor: Int
 
-    private var originLyrics: List<Pair<Long, String>>? = null
     private var lyrics: List<Pair<Long, List<String>>>? = null
     private var totalLineCount = 0
     private var maxScrollHeight = 0
@@ -165,11 +164,6 @@ class LyricsView @JvmOverloads constructor(
      * Note: post是为了获取width
      */
     fun setLyrics(list: List<Pair<Long, String>>, action: (() -> Unit)? = null) {
-        if (originLyrics == list) {
-            action?.invoke()
-            return
-        }
-        originLyrics = list
         post {
             lyrics = transformLyrics(list)
             maxScrollHeight = max(0, ((lyrics!!.size - 1) * lineHeight).toInt())
