@@ -95,7 +95,7 @@ class LyricsView @JvmOverloads constructor(
         lyricTextSize = typedArray.getDimension(R.styleable.LyricsView_textSize, dp2px(20))
         lyricColor = typedArray.getColor(R.styleable.LyricsView_textColor, Color.BLACK)
         highlightLyricTextRatio =
-            typedArray.getDimension(R.styleable.LyricsView_highlightTextRatio, 1.1f)
+            typedArray.getFloat(R.styleable.LyricsView_highlightTextRatio, 1.1f)
         highlightLyricColor =
             typedArray.getColor(R.styleable.LyricsView_highlightTextColor, Color.BLUE)
         lineHeightRatio = typedArray.getFloat(R.styleable.LyricsView_lineHeightRatio, 1.8f)
@@ -209,6 +209,9 @@ class LyricsView @JvmOverloads constructor(
         invalidate()
     }
 
+    /**
+     * 从空格（' '）处换行，防止英文单词从中间拆开
+     */
     private fun transformLyrics(list: List<Pair<Long, String>>): List<Pair<Long, List<String>>> {
         val tempLyrics = mutableListOf<Pair<Long, List<String>>>()
         list.forEach { (lyricTime, lyric) ->
@@ -221,10 +224,24 @@ class LyricsView @JvmOverloads constructor(
                 val lines = mutableListOf<String>()
                 var start = 0
                 var end = lineCharCount
+                var subStr: String
+                var blankIndex: Int
                 while (start < newLyric.length) {
-                    lines.add(newLyric.substring(start, end))
-                    start = end
-                    end = min(end + lineCharCount, newLyric.length)
+                    subStr = if (end - start < lineCharCount) {
+                        newLyric.substring(start, end)
+                    } else {
+                        newLyric.substring(start, end).run {
+                            blankIndex = lastIndexOf(' ')
+                            if (blankIndex == -1) {
+                                this
+                            } else {
+                                substring(0, blankIndex + 1)
+                            }
+                        }
+                    }
+                    start += subStr.length
+                    end = min(start + lineCharCount, newLyric.length)
+                    lines.add(subStr.trim())
                     totalLineCount++
                 }
                 tempLyrics.add(lyricTime to lines)
