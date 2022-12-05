@@ -11,6 +11,7 @@ import com.hon.librarytest02.R
 const val TAG_SLIDING_UP = "TAG_SLIDING_UP"
 const val TAG_AUDIO_CONTROL = "TAG_AUDIO_CONTROL"
 const val TAG_PAGING = "TAG_PAGING"
+const val TAG_LYRICS = "TAG_LYRICS"
 
 class CustomViewActivity : AppCompatActivity() {
 
@@ -30,6 +31,7 @@ class CustomViewActivity : AppCompatActivity() {
             TAG_SLIDING_UP -> SlidingUpPanelFragment()
             TAG_AUDIO_CONTROL -> CustomViewFragment()
             TAG_PAGING -> PagingFragment()
+            TAG_LYRICS -> LyricsFragment()
             else -> null
         }
         fragment?.let {

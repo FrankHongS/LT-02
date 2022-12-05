@@ -59,7 +59,7 @@ class PagingFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
         }
         pagingAdapter.setData(mutableListOf<String>().apply {
-            for (i in 0..10) {
+            for (i in 1 until 11) {
                 add("Item $i")
             }
         })

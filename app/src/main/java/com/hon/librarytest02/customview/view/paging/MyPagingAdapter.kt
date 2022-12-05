@@ -13,7 +13,7 @@ import com.hon.mylogger.MyLogger
  * Created by Frank Hon on 2022/11/19 5:48 下午.
  * E-mail: frank_hon@foxmail.com
  */
-class MyPagingAdapter : PagingAdapter<String>() {
+class MyPagingAdapter : PagingAdapter<String>(10) {
 
     override fun onCreateNormalViewHolder(
         parent: ViewGroup,

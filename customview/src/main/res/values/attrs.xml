@@ -7,4 +7,13 @@
         <attr name="errorLayout" format="reference" />
         <attr name="noMoreLayout" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="LyricsView">
+        <attr name="lineHeightRatio" format="float" />
+        <attr name="lineHorizontalMargin" format="float" />
+        <attr name="highlightTextRatio" format="float" />
+        <attr name="textSize" format="dimension" />
+        <attr name="textColor" format="color" />
+        <attr name="highlightTextColor" format="color" />
+    </declare-styleable>
 </resources>

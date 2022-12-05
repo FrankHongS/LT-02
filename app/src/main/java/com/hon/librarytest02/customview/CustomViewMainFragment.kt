@@ -14,10 +14,6 @@ import com.hon.librarytest02.R
  */
 class CustomViewMainFragment : Fragment() {
 
-    private lateinit var btn1: Button
-    private lateinit var btn2: Button
-    private lateinit var btn3: Button
-
     private val parentActivity by lazy {
         activity as? CustomViewActivity
     }
@@ -35,19 +31,17 @@ class CustomViewMainFragment : Fragment() {
     }
 
     private fun initView(view: View) {
-        btn1 = view.findViewById(R.id.btn_sliding_up)
-        btn2 = view.findViewById(R.id.btn_audio_control)
-        btn3 = view.findViewById(R.id.btn_paging)
-
-        btn1.setOnClickListener {
+        view.findViewById<Button>(R.id.btn_sliding_up).setOnClickListener {
             parentActivity?.navigateTo(TAG_SLIDING_UP)
         }
-        btn2.setOnClickListener {
+        view.findViewById<Button>(R.id.btn_audio_control).setOnClickListener {
             parentActivity?.navigateTo(TAG_AUDIO_CONTROL)
         }
-
-        btn3.setOnClickListener {
+        view.findViewById<Button>(R.id.btn_paging).setOnClickListener {
             parentActivity?.navigateTo(TAG_PAGING)
+        }
+        view.findViewById<Button>(R.id.btn_lyrics).setOnClickListener {
+            parentActivity?.navigateTo(TAG_LYRICS)
         }
     }
 
