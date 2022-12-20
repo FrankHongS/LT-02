@@ -1,6 +1,7 @@
 package com.frankhon.customview.util
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.View
 
 /**
@@ -8,12 +9,12 @@ import android.view.View
  * E-mail: frank_hon@foxmail.com
  */
 
-internal fun Context.dp2px(dp: Int): Float {
-    val density = resources.displayMetrics.density
+internal val displayMetrics = Resources.getSystem().displayMetrics
+
+internal fun dp2px(dp: Int): Float {
+    val density = displayMetrics.density
     return dp * density + 0.5f
 }
 
-internal fun View.dp2px(dp: Int): Float {
-    val density = resources.displayMetrics.density
-    return dp * density + 0.5f
-}
+val Int.dp
+    get() = dp2px(this)

@@ -15,5 +15,6 @@
         <attr name="textSize" format="dimension" />
         <attr name="textColor" format="color" />
         <attr name="highlightTextColor" format="color" />
+        <attr name="gradientHeight" format="dimension" />
     </declare-styleable>
 </resources>

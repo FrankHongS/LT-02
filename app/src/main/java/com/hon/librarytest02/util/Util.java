@@ -30,12 +30,12 @@ public class Util {
     }
 
     public static int dp2px(float dpValue) {
-        final float scale = Resources.getSystem().getDisplayMetrics().densityDpi;
+        float scale = Resources.getSystem().getDisplayMetrics().densityDpi;
         return (int) (dpValue * (scale / 160) + 0.5f);
     }
 
     public static int px2dp(float pxValue) {
-        final float scale = Resources.getSystem().getDisplayMetrics().density;
+        float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -63,15 +63,15 @@ public class Util {
                                                   String contentTitle,
                                                   String contentText) {
         Intent notificationIntent = new Intent(LibraryTest.sContext, target);
-//        PendingIntent pendingIntent =
-//                PendingIntent.getActivity(LibraryTest.sContext, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(LibraryTest.sContext, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
 
         Notification notification = new NotificationCompat.Builder(LibraryTest.sContext, channelId)
                 .setContentTitle(contentTitle)
                 .setContentText(contentText)
                 // important!, not showing if not set
                 .setSmallIcon(R.mipmap.ic_launcher)
-//                .setContentIntent(pendingIntent)
+                .setContentIntent(pendingIntent)
                 .build();
 
         notification.defaults |= Notification.DEFAULT_ALL;
