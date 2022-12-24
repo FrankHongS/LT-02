@@ -348,16 +348,14 @@ class LyricsView @JvmOverloads constructor(
     }
 
     private fun scrollToLine(lineIndex: Int, shouldSmooth: Boolean) {
-        if (lineIndex < 0) {
-            return
-        }
+        val tempLineIndex = if (lineIndex < 0) 0 else lineIndex
         if (!isTouching) {
             if (shouldSmooth) {
-                val dy = lineIndex * lineHeight - scrollY
+                val dy = tempLineIndex * lineHeight - scrollY
                 scroller.startScroll(0, scrollY, 0, dy.toInt(), 800)
                 invalidate()
             } else {
-                scrollTo(0, (lineIndex * lineHeight).toInt())
+                scrollTo(0, (tempLineIndex * lineHeight).toInt())
             }
         } else {
             invalidate()
