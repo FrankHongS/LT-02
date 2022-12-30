@@ -1,16 +1,19 @@
 package com.hon.librarytest02
 
+import android.R.attr.data
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import butterknife.internal.Utils
 import com.frankhon.launchmodetest.LaunchModeActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
@@ -34,10 +37,12 @@ import com.hon.librarytest02.spider.SpiderActivity
 import com.hon.librarytest02.text.TextActivity
 import com.hon.librarytest02.timelineview.TimelineViewActivity
 import com.hon.librarytest02.transition.TransitionActivity
+import com.hon.librarytest02.util.screenHeight
 import com.hon.librarytest02.viewmoretext.ViewMoreActivity
 import com.hon.librarytest02.watchstock.WatchStockActivity
 import com.hon.librarytest02.webview.WebActivity
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,42 +63,66 @@ class MainActivity : AppCompatActivity() {
         rv_main.let {
             it.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
             it.layoutManager = LinearLayoutManager(this)
+            it.layoutAnimation = getLayoutAnimationController()
             it.adapter = MainAdapter(titles) { _, title ->
                 when (title) {
-                    "Custom View" -> navigate(CustomViewActivity::class.java)
-                    "Floating Button" -> navigate(FloatingBtnActivity::class.java)
-                    "Preference" -> navigate(PreferenceActivity::class.java)
-                    "Service" -> navigate(ServiceActivity::class.java)
-                    "Job Scheduler" -> navigate(JobSchedulerActivity::class.java)
-                    "ButterKnife" -> navigate(Test02Activity::class.java)
-                    "WebView" -> navigate(WebActivity::class.java)
-                    "Timeline View" -> navigate(TimelineViewActivity::class.java)
-                    "Audio Message" -> navigate(AudioMessageActivity::class.java)
-                    "Text" -> navigate(TextActivity::class.java)
-                    "ChartView" -> navigate(ChartActivity::class.java)
-                    "Spider" -> navigate(SpiderActivity::class.java)
-                    "Stock" -> navigate(WatchStockActivity::class.java)
-                    "Lifecycle" -> navigate(LifecycleActivity::class.java)
-                    "Save Instance" -> navigate(SaveInstanceActivity::class.java)
-                    "Transition" -> navigate(TransitionActivity::class.java)
-                    "Launch Mode" -> navigate(LaunchModeActivity::class.java)
-                    "StaggerGridView" -> navigate(GridViewActivity::class.java)
-                    "View More Text" -> navigate(ViewMoreActivity::class.java)
-                    "SearchView" -> navigate(SearchViewActivity::class.java)
-                    "Downloader" -> navigate(DownloadManagerActivity::class.java)
-                    "Camera" -> navigate(CameraShootingPage::class.java)
-                    "Glide" -> navigate(GlideActivity::class.java)
-                    "NDK" -> navigate(NDKTestActivity::class.java)
-                    "Coroutine" -> navigate(AsyncActivity::class.java)
-                    "Fixed Top Bar" -> navigate(FixedTopBarActivity::class.java)
-                    "Dialog" -> navigate(DialogActivity::class.java)
+                    "Custom View" -> navigate<CustomViewActivity>()
+                    "Floating Button" -> navigate<FloatingBtnActivity>()
+                    "Preference" -> navigate<PreferenceActivity>()
+                    "Service" -> navigate<ServiceActivity>()
+                    "Job Scheduler" -> navigate<JobSchedulerActivity>()
+                    "ButterKnife" -> navigate<Test02Activity>()
+                    "WebView" -> navigate<WebActivity>()
+                    "Timeline View" -> navigate<TimelineViewActivity>()
+                    "Audio Message" -> navigate<AudioMessageActivity>()
+                    "Text" -> navigate<TextActivity>()
+                    "ChartView" -> navigate<ChartActivity>()
+                    "Spider" -> navigate<SpiderActivity>()
+                    "Stock" -> navigate<WatchStockActivity>()
+                    "Lifecycle" -> navigate<LifecycleActivity>()
+                    "Save Instance" -> navigate<SaveInstanceActivity>()
+                    "Transition" -> navigate<TransitionActivity>()
+                    "Launch Mode" -> navigate<LaunchModeActivity>()
+                    "StaggerGridView" -> navigate<GridViewActivity>()
+                    "View More Text" -> navigate<ViewMoreActivity>()
+                    "SearchView" -> navigate<SearchViewActivity>()
+                    "Downloader" -> navigate<DownloadManagerActivity>()
+                    "Camera" -> navigate<CameraShootingPage>()
+                    "Glide" -> navigate<GlideActivity>()
+                    "NDK" -> navigate<NDKTestActivity>()
+                    "Coroutine" -> navigate<AsyncActivity>()
+                    "Fixed Top Bar" -> navigate<FixedTopBarActivity>()
+                    "Dialog" -> navigate<DialogActivity>()
                 }
             }
         }
     }
 
-    private fun <T : Activity> navigate(target: Class<T>) {
-        startActivity(Intent(this@MainActivity, target))
+    private inline fun <reified T : Activity> navigate() {
+        startActivity(Intent(this@MainActivity, T::class.java))
+    }
+
+    private fun getLayoutAnimationController(): LayoutAnimationController {
+        val set = AnimationSet(true)
+
+        // Fade in animation
+        val fadeIn = AlphaAnimation(0.0f, 1.0f).apply {
+            duration = 400
+            fillAfter = true
+        }
+        set.addAnimation(fadeIn)
+
+        // Slide up animation from bottom of screen
+        val slideUp = TranslateAnimation(0f, 0f,
+            screenHeight.toFloat(), 0f)
+            .apply {
+                interpolator = DecelerateInterpolator(2f)
+                duration = 600
+            }
+        set.addAnimation(slideUp)
+
+        // Set up the animation controller , (second parameter is the delay)
+        return LayoutAnimationController(set, 0.2f)
     }
 
     class MainAdapter(

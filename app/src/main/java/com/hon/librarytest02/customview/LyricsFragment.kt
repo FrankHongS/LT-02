@@ -9,10 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.hon.librarytest02.R
 import kotlinx.android.synthetic.main.fragment_lyrics.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 /**
  * Created by Frank Hon on 2022/12/2 11:02 上午.
@@ -29,7 +26,10 @@ class LyricsFragment : Fragment() {
         100L to "秋刀鱼的滋味", 110L to "猫跟你都想了解", 120L to "雨下整夜",
         130L to "我的爱溢出就像雨水",
         135L to "you are my girl, you are my girl, you are my girl, you are my girl, you are my girl",
-        140L to "院子落叶", 150L to "跟我的思念厚厚一叠"
+        140L to "院子落叶", 150L to "跟我的思念厚厚一叠",
+        155L to "分别总是在九月",160L to "回忆是思念的愁",165L to "深秋嫩绿的翠柳",
+        170L to "亲吻着我额头",175L to "在那座阴雨的小城里",180L to "我从未忘记你",
+        185L to "成都 带不走的",190L to "只有你",195L to "和我在成都的街头走一走"
     )
 
     override fun onCreateView(
@@ -58,7 +58,7 @@ class LyricsFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             withContext(Dispatchers.IO) {
                 var count = 0
-                while (true) {
+                while (isActive) {
                     delay(300)
                     count++
                     lv_lyrics?.post { lv_lyrics.updateCurLyricTime(count.toLong()) }
