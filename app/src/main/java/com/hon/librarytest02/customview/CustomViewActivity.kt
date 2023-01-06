@@ -12,6 +12,7 @@ const val TAG_SLIDING_UP = "TAG_SLIDING_UP"
 const val TAG_AUDIO_CONTROL = "TAG_AUDIO_CONTROL"
 const val TAG_PAGING = "TAG_PAGING"
 const val TAG_LYRICS = "TAG_LYRICS"
+const val TAG_STAGGERED_GRID = "TAG_STAGGERED_GRID"
 
 class CustomViewActivity : AppCompatActivity() {
 
@@ -32,6 +33,7 @@ class CustomViewActivity : AppCompatActivity() {
             TAG_AUDIO_CONTROL -> CustomViewFragment()
             TAG_PAGING -> PagingFragment()
             TAG_LYRICS -> LyricsFragment()
+            TAG_STAGGERED_GRID -> StaggeredGridFragment()
             else -> null
         }
         fragment?.let {

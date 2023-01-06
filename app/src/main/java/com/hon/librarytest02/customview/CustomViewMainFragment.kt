@@ -43,6 +43,9 @@ class CustomViewMainFragment : Fragment() {
         view.findViewById<Button>(R.id.btn_lyrics).setOnClickListener {
             parentActivity?.navigateTo(TAG_LYRICS)
         }
+        view.findViewById<Button>(R.id.btn_staggered_grid).setOnClickListener {
+            parentActivity?.navigateTo(TAG_STAGGERED_GRID)
+        }
     }
 
 }
