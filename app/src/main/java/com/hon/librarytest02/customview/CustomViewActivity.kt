@@ -33,7 +33,7 @@ class CustomViewActivity : AppCompatActivity() {
             TAG_AUDIO_CONTROL -> CustomViewFragment()
             TAG_PAGING -> PagingFragment()
             TAG_LYRICS -> LyricsFragment()
-            TAG_STAGGERED_GRID -> StaggeredGridFragment()
+            TAG_STAGGERED_GRID -> StaggeredGridContainerFragment()
             else -> null
         }
         fragment?.let {
