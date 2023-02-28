@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
@@ -81,8 +83,9 @@
         <activity android:name=".customview.CustomViewActivity" />
         <activity android:name=".preference.PreferenceActivity" />
         <activity android:name=".downloader.DownloadManagerActivity" />
+        <activity android:name=".media.MediaActivity" />
 
-<!--        <receiver-->
+        <!--        <receiver-->
 <!--            android:name=".service.MediaReceiver"-->
 <!--            android:exported="false"/>-->
 <!--        <service android:name=".service.Service01" />-->

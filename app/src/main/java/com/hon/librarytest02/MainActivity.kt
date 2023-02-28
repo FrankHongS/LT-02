@@ -1,6 +1,5 @@
 package com.hon.librarytest02
 
-import android.R.attr.data
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.internal.Utils
 import com.frankhon.launchmodetest.LaunchModeActivity
 import com.hon.librarytest02.audiomessage.AudioMessageActivity
 import com.hon.librarytest02.camera.camerax.CameraShootingPage
@@ -28,6 +26,7 @@ import com.hon.librarytest02.glide.GlideActivity
 import com.hon.librarytest02.gridview.GridViewActivity
 import com.hon.librarytest02.jobschedule.JobSchedulerActivity
 import com.hon.librarytest02.lifecycle.LifecycleActivity
+import com.hon.librarytest02.media.MediaActivity
 import com.hon.librarytest02.ndk.NDKTestActivity
 import com.hon.librarytest02.preference.PreferenceActivity
 import com.hon.librarytest02.saveInstance.SaveInstanceActivity
@@ -49,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private var titles = arrayOf(
         "Custom View", "Preference",
         "WorkManager", "Service", "Job Scheduler", "ButterKnife",
-        "Floating Button",
+        "Floating Button", "Media",
         "WebView", "Timeline View", "Audio Message", "Text", "ChartView",
         "Spider", "Stock", "Lifecycle", "Save Instance", "Transition",
         "Launch Mode", "StaggerGridView", "View More Text", "SearchView", "Downloader",
@@ -66,6 +65,7 @@ class MainActivity : AppCompatActivity() {
             it.layoutAnimation = getLayoutAnimationController()
             it.adapter = MainAdapter(titles) { _, title ->
                 when (title) {
+                    "Media" -> navigate<MediaActivity>()
                     "Custom View" -> navigate<CustomViewActivity>()
                     "Floating Button" -> navigate<FloatingBtnActivity>()
                     "Preference" -> navigate<PreferenceActivity>()
@@ -113,8 +113,10 @@ class MainActivity : AppCompatActivity() {
         set.addAnimation(fadeIn)
 
         // Slide up animation from bottom of screen
-        val slideUp = TranslateAnimation(0f, 0f,
-            screenHeight.toFloat(), 0f)
+        val slideUp = TranslateAnimation(
+            0f, 0f,
+            screenHeight.toFloat(), 0f
+        )
             .apply {
                 interpolator = DecelerateInterpolator(2f)
                 duration = 600

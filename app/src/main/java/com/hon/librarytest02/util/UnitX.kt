@@ -3,6 +3,9 @@
 package com.hon.librarytest02.util
 
 import android.util.TypedValue
+import com.hon.librarytest02.LibraryTest
+
+val appContext = LibraryTest.sContext
 
 val <T : Number> T.dp
     @JvmName("dpToPx")
