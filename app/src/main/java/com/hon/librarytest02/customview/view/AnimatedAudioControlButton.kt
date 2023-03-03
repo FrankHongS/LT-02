@@ -93,7 +93,6 @@ class AnimatedAudioControlButton @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas) {
-        Log.d("frankhon", "onDraw: ")
         if (playState == PlayState.PREPARING) {
             drawLoading(canvas)
         }
