@@ -1,10 +1,12 @@
 package com.hon.librarytest02.customview
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.frankhon.customview.view.RangeSeekBar
 import com.hon.librarytest02.R
 import com.hon.librarytest02.customview.view.AudioControlButton
 
@@ -23,6 +25,20 @@ class CustomViewFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val btn = view.findViewById<AudioControlButton>(R.id.btn_audio_control_2)
+        val rangeSeekBar = view.findViewById<RangeSeekBar>(R.id.rsb)
+        rangeSeekBar.init(10, 50)
+        rangeSeekBar.setOnTrackingTouchListener(object : RangeSeekBar.OnTrackingTouchListener {
+            override fun onStartTrackingTouch(thumb: RangeSeekBar.Thumb, start: Int, end: Int) {
+                Log.d("frankhon", "onStartTrackingTouch: $thumb $start $end")
+            }
+
+            override fun onProgressChanged(thumb: RangeSeekBar.Thumb, start: Int, end: Int) {
+                Log.d("frankhon", "onProgressChanged: $thumb $start $end")
+            }
+
+            override fun onStopTrackingTouch(thumb: RangeSeekBar.Thumb, start: Int, end: Int) {
+                Log.d("frankhon", "onStopTrackingTouch: $thumb $start $end")
+            }
+        })
     }
 }

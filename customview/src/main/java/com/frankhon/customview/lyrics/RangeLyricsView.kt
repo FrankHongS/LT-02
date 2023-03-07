@@ -20,12 +20,11 @@ import kotlin.math.max
  * E-mail: frank_hon@foxmail.com
  */
 @SuppressLint("ClickableViewAccessibility")
-class LyricsView @JvmOverloads constructor(
+class RangeLyricsView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     private val lyricTextSize: Float
-    private val highlightLyricTextRatio: Float
     private val lineHeightRatio: Float
     private val lineHeight: Float
     private val lineHorizontalPadding: Float
@@ -38,15 +37,11 @@ class LyricsView @JvmOverloads constructor(
     private var totalLineCount = 0
     private var maxScrollHeight = 0
 
-    // 当前播放的歌词index
-    private var curIndex = -1
+    // 当前选择的歌词范围
+    private var curRange = -1 to -1
 
     private val normalLyricPaint: Paint
     private val highlightLyricPaint: Paint
-
-    private val gradientLyricPaint: Paint
-    private val highlightGradientLyricPaint: Paint
-    private val gradientHeight: Float
 
     private val scroller by lazy { Scroller(context) }
     private val gestureDetector =
@@ -83,7 +78,7 @@ class LyricsView @JvmOverloads constructor(
             }
 
             override fun onSingleTapUp(e: MotionEvent): Boolean {
-                onLyricsClickListener?.invoke(this@LyricsView)
+                onLyricsClickListener?.invoke(this@RangeLyricsView)
                 return true
             }
 
@@ -93,26 +88,18 @@ class LyricsView @JvmOverloads constructor(
     private var isTouching = false
     private var onLyricsClickListener: ((View) -> Unit)? = null
 
-    private val shaderMatrix = Matrix()
-    private lateinit var topGradient: LinearGradient
-    private lateinit var topHighlightGradient: LinearGradient
-    private lateinit var bottomGradient: LinearGradient
-    private lateinit var bottomHighlightGradient: LinearGradient
-
     init {
         val typedArray = getContext().obtainStyledAttributes(
-            attrs, R.styleable.LyricsView
+            attrs, R.styleable.RangeLyricsView
         )
-        lyricTextSize = typedArray.getDimension(R.styleable.LyricsView_textSize, 20.dp)
-        lyricColor = typedArray.getColor(R.styleable.LyricsView_textColor, Color.BLACK)
-        highlightLyricTextRatio =
-            typedArray.getFloat(R.styleable.LyricsView_highlightTextRatio, 1.1f)
+        lyricTextSize = typedArray.getDimension(R.styleable.RangeLyricsView_rangeTextSize, 20.dp)
+        lyricColor = typedArray.getColor(R.styleable.RangeLyricsView_rangeTextColor, Color.BLACK)
         highlightLyricColor =
-            typedArray.getColor(R.styleable.LyricsView_highlightTextColor, Color.BLUE)
-        lineHeightRatio = typedArray.getFloat(R.styleable.LyricsView_lineHeightRatio, 1.8f)
+            typedArray.getColor(R.styleable.RangeLyricsView_rangeHighlightTextColor, Color.BLUE)
+        lineHeightRatio =
+            typedArray.getFloat(R.styleable.RangeLyricsView_rangeLineHeightRatio, 1.8f)
         lineHorizontalPadding =
-            typedArray.getDimension(R.styleable.LyricsView_lineHorizontalPadding, 32.dp)
-        gradientHeight = typedArray.getDimension(R.styleable.LyricsView_gradientHeight, 128.dp)
+            typedArray.getDimension(R.styleable.RangeLyricsView_rangeLineHorizontalPadding, 32.dp)
         typedArray.recycle()
 
         lineHeight = lyricTextSize * lineHeightRatio
@@ -124,13 +111,10 @@ class LyricsView @JvmOverloads constructor(
         }
         highlightLyricPaint = Paint().apply {
             strokeWidth = 6.dp
-            textSize = lyricTextSize * highlightLyricTextRatio
+            textSize = lyricTextSize
             color = highlightLyricColor
             textAlign = Paint.Align.CENTER
         }
-        gradientLyricPaint = Paint(normalLyricPaint)
-        highlightGradientLyricPaint = Paint(highlightLyricPaint)
-        initGradients()
 
         isClickable = true
         setOnTouchListener { _, event ->
@@ -142,87 +126,18 @@ class LyricsView @JvmOverloads constructor(
         }
     }
 
-    private fun initGradients() {
-        topGradient = LinearGradient(
-            0f,
-            0f,
-            0f,
-            gradientHeight,
-            Color.TRANSPARENT,
-            lyricColor,
-            Shader.TileMode.CLAMP
-        )
-        topHighlightGradient = LinearGradient(
-            0f,
-            0f,
-            0f,
-            gradientHeight,
-            Color.TRANSPARENT,
-            highlightLyricColor,
-            Shader.TileMode.CLAMP
-        )
-        bottomGradient = LinearGradient(
-            0f,
-            0f,
-            0f,
-            gradientHeight,
-            lyricColor,
-            Color.TRANSPARENT,
-            Shader.TileMode.CLAMP
-        )
-        bottomHighlightGradient = LinearGradient(
-            0f,
-            0f,
-            0f,
-            gradientHeight,
-            highlightLyricColor,
-            Color.TRANSPARENT,
-            Shader.TileMode.CLAMP
-        )
-    }
-
     override fun onDraw(canvas: Canvas) {
         val startX = width / 2f
         val startY = paddingTop
         var lineCount = 0
         lyrics?.forEachIndexed { index, (_, lyricLines) ->
-            val isHighlightLyric = curIndex == index
+            val isHighlightLyric = index in curRange.first..curRange.second
             lyricLines.forEach {
                 val positionY = startY + lineHeight * lineCount
-                when (positionY - scrollY) {// real position
-                    //边界值加一个lineHeight是因为baseline（文字基线）会导致文字位置与预想产生偏差
-                    in -lineHeight..gradientHeight -> {
-                        val gradientPaint =
-                            if (isHighlightLyric) highlightGradientLyricPaint.apply {
-                                shader = topHighlightGradient
-                            } else gradientLyricPaint.apply { shader = topGradient }
-                        canvas.drawText(it, startX, positionY,
-                            gradientPaint.apply {
-                                shaderMatrix.setTranslate(0f, scrollY.toFloat())
-                                shader.setLocalMatrix(shaderMatrix)
-                            })
-                    }
-                    in (height - gradientHeight)..(height + lineHeight) -> {
-                        val gradientPaint =
-                            if (isHighlightLyric) highlightGradientLyricPaint.apply {
-                                shader = bottomHighlightGradient
-                            } else gradientLyricPaint.apply { shader = bottomGradient }
-                        canvas.drawText(it, startX, positionY,
-                            gradientPaint.apply {
-                                shaderMatrix.setTranslate(
-                                    0f,
-                                    height - gradientHeight + scrollY.toFloat()
-                                )
-                                shader.setLocalMatrix(shaderMatrix)
-                            })
-                    }
-                    else -> {
-                        canvas.drawText(
-                            it, startX, positionY,
-                            if (isHighlightLyric) highlightLyricPaint else normalLyricPaint
-                        )
-                    }
-                }
+                canvas.drawText(
+                    it, startX, positionY,
+                    if (isHighlightLyric) highlightLyricPaint else normalLyricPaint
+                )
                 lineCount++
             }
         }
@@ -239,7 +154,7 @@ class LyricsView @JvmOverloads constructor(
         lyrics = null
         totalLineCount = 0
         maxScrollHeight = 0
-        curIndex = -1
+        curRange = -1 to -1
         if (scrollY == 0) {
             invalidate()
         } else {
@@ -260,32 +175,45 @@ class LyricsView @JvmOverloads constructor(
         }
     }
 
-    /**
-     * 更新当前播放歌词
-     */
-    fun updateCurLyricTime(curLyricTime: Long, shouldSmooth: Boolean = true) {
+    fun updateCurLyricRangeStart(startLyricTime: Long) {
+        getLineInfoByLyricTime(startLyricTime)?.let { (curIndex, lineIndex) ->
+            val (curStartIndex, curEndIndex) = curRange
+            if (curStartIndex != curIndex) {
+                curRange = curIndex to curEndIndex
+                scrollToLine(lineIndex)
+            }
+        }
+    }
+
+    fun updateCurLyricRangeEnd(endLyricTime: Long) {
+        getLineInfoByLyricTime(endLyricTime)?.let { (curIndex, lineIndex) ->
+            val (curStartIndex, curEndIndex) = curRange
+            if (curEndIndex != curIndex) {
+                curRange = curStartIndex to curIndex
+                scrollToLine(lineIndex)
+            }
+        }
+    }
+
+    private fun getLineInfoByLyricTime(curLyricTime: Long): Pair<Int, Int>? {
         lyrics?.takeIf { it.isNotEmpty() }?.let {
             val (lastLyricsTime, _) = it.last()
             if (curLyricTime >= lastLyricsTime) {
-                if (curIndex != it.size - 1) {
-                    curIndex = it.size - 1
-                    scrollToLine(totalLineCount - 1, shouldSmooth)
-                }
+                return it.size - 1 to totalLineCount - 1
             } else {
                 var lineCount = 0
                 it.forEachIndexed { index, (lyricTime, lyrics) ->
-                    if (curLyricTime < lyricTime) {
-                        if (curIndex != index - 1) {
-                            curIndex = index - 1
-                            scrollToLine(lineCount - 1, shouldSmooth)
-                        }
-                        return
+                    if (curLyricTime == lyricTime) {
+                        return index to lineCount
+                    } else if (curLyricTime < lyricTime) {
+                        return index - 1 to lineCount - 1
                     } else {
                         lineCount += lyrics.size
                     }
                 }
             }
         }
+        return null
     }
 
     fun setOnLyricsClickListener(listener: (View) -> Unit) {
@@ -341,16 +269,12 @@ class LyricsView @JvmOverloads constructor(
         return tempLyrics
     }
 
-    private fun scrollToLine(lineIndex: Int, shouldSmooth: Boolean) {
+    private fun scrollToLine(lineIndex: Int) {
         val tempLineIndex = if (lineIndex < 0) 0 else lineIndex
         if (!isTouching) {
-            if (shouldSmooth) {
-                val dy = tempLineIndex * lineHeight - scrollY
-                scroller.startScroll(0, scrollY, 0, dy.toInt(), 800)
-                invalidate()
-            } else {
-                scrollTo(0, (tempLineIndex * lineHeight).toInt())
-            }
+            val dy = tempLineIndex * lineHeight - scrollY
+            scroller.startScroll(0, scrollY, 0, dy.toInt(), 800)
+            invalidate()
         } else {
             invalidate()
         }

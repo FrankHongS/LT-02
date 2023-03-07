@@ -1,13 +1,16 @@
 package com.hon.librarytest02.customview
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.frankhon.customview.view.RangeSeekBar
 import com.hon.librarytest02.R
+import com.hon.librarytest02.util.msToMMSS
 import kotlinx.android.synthetic.main.fragment_lyrics.*
 import kotlinx.coroutines.*
 
@@ -27,9 +30,9 @@ class LyricsFragment : Fragment() {
         130L to "我的爱溢出就像雨水",
         135L to "you are my girl, you are my girl, you are my girl, you are my girl, you are my girl",
         140L to "院子落叶", 150L to "跟我的思念厚厚一叠",
-        155L to "分别总是在九月",160L to "回忆是思念的愁",165L to "深秋嫩绿的翠柳",
-        170L to "亲吻着我额头",175L to "在那座阴雨的小城里",180L to "我从未忘记你",
-        185L to "成都 带不走的",190L to "只有你",195L to "和我在成都的街头走一走"
+        155L to "分别总是在九月", 160L to "回忆是思念的愁", 165L to "深秋嫩绿的翠柳",
+        170L to "亲吻着我额头", 175L to "在那座阴雨的小城里", 180L to "我从未忘记你",
+        185L to "成都 带不走的", 190L to "只有你", 195L to "和我在成都的街头走一走"
     )
 
     override fun onCreateView(
@@ -55,16 +58,35 @@ class LyricsFragment : Fragment() {
             lv_lyrics.isVisible = true
         }
 
-        lifecycleScope.launchWhenCreated {
-            withContext(Dispatchers.IO) {
-                var count = 0
-                while (isActive) {
-                    delay(300)
-                    count++
-                    lv_lyrics?.post { lv_lyrics.updateCurLyricTime(count.toLong()) }
+        rsb.length = 200
+        rsb.setOnTrackingTouchListener(object : RangeSeekBar.OnTrackingTouchListener {
+            override fun onProgressChanged(thumb: RangeSeekBar.Thumb, start: Int, end: Int) {
+                Log.d("frankhon", "onProgressChanged: $thumb ${start} ${end.toLong()}")
+                when (thumb) {
+                    RangeSeekBar.Thumb.LEFT -> tv_start.text = msToMMSS(start * 1000L)
+                    RangeSeekBar.Thumb.RIGHT -> tv_end.text = msToMMSS(end * 1000L)
+                    else -> {}
                 }
             }
-        }
+
+            override fun onStopTrackingTouch(thumb: RangeSeekBar.Thumb, start: Int, end: Int) {
+                when (thumb) {
+                    RangeSeekBar.Thumb.LEFT -> lv_lyrics.updateCurLyricRangeStart(start.toLong())
+                    RangeSeekBar.Thumb.RIGHT -> lv_lyrics.updateCurLyricRangeEnd(end.toLong())
+                    else -> {}
+                }
+            }
+        })
+//        lifecycleScope.launchWhenCreated {
+//            withContext(Dispatchers.IO) {
+//                var count = 0
+//                while (isActive) {
+//                    delay(300)
+//                    count++
+//                    lv_lyrics?.post { lv_lyrics.updateCurLyricTime(count.toLong()) }
+//                }
+//            }
+//        }
 
     }
 
