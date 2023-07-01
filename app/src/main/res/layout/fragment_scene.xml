@@ -18,20 +18,20 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_scenes_2"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
         android:background="@color/color_search_text_hint"
         app:layout_constraintBottom_toTopOf="@id/rv_scenes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_scenes"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="120dp"
         android:background="@color/color_search_text_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

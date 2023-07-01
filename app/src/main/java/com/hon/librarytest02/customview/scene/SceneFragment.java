@@ -35,8 +35,8 @@ public class SceneFragment extends Fragment {
         config.secondaryScale = 0.8f;
         config.scaleRatio = 0.5f;
         config.maxStackCount = 3;
-        config.initialStackCount = 2;
-        config.space = 40;
+        config.initialStackCount = 0;
+        config.space = 30;
         config.parallex = 1.5f;
         config.align = Align.LEFT;
         StackLayoutManager2 layoutManager = new StackLayoutManager2(config);
@@ -73,7 +73,7 @@ public class SceneFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 5;
+            return 11;
         }
     }
 }

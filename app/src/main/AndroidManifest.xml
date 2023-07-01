@@ -80,7 +80,8 @@
         <activity android:name=".floatingbtn.FloatingBtnActivity" />
         <activity android:name=".viewmoretext.ViewMoreActivity" />
         <activity android:name=".itemdecoration.ItemDecorationActivity" />
-        <activity android:name=".customview.CustomViewActivity" />
+        <activity android:name=".customview.CustomViewActivity"
+            android:screenOrientation="landscape"/>
         <activity android:name=".preference.PreferenceActivity" />
         <activity android:name=".downloader.DownloadManagerActivity" />
         <activity android:name=".media.MediaActivity" />
