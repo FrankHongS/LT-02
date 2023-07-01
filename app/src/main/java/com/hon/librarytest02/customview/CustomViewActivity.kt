@@ -3,6 +3,7 @@ package com.hon.librarytest02.customview
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hon.librarytest02.R
+import com.hon.librarytest02.customview.scene.SceneFragment
 
 /**
  * Created by Frank Hon on 2022/7/18 7:24 下午.
@@ -13,6 +14,7 @@ const val TAG_AUDIO_CONTROL = "TAG_AUDIO_CONTROL"
 const val TAG_PAGING = "TAG_PAGING"
 const val TAG_LYRICS = "TAG_LYRICS"
 const val TAG_STAGGERED_GRID = "TAG_STAGGERED_GRID"
+const val TAG_PILE_LAYOUT = "TAG_PILE_LAYOUT"
 
 class CustomViewActivity : AppCompatActivity() {
 
@@ -34,6 +36,7 @@ class CustomViewActivity : AppCompatActivity() {
             TAG_PAGING -> PagingFragment()
             TAG_LYRICS -> LyricsFragment()
             TAG_STAGGERED_GRID -> StaggeredGridContainerFragment()
+            TAG_PILE_LAYOUT -> SceneFragment()
             else -> null
         }
         fragment?.let {
