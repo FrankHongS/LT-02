@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,8 @@ public class SceneFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.rv_scenes);
         RecyclerView recyclerView2 = view.findViewById(R.id.rv_scenes_2);
         TextView debugText = view.findViewById(R.id.tv_debug);
+        Button debugIncBtn = view.findViewById(R.id.btn_debug_inc);
+        Button debugDecBtn = view.findViewById(R.id.btn_debug_dec);
         Config config = new Config();
         config.secondaryScale = 0.8f;
         config.scaleRatio = 0.5f;
@@ -51,6 +54,15 @@ public class SceneFragment extends Fragment {
 
         recyclerView2.setLayoutManager(new StackLayoutManager(config));
         recyclerView2.setAdapter(new PileAdapter());
+
+        debugIncBtn.setOnClickListener(v -> {
+            int selectedPosition = layoutManager.getSelectedPosition();
+            layoutManager.scrollToPosition(selectedPosition + 1);
+        });
+        debugDecBtn.setOnClickListener(v -> {
+            int selectedPosition = layoutManager.getSelectedPosition();
+            layoutManager.scrollToPosition(selectedPosition - 1);
+        });
     }
 
     private static class PileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -73,7 +85,7 @@ public class SceneFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 11;
+            return 4;
         }
     }
 }

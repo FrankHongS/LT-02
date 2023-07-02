@@ -41,6 +41,7 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
     private int itemWidth;
     //the counting variable ,record the total offset including parallex
     private int mTotalOffset;
+    private int selectedPosition;
     private ObjectAnimator animator;
     private int animateValue;
     private final int duration = 300;
@@ -75,7 +76,6 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
 
     @Override
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.d("frankhon", "onLayoutChildren: ");
         // 根据itemWidth的值来判断是否初始化
         if (getItemCount() <= 0 || itemWidth != 0)
             return;
@@ -106,21 +106,22 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
         int end = Math.min(MAX_VISIBLE_ITEM_COUNT, getItemCount() - 1);
 
         int lastVisiblePosition = Math.min(MAX_VISIBLE_ITEM_COUNT - 1, getItemCount() - 1);
-        int centerPosition = lastVisiblePosition / 2;
+        selectedPosition = lastVisiblePosition / 2;
 
         if (onSelectListener != null) {
-            onSelectListener.onSelect(centerPosition);
+            onSelectListener.onSelect(getSelectedPosition());
         }
 
         //layout view
         for (int i = 0; i <= end / 2; i++) {
-            layoutChildView(i, centerPosition, recycler);
-            layoutChildView(end - i, centerPosition, recycler);
+            layoutChildView(i, 0, selectedPosition, recycler);
+            layoutChildView(end - i, 0, selectedPosition, recycler);
         }
     }
 
     private int fillFromLeft(int dx, RecyclerView.Recycler recycler) {
-        if (mTotalOffset + dx < 0 || mTotalOffset + dx > (getItemCount() - MAX_VISIBLE_ITEM_COUNT) * mUnit) {
+        if (mTotalOffset + dx < -MAX_VISIBLE_ITEM_COUNT / 2 * mUnit ||
+                mTotalOffset + dx > (getItemCount() - 1 - MAX_VISIBLE_ITEM_COUNT / 2) * mUnit) {
             return 0;
         }
 
@@ -128,39 +129,42 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
         recycleViews(dx, recycler);
 
         mTotalOffset += dx;
-        int currPos = mTotalOffset / mUnit;
-        int start = Math.max(currPos - 1, 0);
-        int end = Math.min(currPos + MAX_VISIBLE_ITEM_COUNT, getItemCount() - 1);
 
-        int firstVisiblePosition = mTotalOffset / mUnit;
-        int lastVisiblePosition = Math.min(
-                firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT - 1,
-                getItemCount() - 1
-        );
-        int centerPosition = (firstVisiblePosition + lastVisiblePosition) / 2;
+        int firstVisiblePosition;
+        if (mTotalOffset >= 0) {
+            firstVisiblePosition = mTotalOffset / mUnit;
+        } else {
+            firstVisiblePosition = mTotalOffset / mUnit - 1;
+        }
+        int lastVisiblePosition = firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT - 1;
+        selectedPosition = (firstVisiblePosition + lastVisiblePosition) / 2;
+
+        int start = Math.max(firstVisiblePosition - 1, 0);
+        int end = Math.min(lastVisiblePosition + 1, getItemCount() - 1);
 
         if (onSelectListener != null) {
-            onSelectListener.onSelect(centerPosition);
+            onSelectListener.onSelect(getSelectedPosition());
         }
 
         //layout view
         for (int i = start; i <= (start + end) / 2; i++) {
-            layoutChildView(i, centerPosition, recycler);
-            layoutChildView(start + end - i, centerPosition, recycler);
+            layoutChildView(i, firstVisiblePosition, selectedPosition, recycler);
+            layoutChildView(start + end - i, firstVisiblePosition, selectedPosition, recycler);
         }
 
         return dx;
     }
 
-    private void layoutChildView(int position, int centerPosition, RecyclerView.Recycler recycler) {
+    private void layoutChildView(int position, int firstVisiblePosition,
+                                 int selectedPosition, RecyclerView.Recycler recycler) {
         View view = recycler.getViewForPosition(position);
 
-        float scale = scale(position, centerPosition);
+        float scale = scale(position, selectedPosition);
         float alpha = alpha(position);
 
         addView(view);
         measureChildWithMargins(view, 0, 0);
-        int left = getLeft(position);
+        int left = getLeft(position, firstVisiblePosition);
         int top = 0;
         int right = left + view.getMeasuredWidth();
         int bottom = top + view.getMeasuredHeight();
@@ -194,12 +198,22 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
                 if (v.isPressed()) v.performClick();
                 mVelocityTracker.computeCurrentVelocity(1000, 14000);
                 float xVelocity = mVelocityTracker.getXVelocity(pointerId);
-                int o = mTotalOffset % mUnit;
+                int offsetPerUnit = Math.abs(mTotalOffset % mUnit);
                 int scrollX;
-                if (Math.abs(xVelocity) < mMinVelocityX && o != 0) {
-                    if (o >= mUnit / 2)
-                        scrollX = mUnit - o;
-                    else scrollX = -o;
+                if (Math.abs(xVelocity) < mMinVelocityX && offsetPerUnit != 0) {
+                    if (mTotalOffset >= 0) {
+                        if (offsetPerUnit >= mUnit / 2) {
+                            scrollX = mUnit - offsetPerUnit;
+                        } else {
+                            scrollX = -offsetPerUnit;
+                        }
+                    } else {
+                        if (offsetPerUnit >= mUnit / 2) {
+                            scrollX = offsetPerUnit - mUnit;
+                        } else {
+                            scrollX = offsetPerUnit;
+                        }
+                    }
                     int dur = (int) (Math.abs((scrollX + 0f) / mUnit) * duration);
                     Log.i(TAG, "onTouch: ======BREW===");
                     brewAndStartAnimator(dur, scrollX);
@@ -213,15 +227,22 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
     private RecyclerView.OnFlingListener mOnFlingListener = new RecyclerView.OnFlingListener() {
         @Override
         public boolean onFling(int velocityX, int velocityY) {
-            int o = mTotalOffset % mUnit;
-            int s = mUnit - o;
+            int offsetPerUnit;
+            if (mTotalOffset >= 0) {
+                offsetPerUnit = mTotalOffset % mUnit;
+            } else {
+                offsetPerUnit = mTotalOffset % mUnit + mUnit;
+            }
+            Log.d("frankhon", "onFling: velocityX = " + velocityX + ", offsetPerUnit = " + offsetPerUnit);
             int scrollX;
-            int vel = absMax(velocityX, velocityY);
-            if (vel > 0) {
-                scrollX = s;
-            } else
-                scrollX = -o;
-            int dur = computeSettleDuration(Math.abs(scrollX), Math.abs(vel));
+            if (velocityX > 0) {
+                // 向左加速
+                scrollX = mUnit - offsetPerUnit;
+            } else {
+                // 向右加速
+                scrollX = -offsetPerUnit;
+            }
+            int dur = computeSettleDuration(Math.abs(scrollX), Math.abs(velocityX));
             brewAndStartAnimator(dur, scrollX);
             setScrollStateIdle();
             return true;
@@ -251,8 +272,8 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
         return (int) ((sWeight + velWeight) * duration);
     }
 
-    private void brewAndStartAnimator(int dur, int finalXorY) {
-        animator = ObjectAnimator.ofInt(StackLayoutManager2.this, "animateValue", 0, finalXorY);
+    private void brewAndStartAnimator(int dur, int finalX) {
+        animator = ObjectAnimator.ofInt(StackLayoutManager2.this, "animateValue", 0, finalX);
         animator.setDuration(dur);
         animator.start();
         animator.addListener(new AnimatorListenerAdapter() {
@@ -284,7 +305,10 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
     }
 
     private float scale(int position, int centerPosition) {
-        float offsetRatio = (mTotalOffset % mUnit) * 1f / mUnit;
+        float offsetRatio = Math.abs((mTotalOffset % mUnit) * 1f / mUnit);
+        if (mTotalOffset < 0) {
+            offsetRatio = 1 - offsetRatio;
+        }
         float scale;
         if (position == centerPosition) {
             scale = 1 - (1 - secondaryScale) * offsetRatio;
@@ -293,6 +317,7 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
         } else {
             scale = secondaryScale;
         }
+
         return scale;
     }
 
@@ -300,19 +325,27 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
      * @param position the index of the item in the adapter
      * @return the accurate left position for the given item
      */
-    private int getLeft(int position) {
+    private int getLeft(int position, int firstVisiblePosition) {
 
-        int currPos = mTotalOffset / mUnit;
         int tail = mTotalOffset % mUnit;
-
         int left;
 
-        if (position <= currPos) {
-            left = 0;
-        } else if (position >= currPos + MAX_VISIBLE_ITEM_COUNT) {
-            left = mUnit * 4;
+        if (mTotalOffset >= 0) {
+            if (position <= firstVisiblePosition) {
+                left = 0;
+            } else if (position >= firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT) {
+                left = mUnit * 4;
+            } else {
+                left = mUnit * (position - firstVisiblePosition) - tail;
+            }
         } else {
-            left = mUnit * (position - currPos) - tail;
+            if (position <= firstVisiblePosition) {
+                left = 0;
+            } else if (position >= firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT) {
+                left = mUnit * 4;
+            } else {
+                left = mUnit * (position - firstVisiblePosition - 1) - tail;
+            }
         }
         return left;
     }
@@ -345,7 +378,6 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
 
     @Override
     public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        Log.d("frankhon", "scrollHorizontallyBy: ");
         return fillFromLeft(dx, recycler);
     }
 
@@ -377,14 +409,20 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
 
     @Override
     public void scrollToPosition(int position) {
-        if (position > getItemCount() - 1) {
+        if (position > getItemCount() - 1 || position < 0) {
             Log.i(TAG, "position is " + position + " but itemCount is " + getItemCount());
             return;
         }
-        int currPosition = mTotalOffset / mUnit;
-        int distance = (position - currPosition) * mUnit;
+        int distance = (position - getSelectedPosition()) * mUnit;
         int dur = computeSettleDuration(Math.abs(distance), 0);
         brewAndStartAnimator(dur, distance);
+    }
+
+    public int getSelectedPosition() {
+        if (selectedPosition <= 0) {
+            return selectedPosition + 1;
+        }
+        return selectedPosition;
     }
 
     public interface OnSelectListener {
