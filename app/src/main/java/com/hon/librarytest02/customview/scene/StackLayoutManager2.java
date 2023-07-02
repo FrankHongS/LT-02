@@ -103,54 +103,107 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
 
     private void fill(RecyclerView.Recycler recycler) {
 
-        int end = Math.min(MAX_VISIBLE_ITEM_COUNT, getItemCount() - 1);
+        int itemCount = getItemCount();
 
-        int lastVisiblePosition = Math.min(MAX_VISIBLE_ITEM_COUNT - 1, getItemCount() - 1);
-        selectedPosition = lastVisiblePosition / 2;
+        if (itemCount - 1 < MAX_VISIBLE_ITEM_COUNT / 2) {
+            int end = Math.min(MAX_VISIBLE_ITEM_COUNT, itemCount - 1);
 
-        if (onSelectListener != null) {
-            onSelectListener.onSelect(getSelectedPosition());
+            int firstVisiblePosition = 0;
+            int lastVisiblePosition = itemCount - 1;
+            selectedPosition = (firstVisiblePosition + lastVisiblePosition + 1) / 2;
+
+            if (onSelectListener != null) {
+                onSelectListener.onSelect(getSelectedPosition());
+            }
+
+            //layout view
+            for (int i = 0; i <= end / 2; i++) {
+                layoutChildView(i, firstVisiblePosition, selectedPosition, recycler);
+                layoutChildView(end - i, firstVisiblePosition, selectedPosition, recycler);
+            }
+        } else {
+
+            int end = Math.min(MAX_VISIBLE_ITEM_COUNT, getItemCount() - 1);
+
+            int firstVisiblePosition = 0;
+            int lastVisiblePosition = MAX_VISIBLE_ITEM_COUNT - 1;
+            selectedPosition = (firstVisiblePosition + lastVisiblePosition) / 2;
+
+            if (onSelectListener != null) {
+                onSelectListener.onSelect(getSelectedPosition());
+            }
+
+            //layout view
+            for (int i = 0; i <= end / 2; i++) {
+                layoutChildView(i, firstVisiblePosition, selectedPosition, recycler);
+                layoutChildView(end - i, firstVisiblePosition, selectedPosition, recycler);
+            }
         }
 
-        //layout view
-        for (int i = 0; i <= end / 2; i++) {
-            layoutChildView(i, 0, selectedPosition, recycler);
-            layoutChildView(end - i, 0, selectedPosition, recycler);
-        }
     }
 
     private int fillFromLeft(int dx, RecyclerView.Recycler recycler) {
-        if (mTotalOffset + dx < -MAX_VISIBLE_ITEM_COUNT / 2 * mUnit ||
-                mTotalOffset + dx > (getItemCount() - 1 - MAX_VISIBLE_ITEM_COUNT / 2) * mUnit) {
-            return 0;
-        }
+        int itemCount = getItemCount();
+        if (itemCount - 1 < MAX_VISIBLE_ITEM_COUNT / 2) {
+            if (mTotalOffset + dx < -itemCount / 2 * mUnit || mTotalOffset + dx > 0) {
+                return 0;
+            }
 
-        detachAndScrapAttachedViews(recycler);
-        recycleViews(dx, recycler);
+            detachAndScrapAttachedViews(recycler);
+            recycleViews(dx, recycler);
 
-        mTotalOffset += dx;
+            mTotalOffset += dx;
 
-        int firstVisiblePosition;
-        if (mTotalOffset >= 0) {
-            firstVisiblePosition = mTotalOffset / mUnit;
+            int firstVisiblePosition = 0;
+            int lastVisiblePosition = itemCount - 1;
+            selectedPosition = itemCount - 1 + mTotalOffset / mUnit;
+
+            int start = 0;
+            int end = itemCount - 1;
+
+            if (onSelectListener != null) {
+                onSelectListener.onSelect(getSelectedPosition());
+            }
+
+            //layout view
+            for (int i = start; i <= (start + end) / 2; i++) {
+                layoutChildView(i, firstVisiblePosition, selectedPosition, recycler);
+                layoutChildView(start + end - i, firstVisiblePosition, selectedPosition, recycler);
+            }
         } else {
-            firstVisiblePosition = mTotalOffset / mUnit - 1;
-        }
-        int lastVisiblePosition = firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT - 1;
-        selectedPosition = (firstVisiblePosition + lastVisiblePosition) / 2;
+            if (mTotalOffset + dx < -MAX_VISIBLE_ITEM_COUNT / 2 * mUnit ||
+                    mTotalOffset + dx > (getItemCount() - 1 - MAX_VISIBLE_ITEM_COUNT / 2) * mUnit) {
+                return 0;
+            }
 
-        int start = Math.max(firstVisiblePosition - 1, 0);
-        int end = Math.min(lastVisiblePosition + 1, getItemCount() - 1);
+            detachAndScrapAttachedViews(recycler);
+            recycleViews(dx, recycler);
 
-        if (onSelectListener != null) {
-            onSelectListener.onSelect(getSelectedPosition());
+            mTotalOffset += dx;
+
+            int firstVisiblePosition;
+            if (mTotalOffset >= 0) {
+                firstVisiblePosition = mTotalOffset / mUnit;
+            } else {
+                firstVisiblePosition = mTotalOffset / mUnit - 1;
+            }
+            int lastVisiblePosition = firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT - 1;
+            selectedPosition = (firstVisiblePosition + lastVisiblePosition) / 2;
+
+            int start = Math.max(firstVisiblePosition - 1, 0);
+            int end = Math.min(lastVisiblePosition + 1, getItemCount() - 1);
+
+            if (onSelectListener != null) {
+                onSelectListener.onSelect(getSelectedPosition());
+            }
+
+            //layout view
+            for (int i = start; i <= (start + end) / 2; i++) {
+                layoutChildView(i, firstVisiblePosition, selectedPosition, recycler);
+                layoutChildView(start + end - i, firstVisiblePosition, selectedPosition, recycler);
+            }
         }
 
-        //layout view
-        for (int i = start; i <= (start + end) / 2; i++) {
-            layoutChildView(i, firstVisiblePosition, selectedPosition, recycler);
-            layoutChildView(start + end - i, firstVisiblePosition, selectedPosition, recycler);
-        }
 
         return dx;
     }
@@ -304,18 +357,30 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
         return alpha <= 0.001f ? 0 : alpha;
     }
 
-    private float scale(int position, int centerPosition) {
-        float offsetRatio = Math.abs((mTotalOffset % mUnit) * 1f / mUnit);
-        if (mTotalOffset < 0) {
-            offsetRatio = 1 - offsetRatio;
-        }
+    private float scale(int position, int selectedPosition) {
+        int itemCount = getItemCount();
         float scale;
-        if (position == centerPosition) {
-            scale = 1 - (1 - secondaryScale) * offsetRatio;
-        } else if (position == centerPosition + 1) {
-            scale = secondaryScale + (1 - secondaryScale) * offsetRatio;
+        if (itemCount - 1 < MAX_VISIBLE_ITEM_COUNT / 2) {
+            float offsetRatio = Math.abs((mTotalOffset % mUnit) * 1f / mUnit);
+            if (position == selectedPosition) {
+                scale = 1 - (1 - secondaryScale) * offsetRatio;
+            } else if (position == selectedPosition - 1) {
+                scale = secondaryScale + (1 - secondaryScale) * offsetRatio;
+            } else {
+                scale = secondaryScale;
+            }
         } else {
-            scale = secondaryScale;
+            float offsetRatio = Math.abs((mTotalOffset % mUnit) * 1f / mUnit);
+            if (mTotalOffset < 0) {
+                offsetRatio = 1 - offsetRatio;
+            }
+            if (position == selectedPosition) {
+                scale = 1 - (1 - secondaryScale) * offsetRatio;
+            } else if (position == selectedPosition + 1) {
+                scale = secondaryScale + (1 - secondaryScale) * offsetRatio;
+            } else {
+                scale = secondaryScale;
+            }
         }
 
         return scale;
@@ -327,26 +392,31 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
      */
     private int getLeft(int position, int firstVisiblePosition) {
 
-        int tail = mTotalOffset % mUnit;
+        int itemCount = getItemCount();
         int left;
-
-        if (mTotalOffset >= 0) {
-            if (position <= firstVisiblePosition) {
-                left = 0;
-            } else if (position >= firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT) {
-                left = mUnit * 4;
-            } else {
-                left = mUnit * (position - firstVisiblePosition) - tail;
-            }
+        if (itemCount - 1 < MAX_VISIBLE_ITEM_COUNT / 2) {
+            left = mUnit * (position + MAX_VISIBLE_ITEM_COUNT / 2 - itemCount + 1) - mTotalOffset;
         } else {
-            if (position <= firstVisiblePosition) {
-                left = 0;
-            } else if (position >= firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT) {
-                left = mUnit * 4;
+            int tail = mTotalOffset % mUnit;
+            if (mTotalOffset >= 0) {
+                if (position <= firstVisiblePosition) {
+                    left = 0;
+                } else if (position >= firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT) {
+                    left = mUnit * 4;
+                } else {
+                    left = mUnit * (position - firstVisiblePosition) - tail;
+                }
             } else {
-                left = mUnit * (position - firstVisiblePosition - 1) - tail;
+                if (position <= firstVisiblePosition) {
+                    left = 0;
+                } else if (position >= firstVisiblePosition + MAX_VISIBLE_ITEM_COUNT) {
+                    left = mUnit * 4;
+                } else {
+                    left = mUnit * (position - firstVisiblePosition - 1) - tail;
+                }
             }
         }
+
         return left;
     }
 
@@ -419,10 +489,18 @@ class StackLayoutManager2 extends RecyclerView.LayoutManager {
     }
 
     public int getSelectedPosition() {
+        if (isLessThanHalf()) {
+            return selectedPosition;
+        }
         if (selectedPosition <= 0) {
             return selectedPosition + 1;
         }
         return selectedPosition;
+    }
+
+    private boolean isLessThanHalf() {
+        int itemCount = getItemCount();
+        return itemCount - 1 < MAX_VISIBLE_ITEM_COUNT / 2;
     }
 
     public interface OnSelectListener {

@@ -85,7 +85,7 @@ public class SceneFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return 4;
+            return 11;
         }
     }
 }
