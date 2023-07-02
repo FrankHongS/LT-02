@@ -1,5 +1,6 @@
 package com.hon.librarytest02.customview.scene;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hon.librarytest02.R;
@@ -42,15 +42,14 @@ public class SceneFragment extends Fragment {
         config.space = 30;
         config.parallex = 1.5f;
         config.align = Align.LEFT;
-        StackLayoutManager2 layoutManager = new StackLayoutManager2(config);
-        layoutManager.setOnSelectListener(new StackLayoutManager2.OnSelectListener() {
-            @Override
-            public void onSelect(int position) {
-                debugText.setText("curPos: " + position);
-            }
-        });
+        PileLayoutManager layoutManager = new PileLayoutManager(30, 0.8f);
+        layoutManager.setOnSelectListener(position -> debugText.setText("curPos: " + position));
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(new PileAdapter());
+        PileAdapter adapter = new PileAdapter();
+        adapter.setOnItemClickListener(position -> {
+            layoutManager.scrollToPosition(position);
+        });
+        recyclerView.setAdapter(adapter);
 
         recyclerView2.setLayoutManager(new StackLayoutManager(config));
         recyclerView2.setAdapter(new PileAdapter());
@@ -66,6 +65,9 @@ public class SceneFragment extends Fragment {
     }
 
     private static class PileAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        private OnItemClickListener onItemClickListener;
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -81,11 +83,31 @@ public class SceneFragment extends Fragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             TextView textView = holder.itemView.findViewById(R.id.tv_text);
             textView.setText(String.valueOf(position));
+            holder.itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(position);
+                }
+            });
+            if (position % 3 == 0) {
+                holder.itemView.setBackgroundColor(Color.parseColor("#009688"));
+            } else {
+                holder.itemView.setBackgroundColor(Color.parseColor("#607D8B"));
+            }
         }
 
         @Override
         public int getItemCount() {
-            return 11;
+            return 2;
         }
+
+        public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
+        }
+    }
+
+    private interface OnItemClickListener {
+
+        void onItemClick(int position);
+
     }
 }
