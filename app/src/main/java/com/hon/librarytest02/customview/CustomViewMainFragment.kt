@@ -46,6 +46,9 @@ class CustomViewMainFragment : Fragment() {
         view.findViewById<Button>(R.id.btn_staggered_grid).setOnClickListener {
             parentActivity?.navigateTo(TAG_STAGGERED_GRID)
         }
+        view.findViewById<Button>(R.id.btn_drag_layout).setOnClickListener {
+            parentActivity?.navigateTo(TAG_DRAG_LAYOUT)
+        }
         view.findViewById<Button>(R.id.btn_pile_layout).setOnClickListener {
             parentActivity?.navigateTo(TAG_PILE_LAYOUT)
         }

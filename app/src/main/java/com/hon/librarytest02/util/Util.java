@@ -9,11 +9,15 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
 import com.hon.librarytest02.LibraryTest;
@@ -29,6 +33,10 @@ public class Util {
         return LibraryTest.sContext.getResources().getString(resId);
     }
 
+    public static int getColor(int resId) {
+        return ContextCompat.getColor(LibraryTest.sContext, resId);
+    }
+
     public static int dp2px(float dpValue) {
         float scale = Resources.getSystem().getDisplayMetrics().densityDpi;
         return (int) (dpValue * (scale / 160) + 0.5f);
@@ -37,6 +45,15 @@ public class Util {
     public static int px2dp(float pxValue) {
         float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
+    }
+
+    public static Bitmap viewToBitmap(View view) {
+        int width = view.getWidth();
+        int height = view.getHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+        return bitmap;
     }
 
     public static DisplayMetrics getDisplayMetrics() {
